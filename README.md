@@ -14,10 +14,10 @@ PvMonit support tout le matériel Victron compatible Ve Direct (via USB) :
 
 ### Requis
 
+  * Linux
   * PHP (5.5-5.6 recomended)
   * Lighttpd/Apache (au autre serveur web)
   * Perl
-  * Bash
   * Python
 
 ### Installation
