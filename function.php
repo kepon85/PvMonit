@@ -14,11 +14,50 @@ function ve_type($ve_pid) {
 		$ve_type_retour='BMV';
 	} else if (substr($ve_pid, 0, -2) == '0xA0' || $ve_pid == '0x300') {
 		$ve_type_retour='MPTT';
+	} else if (substr($ve_pid, 0, -2) == '0xA2') {
+		$ve_type_retour='PhoenixInverter';
 	} else {
-		$ve_type_retour='Not supported';
+		$ve_type_retour='Inconnu';
 	}
 	return $ve_type_retour;
 }
+function ve_modele($ve_pid) {
+	switch ($ve_pid) {
+		case '0x203': $ve_modele_retour='BMV-700'; break;
+		case '0x204': $ve_modele_retour='BMV-702'; break;
+		case '0x205': $ve_modele_retour='BMV-700H'; break;
+		case '0xA04C': $ve_modele_retour='BlueSolar MPPT 75/10'; break;
+		case '0x300': $ve_modele_retour='BlueSolar MPPT 70/15'; break;
+		case '0xA042': $ve_modele_retour='BlueSolar MPPT 75/15'; break;
+		case '0xA043': $ve_modele_retour='BlueSolar MPPT 100/15'; break;
+		case '0xA044': $ve_modele_retour='BlueSolar MPPT 100/30 rev1'; break;
+		case '0xA04A': $ve_modele_retour='BlueSolar MPPT 100/30 rev2'; break;
+		case '0xA041': $ve_modele_retour='BlueSolar MPPT 150/35 rev1'; break;
+		case '0xA04B': $ve_modele_retour='BlueSolar MPPT 150/35 rev2'; break;
+		case '0xA04D': $ve_modele_retour='BlueSolar MPPT 150/45'; break;
+		case '0xA040': $ve_modele_retour='BlueSolar MPPT 75/50'; break;
+		case '0xA045': $ve_modele_retour='BlueSolar MPPT 100/50 rev1'; break;
+		case '0xA049': $ve_modele_retour='BlueSolar MPPT 100/50 rev2'; break;
+		case '0xA04E': $ve_modele_retour='BlueSolar MPPT 150/60'; break;
+		case '0xA046': $ve_modele_retour='BlueSolar MPPT 150/70'; break;
+		case '0xA04F': $ve_modele_retour='BlueSolar MPPT 150/85'; break;
+		case '0xA047': $ve_modele_retour='BlueSolar MPPT 150/100'; break;
+		case '0xA051': $ve_modele_retour='SmartSolar MPPT 150/100'; break;
+		case '0xA050': $ve_modele_retour='SmartSolar MPPT 250/100'; break;
+		case '0xA201': $ve_modele_retour='Phoenix Inverter 12V 250VA 230V'; break;
+		case '0xA202': $ve_modele_retour='Phoenix Inverter 24V 250VA 230V'; break;
+		case '0xA204': $ve_modele_retour='Phoenix Inverter 48V 250VA 230V'; break;
+		case '0xA211': $ve_modele_retour='Phoenix Inverter 12V 375VA 230V'; break;
+		case '0xA212': $ve_modele_retour='Phoenix Inverter 24V 375VA 230V'; break;
+		case '0xA214': $ve_modele_retour='Phoenix Inverter 48V 375VA 230V'; break;
+		case '0xA221': $ve_modele_retour='Phoenix Inverter 12V 500VA 230V'; break;
+		case '0xA222': $ve_modele_retour='Phoenix Inverter 24V 500VA 230V'; break;
+		case '0xA224': $ve_modele_retour='Phoenix Inverter 48V 500VA 230V'; break;
+		default; $ve_modele_retour = 'Inconnu'; break;
+	}
+	return $ve_modele_retour;
+}
+
 
 function ve_nom($ve_serial) {
 	$ve_nom=$ve_serial;
@@ -43,18 +82,26 @@ function vedirect_scan() {
 			if ($vedirect_retour != 0){
 				trucAdir(1, 'Erreur à l\'exécution du script '.VEDIRECT_BIN.' sur le '.$unDev);
 			} else {
+				// Pour gérer le BMV-600
+				$BMV600=false;
+				$ve_nom=null;
 				foreach ($vedirect_sortie as $vedirect_ligne) {
 					$vedirect_data = explode(':', $vedirect_ligne);
 					switch ($vedirect_data[0]) {
 						case 'PID':
 							$ve_type=ve_type($vedirect_data[1]);
+							$ve_modele=ve_modele($vedirect_data[1]);
 						break;
 						case 'SER#':
 							$ve_nom=ve_nom($vedirect_data[1]);
 						break;
+						case 'BMV':
+							$ve_type='BMV';
+							$ve_nom=$vedirect_data[1];
+						break;
 					}
 				}
-				trucAdir(3, 'C\'est un '.$ve_type.' du nom de '.$ve_nom);
+				trucAdir(3, 'C\'est un '.$ve_type.', modèle "'.$ve_modele.'" du nom de '.$ve_nom);
 				$vedirect_data_formate='';
 				foreach ($vedirect_sortie as $vedirect_ligne) {
 					$vedirect_data = explode(':', $vedirect_ligne);
@@ -87,6 +134,7 @@ function vedirect_scan() {
 			}
 			$vedirect_scan_return[$idDevice]['nom']=$ve_nom;
 			$vedirect_scan_return[$idDevice]['type']=$ve_type;
+			$vedirect_scan_return[$idDevice]['modele']=$ve_modele;
 			$vedirect_scan_return[$idDevice]['data']=$vedirect_data_formate;
 			$idDevice++;
 		}
