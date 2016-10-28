@@ -7,7 +7,7 @@ Mon usage de PvMonit : je dipose d'un RaspberryPi connecté avec des câbles VE.
     - De collecter les données toutes les 5 minutes, les mettres en caches et les expédier vers emoncms quand internet est là (le wifi n'étant allumé qu'au besoin)
 
 PvMonit support tout le matériel Victron compatible Ve Direct (via USB) : 
-  *  BMV : 700, 702, 700H
+  *  BMV : 600, 700, 702, 700H
   *  BlueSolar MPPT 75/10, 70/15, 75/14, 100/15, 100/30 rev1, 100/30 rev2, 150/35 rev1, 150/35 rev2, 150/45, 75/50, 100/50 rev1, 100/50 rev2, 150/60, 150/70, 150/85, 150/100
   *  SmartSolar MPPT 150/100,  250/100
   *  Phoenix Inverter 12V 250VA 230V, 24V 250VA 230V, 48V 250VA 230V, 12V 375VA 230V, 24V 375VA 230V, 48V 375VA 230V, 12V 500VA 230V, 24V 500VA 230V, 48V 500VA 230V
@@ -22,7 +22,9 @@ PvMonit support tout le matériel Victron compatible Ve Direct (via USB) :
 
 ### Installation
 
-#### La base
+#### La base / le socle
+
+install dépendance
 
 #### Interface web en temps réèl
 
@@ -39,7 +41,7 @@ $ aptitude install toto
 
  - expedition.sh en PHP
  - écrire un article sur l'installation
- - Supporté tout les modèles possibles
+ - améliorer/passer en fonction pour les "progress" bar
  - Traduction en anglais, autres langues
 
 ### Documentation

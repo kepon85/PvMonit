@@ -3,8 +3,9 @@
 # Script sous licence BEERWARE
 # Version 0.1	2016
 ###################################
-include_once('/opt/PvMonit/config-dist.php');
+include_once('/opt/PvMonit/config-default.php');
 include_once('/opt/PvMonit/config.php');
+
 include('/opt/PvMonit/function.php');
 $PRINTMESSAGE=0;
 if ($_GET['cache'] == 'no') {
@@ -18,12 +19,13 @@ if ($_GET['cache'] == 'no') {
 <title>Pv Monit</title>
 <!--[if IE]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 <link rel="stylesheet" type="text/css" href="./css/style.css" />
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
 <meta http-equiv="cache-control" content="max-age=0" />
 <meta http-equiv="cache-control" content="no-cache" />
 <meta http-equiv="expires" content="0" />
 <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
 <meta http-equiv="pragma" content="no-cache" />
-<meta http-equiv="robots" content="non" /> 
+<meta name="robots" content="non" /> 
 </head>
 <body>
     <div id="wrapper">
@@ -41,24 +43,12 @@ if ($_GET['cache'] == 'no') {
         </div>
         <div id="contentwrap">
         <div id="content">
-			
-           <!--<div class="box">
-				<div class="title">MPTT blue solare</div>
-				<div class="boxvaleur vbat"><h3>Tension de la batterie</h3>
-				<progress class="jaugeVerte" style="width: 80%" max="30" value="2"></progress>
-				12V
-				</div>
-				<div class="boxvaleur pvw"><h3>Production des panneaux</h3>
-				<progress class="jaugeRouge" style="width: 80%" max="30" value="39"></progress>
-				122W</div>
-				<div class="boxvaleur cs"><h3>Status de charge</h3>
-				<progress class="jaugeBleu" style="width: 80%" max="30" value="39"></progress>Blunk</div>
-				<div class="boxvaleur err"><h3>Présence d'erreur</h3> Aucune</div>
-			</div>-->
-			
+	
 			<!-- TRAP BOX -->
 						
 			<?php 
+			// VE.DIRECT SCAN 
+			
 			$ppv_total=null;
 			$nb_ppv_total=0;
 			foreach (vedirect_scan() as $device) {
@@ -354,30 +344,12 @@ if ($_GET['cache'] == 'no') {
 				</div>
 			</div>
 			
-			<script src="http://widget.windguru.cz/js/wg_widget.php" type="text/javascript"></script>
-			<script language="JavaScript" type="text/javascript">
-			//<![CDATA[
-			WgWidget({
-			s: 496406, odh:8, doh:22, wj:'kmh', tj:'c', waj:'m', fhours:72, lng:'fr',
-			params: ['WINDSPD','GUST','SMER','TMPE','APCPs','TCDC','CDC','RH'],
-			first_row:true,
-			spotname:true,
-			first_row_minfo:true,
-			last_row:false,
-			lat_lon:true,
-			tz:true,
-			sun:true,
-			link_archive:false,
-			link_new_window:false
-			},
-			'wg_target_div_496406_33925293'
-			);
-			//]]>
-			</script>
+			<?php if (is_file('./windguru.php')) { ?>
 			<div style="width: 500px" class="box">
 			<div class="title">Météo Windguru</div>
-			<div id="wg_target_div_496406_33925293"></div>
+				<?php include('./windguru.php'); ?>
 			</div>
+			<?php } ?>
 		
 			<div style="clear:both"></div>
         </div>

@@ -1,16 +1,16 @@
 #!/usr/bin/php
 <?php
 
-###################################
+######################################################################
+# PvMonit - By David Mercereau : http://david.mercereau.info/contact/
 # Script sous licence BEERWARE
 # Version 0.2	2016
-###################################
+######################################################################
 
-# Joué toutes les 5 minutes par un utilisateur restraint (non root)
+include_once('/opt/PvMonit/config-default.php');
+include_once('/opt/PvMonit/config.php');
 
-include('/opt/PvMonit/config.php');
 include('/opt/PvMonit/function.php');
-
 trucAdir(5, 'Lancement du script');
 $timestamp=time();
 
@@ -21,9 +21,9 @@ if (date('Y') < '2016') {
 }
 
 # Test du répertoire de collecte
-if (!is_dir($DATA_COLLECTE)) {
-	trucAdir(3, 'Création du répertoire '.$DATA_COLLECTE);
-	mkdir($DATA_COLLECTE);
+if (!is_dir($GLOBALS['DATA_COLLECTE'])) {
+	trucAdir(3, 'Création du répertoire '.$GLOBALS['DATA_COLLECTE']);
+	mkdir($GLOBALS['DATA_COLLECTE']);
 }
 
 function sauvegardeDesDonnes($data) {
