@@ -97,8 +97,8 @@ function vedirect_scan() {
 # Récupérer les informations de la sonde de température
 function temperature() {
 	$temperature_retour='NODATA';
-	if (!is_file($GLOBALS['TEMPERV14_BIN'])) {
-		trucAdir(3, 'Le programme temperv14 pour la sonde de température n\'existe pas');
+	if ($GLOBALS['TEMPERV14_BIN'] == '') {
+		trucAdir(5, 'Pas de prise de température par temperv14');
 	} else {
 		# Exécussion du programme pour récupérer les inforamtions de la sonde de température
 		exec($GLOBALS['TEMPERV14_BIN'].' -c 2>/dev/null', $temperv14_sortie, $temperv14_retour);
@@ -118,7 +118,7 @@ function temperature() {
 # Récupérer les informations de l'amphèrmètre}
 function consommation() {
 	$consommation_retour='NODATA';
-	if (!is_file($GLOBALS['DEV_AMPEREMETRE'])) {
+	if ($GLOBALS['AMPEREMETRE_BIN'] != '') {
 		for ($i = 1; $i <= 3; $i++) {
 			trucAdir(3, 'Tentative '.$i.' de récupération de consommation');
 			//trucAdir(5, 'Lancement de la commande : echo "~" | head -n 1 '.$GLOBALS['DEV_AMPEREMETRE'].'  | tail -c6 | sed "s/A//" 2>/dev/null');

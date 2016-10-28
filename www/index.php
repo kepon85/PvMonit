@@ -29,8 +29,8 @@ if ($_GET['cache'] == 'no') {
         <div id="header">
             <nav>
 			  <ul>
+				  <!-- TRAP MENU -->
 				<?php echo $WWW_MENU; ?>
-				<!-- TRAP MENU-->
 			  </ul>
 			</nav>
             <h1>Pv Monit</h1>
@@ -54,6 +54,8 @@ if ($_GET['cache'] == 'no') {
 				<div class="boxvaleur err"><h3>Présence d'erreur</h3> Aucune</div>
 			</div>-->
 			
+			<!-- TRAP BOX -->
+						
 			<?php 
 			$ppv_total=null;
 			$nb_ppv_total=0;
@@ -102,13 +104,13 @@ if ($_GET['cache'] == 'no') {
 									echo 'Fault';
 								break;
 								case 3:
-									echo 'Blunk (Pas plein, on charge)';
+									echo 'Blunk (en charge)';
 								break;
 								case 4:
 									echo 'Absorption';
 								break;
 								case 5:
-									echo 'Float (Pleinne charge on maintient)';
+									echo 'Float (maintient la charge pleine)';
 								break;
 							}
 							echo '</div>';
@@ -230,7 +232,7 @@ if ($_GET['cache'] == 'no') {
 			<div class="title">Météo Windguru</div>
 			<div id="wg_target_div_496406_33925293"></div>
 			</div>
-			
+		
 			<div style="clear:both"></div>
         </div>
         </div>

@@ -7,11 +7,11 @@
 # Niveau d'affichage des messages
 $PRINTMESSAGE=5;	# 0=0	5=debug
 # Binaire du logiciel de sonde température
-$TEMPERV14_BIN='/opt/temperv14/temperv14';
+$TEMPERV14_BIN='/usr/bin/sudo /opt/temperv14/temperv14';
 # Ma sonde n'est pas juste, il faut une correction de quelques degrés (exemple : -3)
 $SONDE_TEMPERATURE_CORRECTION='0';	
 # Binaire de vedirect.py
-$VEDIRECT_BIN = '/usr/bin/python /opt/PvMonit/vedirect.py';
+$VEDIRECT_BIN = '/usr/bin/sudo /usr/bin/python /opt/PvMonit/vedirect.py';
 # MPTT data (voir la doc victron sur le protocole VE.Direct)
 $VEDIRECT_MPTT_DATA=array ('CS', 'PPV', 'V', 'ERR', 'I', 'VPV', 'H19', 'H20', 'H21', 'H22', 'H23');
 # MPTT data (voir la doc victron sur le protocole VE.Direct)
@@ -21,9 +21,7 @@ $VEDIRECT_DEVICE_CORRESPONDANCE=array ('HQXXXXXXXX' => 'MpttGarage', 'HQYYYYYY' 
 # Répertoire de collecte de données
 $DATA_COLLECTE='/tmp/PvMonit.collecteData';
 # Binaire ampèrmetre.pl
-$AMPEREMETRE_BIN = 'perl /opt/PvMonit/ampermetre.pl';
-# le périphérique pour l'ampèremetre
-$DEV_AMPEREMETRE='/dev/ttyACM0';
+$AMPEREMETRE_BIN = '/usr/bin/sudo /usr/bin/perl /opt/PvMonit/ampermetre.pl';
 # Plafont de consommation en W impossible à dépasser (techniquement, sinon c'est une erreur de sonde)
 $CONSO_PLAFOND = 1500;	
 # emoncms URL du post.json & API key
