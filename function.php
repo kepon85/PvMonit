@@ -131,12 +131,12 @@ function vedirect_scan() {
 					}
 				}
 				trucAdir(3, 'Les données sont formatées comme ceci : '.$vedirect_data_formate );
-			}
-			$vedirect_scan_return[$idDevice]['nom']=$ve_nom;
-			$vedirect_scan_return[$idDevice]['type']=$ve_type;
-			$vedirect_scan_return[$idDevice]['modele']=$ve_modele;
-			$vedirect_scan_return[$idDevice]['data']=$vedirect_data_formate;
-			$idDevice++;
+				$vedirect_scan_return[$idDevice]['nom']=$ve_nom;
+				$vedirect_scan_return[$idDevice]['type']=$ve_type;
+				$vedirect_scan_return[$idDevice]['modele']=$ve_modele;
+				$vedirect_scan_return[$idDevice]['data']=$vedirect_data_formate;
+				$idDevice++;
+			}	
 		}
 	}
 	return $vedirect_scan_return;
@@ -177,7 +177,7 @@ function consommation() {
 			} else {
 				if ($exec_consommation_sortie[0] != '') {
 					trucAdir(3, 'Trouvé à la tentative '.$i.' : la La consommation trouvé est '.$exec_consommation_sortie[0].'A');
-					$re = '/[0-9][0-9]+.[0-9]$/';
+					$re = '/^[0-9][0-9]+.[0-9]$/';
 					if (!preg_match_all($re, $exec_consommation_sortie[0])) {
 						trucAdir(5, 'La vérification par expression régulière à échoué ('.$re.')');
 					} else {				

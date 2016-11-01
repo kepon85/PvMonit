@@ -8,7 +8,9 @@
 ######################################################################
 
 include_once('/opt/PvMonit/config-default.php');
-include_once('/opt/PvMonit/config.php');
+if (is_file('/opt/PvMonit/config.php')) {
+	include_once('/opt/PvMonit/config.php');
+}
 
 include('/opt/PvMonit/function.php');
 trucAdir(5, 'Lancement du script');

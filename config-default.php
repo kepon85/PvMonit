@@ -28,12 +28,12 @@ $AMPEREMETRE_BIN = '/usr/bin/sudo /usr/bin/perl /opt/PvMonit/ampermetre.pl';
 # Plafont de consommation en W impossible à dépasser (techniquement, sinon c'est une erreur de sonde)
 $CONSO_PLAFOND = 1500;
 # emoncms URL du post.json & API key
-$EMONCMS_URL_INPUT_JSON_POST='http://emoncms.org/input/post.json';
+$EMONCMS_URL_INPUT_JSON_POST='https://emoncms.org/input/post.json';
 $EMONCMS_API_KEY='XXXXXXXXXXXXXXXXXXXXXXXX';
 
 # Script expédition vers emoncms
 # Test la connexion internet
-$TEST_INTERNET_HOST='emoncms.mercereau.info';
+$TEST_INTERNET_HOST='emoncms.org';
 $TEST_INTERNET_PORT=80;
 # Dossier ou ranger les erreurs
 $DATA_COLLECTE_ERROR=$DATA_COLLECTE.'_erreur';

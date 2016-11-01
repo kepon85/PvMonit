@@ -60,7 +60,7 @@ if ($_GET['cache'] == 'no') {
 					switch ($dataSplit[0]) {
 						// MPTT & BMV & Phoenix Inverter
 						case 'V':
-							echo '<div class="boxvaleur vbat"><h3>Tension de la batterie</:h3>';
+							echo '<div class="boxvaleur vbat"><h3>Tension de la batterie :</h3>';
 							$Vbat=$dataSplit[1]*0.001;
 							$VbatenPourcentage=round($Vbat*100/$WWW_VBAT_MAX);
 							echo $VbatenPourcentage;
