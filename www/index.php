@@ -60,10 +60,9 @@ if ($_GET['cache'] == 'no') {
 					switch ($dataSplit[0]) {
 						// MPTT & BMV & Phoenix Inverter
 						case 'V':
-							echo '<div class="boxvaleur vbat"><h3>Tension de la batterie :</h3>';
+							echo '<div class="boxvaleur vbat"><h3>Tension de la batterie : </h3>';
 							$Vbat=$dataSplit[1]*0.001;
 							$VbatenPourcentage=round($Vbat*100/$WWW_VBAT_MAX);
-							echo $VbatenPourcentage;
 							$jaugeColor='jaugeVerte';
 							if ($VbatenPourcentage < 80) 
 								$jaugeColor='jaugeOrange';
@@ -309,39 +308,47 @@ if ($_GET['cache'] == 'no') {
 					echo '<progress class="jaugeRouge" style="width: 80%" max="100" value="'.$PpvPourcentage.'"></progress> '.$ppv_total.'W</div>';
 				}
 				?>
-				<div class="boxvaleur conso"><h3>Consommation de l'habitat</h3>
+				
 				<?php
 				$consommation=consommationCache(); 
-				if ($consommation === 'NODATA') {
-					echo ' -- Indisponible --';
-				} else {
-					$ConsoPourcentage=round($consommation)*100/$WWW_CONSO_MAX;
-					$jaugeColor='jaugeVerte';
-					if ($ConsoPourcentage > 50) 
-						$jaugeColor='jaugeOrange';
-					if ($ConsoPourcentage > 80) 
-						$jaugeColor='jaugeRouge';
-					echo '<progress class="'.$jaugeColor.'" style="width: 200px" max="100" value="'.$ConsoPourcentage.'"></progress>';
-					echo $consommation.'W';
+				if ($consommation != null) {
+					echo '<div class="boxvaleur conso"><h3>Consommation de l\'habitat</h3>';
+					if ($consommation === 'NODATA') {
+						echo ' -- Indisponible --';
+					} else {
+						$ConsoPourcentage=round($consommation)*100/$WWW_CONSO_MAX;
+						$jaugeColor='jaugeVerte';
+						if ($ConsoPourcentage > 50) 
+							$jaugeColor='jaugeOrange';
+						if ($ConsoPourcentage > 80) 
+							$jaugeColor='jaugeRouge';
+						echo '<progress class="'.$jaugeColor.'" style="width: 200px" max="100" value="'.$ConsoPourcentage.'"></progress>';
+						echo $consommation.'W';
+					}
+					echo '</div>';
 				}
 				?>
-				</div>
-				<div class="boxvaleur temp"><h3>Température du local</h3>
+				
+				
 				<?php
 				$temperature=temperatureCache(); 
-				if ($temperature === 'NODATA') {
-					echo ' -- Indisponible --';
-				} else {
-					$jaugeColor='jaugeVerte';
-					if ($temperature <= 10 || $temperature >= 26) 
-						$jaugeColor='jaugeOrange';
-					if ($temperature <= 5 || $temperature >= 30) 
-						$jaugeColor='jaugeRouge';
-					echo '<progress class="'.$jaugeColor.'" style="width: 200px" max="45" value="'.$temperature.'"></progress>';
-					echo round($temperature,1).'°';
-				} 
+				if ($temperature != null) {
+					echo '<div class="boxvaleur temp"><h3>Température du local</h3>';
+					if ($temperature === 'NODATA') {
+						echo ' -- Indisponible --';
+					} else {
+						$jaugeColor='jaugeVerte';
+						if ($temperature <= 10 || $temperature >= 26) 
+							$jaugeColor='jaugeOrange';
+						if ($temperature <= 5 || $temperature >= 30) 
+							$jaugeColor='jaugeRouge';
+						echo '<progress class="'.$jaugeColor.'" style="width: 200px" max="45" value="'.$temperature.'"></progress>';
+						echo round($temperature,1).'°';
+					} 
+					echo '</div>';
+				}
 				?>
-				</div>
+				
 			</div>
 			
 			<?php if (is_file('./windguru.php')) { ?>

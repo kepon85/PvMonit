@@ -144,15 +144,16 @@ function vedirect_scan() {
 
 # Récupérer les informations de la sonde de température
 function temperature() {
-	$temperature_retour='NODATA';
 	if ($GLOBALS['TEMPERV14_BIN'] == '') {
 		trucAdir(5, 'Pas de prise de température par temperv14');
+		$temperature_retour=null;
 	} else {
 		# Exécussion du programme pour récupérer les inforamtions de la sonde de température
 		exec($GLOBALS['TEMPERV14_BIN'].' -c 2>/dev/null', $temperv14_sortie, $temperv14_retour);
 		if ($temperv14_retour != 0){
 			trucAdir(3, 'La sonde de température n\'est probablement pas connecté.');
 			trucAdir(5, 'Erreur '.$temperv14_retour.' à l\'exécussion du programme .'.$GLOBALS['TEMPERV14_BIN']);
+			$temperature_retour='NODATA';
 		} else {
 			trucAdir(4, 'La sonde de température indique '.$temperv14_sortie[0].'°C');
 			$temperature=$temperv14_sortie[0]+$GLOBALS['SONDE_TEMPERATURE_CORRECTION'];
@@ -197,7 +198,8 @@ function consommation() {
 			}
 		}
 	} else {
-		trucAdir(3, 'Le périphérique '.$GLOBALS['DEV_AMPEREMETRE'].' n\'est pas connecté');
+		trucAdir(3, 'Le périphérique '.$GLOBALS['DEV_AMPEREMETRE'].' n\'est pas configuré');
+		$consommation_retour=null;
 	}
 	return $consommation_retour;
 }

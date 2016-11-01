@@ -7,10 +7,7 @@
 
 # Niveau d'affichage des messages
 $PRINTMESSAGE=3;	# 0=0	5=debug
-# Binaire du logiciel de sonde température
-$TEMPERV14_BIN='/usr/bin/sudo /opt/temperv14/temperv14';
-# Ma sonde n'est pas juste, il faut une correction de quelques degrés (exemple : -3)
-$SONDE_TEMPERATURE_CORRECTION='0';	
+
 # Binaire de vedirect.py
 $VEDIRECT_BIN = '/usr/bin/sudo /usr/bin/python /opt/PvMonit/vedirect.py';
 # MPTT donnée récolté (voir la doc victron sur le protocole VE.Direct)
@@ -21,28 +18,40 @@ $VEDIRECT_BMV_DATA=array ('V', 'VS', 'VM', 'DM', 'I', 'T', 'P', 'CE', 'SOC', 'TT
 $VEDIRECT_PHOENIX_DATA=array ('P', 'CS', 'MODE', 'AC_OUT_V', 'AC_OUT_I', 'WARN');
 # Numéro de série (champs SER#) en correspondance avec des nom buvables
 $VEDIRECT_DEVICE_CORRESPONDANCE=array ('HQXXXXXXXX' => 'MpttGarage', 'HQYYYYYY' => 'MpttToit'); 
-# Répertoire de collecte de données
-$DATA_COLLECTE='/tmp/PvMonit.collecteData';
+
+## Sonde de température 
+# Binaire du logiciel de sonde température
+$TEMPERV14_BIN='';
+//$TEMPERV14_BIN='/usr/bin/sudo /opt/temperv14/temperv14';
+# Ma sonde n'est pas juste, il faut une correction de quelques degrés (exemple : -3)
+$SONDE_TEMPERATURE_CORRECTION='0';	
+
+## Pince amphèrmétrique
 # Binaire ampèrmetre.pl
-$AMPEREMETRE_BIN = '/usr/bin/sudo /usr/bin/perl /opt/PvMonit/ampermetre.pl';
+$AMPEREMETRE_BIN = '';
+//$AMPEREMETRE_BIN = '/usr/bin/sudo /usr/bin/perl /opt/PvMonit/ampermetre.pl';
 # Plafont de consommation en W impossible à dépasser (techniquement, sinon c'est une erreur de sonde)
 $CONSO_PLAFOND = 1500;
-# emoncms URL du post.json & API key
-$EMONCMS_URL_INPUT_JSON_POST='https://emoncms.org/input/post.json';
-$EMONCMS_API_KEY='XXXXXXXXXXXXXXXXXXXXXXXX';
 
-# Script expédition vers emoncms
+
+### Export vers Emoncms
 # Test la connexion internet
 $TEST_INTERNET_HOST='emoncms.org';
 $TEST_INTERNET_PORT=80;
+# emoncms URL du post.json & API key
+$EMONCMS_URL_INPUT_JSON_POST='https://emoncms.org/input/post.json';
+$EMONCMS_API_KEY='XXXXXXXXXXXXXXXXXXXXXXXX';
+# Répertoire de collecte de données
+$DATA_COLLECTE='/tmp/PvMonit.collecteData';
 # Dossier ou ranger les erreurs
 $DATA_COLLECTE_ERROR=$DATA_COLLECTE.'_erreur';
+
 
 ### Page Web : 
 # Chemin du cache
 $WWW_CACHE_FILE='/tmp/PvMonit.cache-';
 # Âge du cache
-$WWW_CACHE_AGE=60;
+$WWW_CACHE_AGE=10;
 # Max de la jauge voltage batterie (en V) 
 $WWW_VBAT_MAX=30;
 # Max de la jauge puissance PV (en W)

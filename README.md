@@ -22,24 +22,90 @@ PvMonit support tout le matériel Victron compatible Ve Direct (via USB) :
 
 ### Installation
 
+Je vais distinguer 2 partie :
+  * Interface en temps réèl
+  * Export vers emoncms
+
+Il y a bien sûr une bonne partie de commun là dedans
+
 #### La base / le socle
 
-install dépendance
+```sh
+aptitude install php5-cli git python-serial
+cd /opt
+git clone https://github.com/kepon85/PvMonit.git
+cp config-default.php config.php```
+
+visudo vedirect.py
+
+test vedirect
+
+##### Sonde température
+# Source : http://www.generation-linux.fr/index.php?post/2014/06/21/Relever-et-grapher-la-temp%C3%A9rature-de-sa-maison-sur-Debian
+apt-get install libusb-dev libusb-1.0-0-dev unzip
+cd /opt
+wget http://dev-random.net/wp-content/uploads/2013/08/temperv14.zip
+#ou un miroir
+#wget http://www.generation-linux.fr/public/juin14/temperv14.zip
+unzip temperv14.zip
+cd temperv14/
+make
+
+visudo 
+##### Pince amphèrpétrique 
+
+
+```sh
+aptitde install  libdevice-serialport-perl
+```
+
+visudo
 
 #### Interface web en temps réèl
 
 A faire...
 
 ```sh
-$ cd exemple 
-$ aptitude install toto
+aptitude lighttpd php5-cgi 
 ```
+
+lighttpd-enable-mod fastcgi
+lighttpd-enable-mod fastcgi-php
+
+
+# lighttpd.conf : 
+
+server.document-root        = "/opt/PvMonit/www"
+server.pid-file             = "/var/run/lighttpd.pid"
+server.username             = "www-data"
+server.groupname            = "www-data"
+server.port                 = 80
+index-file.names            = ( "index.html", "index.php")
+url.access-deny             = ( "~", ".inc" )
+include_shell "/usr/share/lighttpd/use-ipv6.pl " + server.port
+include_shell "/usr/share/lighttpd/create-mime.assign.pl"
+include_shell "/usr/share/lighttpd/include-conf-enabled.pl"
+
+service lighttpd restart
+
+
+input api http://emoncms.mercereau.info/input/api
+(SCREENSHOT)
 
 #### Export vers emoncms
 
+```sh
+aptitde install  lynx 
+```
+
+
+
+
+mettre en tâche cron
+
+
 ### Todos
 
- - expedition.sh en PHP
  - écrire un article sur l'installation
  - améliorer/passer en fonction pour les "progress" bar
  - Traduction en anglais, autres langues
