@@ -167,7 +167,7 @@ if ($_GET['cache'] == 'no') {
 								case 0: echo 'Off'; break;
 								case 1: echo 'Faible puissance'; break;
 								case 2:	echo 'Fault'; break;
-								case 3:	echo 'Blunk (en charge)'; break;
+								case 3:	echo 'Bulk (en charge)'; break;
 								case 4:	echo 'Absorption';	break;
 								case 5:	echo 'Float (maintient la charge pleine)';	break;
 								case 9:	echo 'On';	break;
@@ -311,7 +311,7 @@ if ($_GET['cache'] == 'no') {
 				
 				<?php
 				$consommation=consommationCache(); 
-				if ($consommation != null) {
+				if ($consommation !== null) {
 					echo '<div class="boxvaleur conso"><h3>Consommation de l\'habitat</h3>';
 					if ($consommation === 'NODATA') {
 						echo ' -- Indisponible --';
@@ -332,7 +332,7 @@ if ($_GET['cache'] == 'no') {
 				
 				<?php
 				$temperature=temperatureCache(); 
-				if ($temperature != null) {
+				if ($temperature !== null) {
 					echo '<div class="boxvaleur temp"><h3>Température du local</h3>';
 					if ($temperature === 'NODATA') {
 						echo ' -- Indisponible --';
