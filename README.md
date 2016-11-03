@@ -4,12 +4,12 @@ Il s'agit d'un petit projet de monitoring photovoltaique pour matériel Victron 
  
 Mon usage de PvMonit : je dipose d'un RaspberryPi connecté avec des câbles VE.Direct sur mes appareil Victron (MPTT, BMV). PvMonit est installé sur ce RaspberryPi et me permet : 
 
- - D'afficher les informations en temps réel sur une page web.
- - De collecter les données toutes les 5 minutes, les mettres en caches et les expédier vers emoncms quand internet est là (le wifi n'étant pas toujours allumé)
+  - D'afficher les informations en temps réel sur une page web.
+  - De collecter les données toutes les X minutes, les mettres en caches et les expédier vers [emoncms](https://openenergymonitor.org/emon/node/90) quand internet est là (le wifi n'étant pas toujours allumé)
 
 PvMonit support tout le matériel Victron compatible Ve Direct (via USB) : 
 
- - BMV : 600, 700, 702, 700H
+  - BMV : 600, 700, 702, 700H
  -  BlueSolar MPPT 75/10, 70/15, 75/14, 100/15, 100/30 rev1, 100/30 rev2, 150/35 rev1, 150/35 rev2, 150/45, 75/50, 100/50 rev1, 100/50 rev2, 150/60, 150/70, 150/85, 150/100
  -  SmartSolar MPPT 150/100,  250/100
  -  Phoenix Inverter 12V 250VA 230V, 24V 250VA 230V, 48V 250VA 230V, 12V 375VA 230V, 24V 375VA 230V, 48V 375VA 230V, 12V 500VA 230V, 24V 500VA 230V, 48V 500VA 230V
@@ -77,20 +77,18 @@ lighttpd-enable-mod fastcgi
 lighttpd-enable-mod fastcgi-php
 ```
 
-Configuration du du serveur http, avec le fichier lighttpd : 
+Configuration du du serveur http, avec le fichier /etc/lighttpd/lighttpd.conf : 
 
-
-> **/etc/lighttpd/lighttpd.conf :**
-> server .document-root        = "/opt/PvMonit/www"
-> server.pid-file             = "/var/run/lighttpd.pid"
-> server.username             = "www-data"
-> server.groupname            = "www-data"
-> server.port                 = 80
-> index-file.names            = ( "index.html", "index.php")
-> url.access-deny             = ( "~", ".inc" )
-> include_shell "/usr/share/lighttpd/use-ipv6.pl " + server.port
-> include_shell "/usr/share/lighttpd/create-mime.assign.pl"
-> include_shell "/usr/share/lighttpd/include-conf-enabled.pl"
+    server .document-root        = "/opt/PvMonit/www"
+    server.pid-file             = "/var/run/lighttpd.pid"
+    server.username             = "www-data"
+    server.groupname            = "www-data"
+    server.port                 = 80
+    index-file.names            = ( "index.html", "index.php")
+    url.access-deny             = ( "~", ".inc" )
+    include_shell "/usr/share/lighttpd/use-ipv6.pl " + server.port
+    include_shell "/usr/share/lighttpd/create-mime.assign.pl"
+    include_shell "/usr/share/lighttpd/include-conf-enabled.pl"
 
 On applique la configuration :
 
@@ -120,7 +118,7 @@ FIXME	SCREENSHOT
 
 Connectez-vous à votre interface emoncms hébergé ou créer un compte sur [emoncms.org](https://emoncms.org/) et rendez-vous sur la page Input api https://emoncms.org/input/api :
 
-![Screenshot input API emoncms](http://david.mercereau.info/wp-content/uploads/2016/11/Sélection_011.png "input API emoncms")
+![Screenshot input API emoncms](http://david.mercereau.info/wp-content/uploads/2016/11/Sélection_011.png)
 
 Récupérer la valeur "Accès en écriture" et ajouter la dans le fichier de configuration Pvmonit  */opt/PvMonit/config.php* :
 
@@ -188,7 +186,7 @@ Ajouter :
 
 Je n'explique pas, ici comment configurer emoncms, les flux pour obtenir de beau dashboard, je vous laisse lire la documentation...
 
-![Screenshot source config emoncms](http://david.mercereau.info/wp-content/uploads/2016/11/emoncms_source_config.png "Sources config emoncms")
+![Screenshot source config emoncms](http://david.mercereau.info/wp-content/uploads/2016/11/emoncms_source_config.png)
 
 
 #### Sonde température (option)
@@ -270,11 +268,16 @@ Ajout de celle-ci dans le fichier  */opt/PvMonit/config.php* :
 
   - Victron VE Direct Protocol documentation : https://www.victronenergy.fr/support-and-downloads/whitepapers
 
+### Auteur
+
+  - David Mercereau [david #arobase# mercereau #point# info[](http://david.mercereau.info/contact/)
+
 ### License BEERWARE
 
 Tant que vous conservez cet avertissement, vous pouvez faire ce que vous voulez de ce truc. Si on se rencontre un jour et que vous pensez que ce truc vaut le coup, vous pouvez me payer une bière en retour. 
 
 > Written with [StackEdit](https://stackedit.io/).
+
 
 
 
