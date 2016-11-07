@@ -5,7 +5,7 @@
 body {
     font-family: Verdana, Arial, Helvetica, sans-serif;
     font-size: 13px;
-    color:#333
+    color:#333;
 }
 
 p {
@@ -177,4 +177,17 @@ progress.jaugeBleu::-moz-progress-bar { background: #8590F7; }
 }
 .footer_right {
 	float: right;
+}
+
+
+@media screen and (max-width: 1000px) {
+	#headerwrap {
+		width: 100%;
+	}
+	#wrapper {
+		width: 100%;
+	}
+	#footerwrap {
+		width: 100%;
+	}
 }

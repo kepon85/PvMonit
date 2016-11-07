@@ -261,7 +261,6 @@ Ajout de celle-ci dans le fichier  */opt/PvMonit/config.php* :
 
 ### Todos
 
- - Responsive web interface
  - Traduction en anglais, autres langues
 
 ### Documentation
