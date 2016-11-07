@@ -48,6 +48,8 @@ $DATA_COLLECTE_ERROR=$DATA_COLLECTE.'_erreur';
 
 
 ### Page Web : 
+# Niveau d'affichage de l'interface web (dans la console du navigateur)
+$PRINTMESSAGEWWW=0;	# 0=0	5=debug
 # Chemin du cache
 $WWW_CACHE_FILE='/tmp/PvMonit.cache-';
 # Âge du cache

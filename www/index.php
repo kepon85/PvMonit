@@ -7,10 +7,11 @@ include_once('/opt/PvMonit/config-default.php');
 include_once('/opt/PvMonit/config.php');
 
 include('/opt/PvMonit/function.php');
-$PRINTMESSAGE=0;
+
 if ($_GET['cache'] == 'no') {
 	$WWW_CACHE_AGE=1;
 }
+$aucunAffichage=true;
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -37,14 +38,12 @@ if ($_GET['cache'] == 'no') {
 				<?php echo $WWW_MENU; ?>
 			  </ul>
 			</nav>
-            <h1>Pv Monit</h1>
+            <h1>Pv Monit<!-- TRAP TITRE --></h1>
             <p>Monitoring de l'installation solaire électrique</p>
         </div>
         </div>
         <div id="contentwrap">
         <div id="content">
-	
-			<!-- TRAP BOX -->
 						
 			<?php 
 			// VE.DIRECT SCAN 
@@ -52,6 +51,7 @@ if ($_GET['cache'] == 'no') {
 			$ppv_total=null;
 			$nb_ppv_total=0;
 			foreach (vedirect_scan() as $device) {
+				$aucunAffichage=false;
 				echo '<div class="box" id="'.$device['nom'].'">';
 				echo '<div class="title">['.$device['nom'].'] '.$device['modele'].'</div>';
 				sort($device['data']);
@@ -81,7 +81,7 @@ if ($_GET['cache'] == 'no') {
 							echo '<div class="boxvaleur pvw"><h3>Production des panneaux</h3>';
 							$PpvPourcentage=$dataSplit[1]*100/$WWW_PPV_MAX;
 							$jaugeColor='jaugeVerte';
-							if ($PpvPourcentage < 30) 
+							if ($PpvPourcentage < 25) 
 								$jaugeColor='jaugeOrange';
 							if ($PpvPourcentage < 10) 
 								$jaugeColor='jaugeRouge';
@@ -298,20 +298,21 @@ if ($_GET['cache'] == 'no') {
 					$ppv_max_total=$WWW_PPV_MAX*$nb_ppv_total;
 					$PpvPourcentage=$ppv_total*100/$ppv_max_total;
 					$jaugeColor='jaugeVerte';
-					if ($PpvPourcentage < 30) {
+					if ($PpvPourcentage < 25) {
 						$jaugeColor='jaugeOrange';
 					}
 					if ($PpvPourcentage < 10) {
 						$jaugeColor='jaugeRouge';
 					}
 					echo '<div class="boxvaleur pvw"><h3>Production total des panneaux</h3>';
-					echo '<progress class="jaugeRouge" style="width: 80%" max="100" value="'.$PpvPourcentage.'"></progress> '.$ppv_total.'W</div>';
+					echo '<progress class="'.$jaugeColor.'" style="width: 80%" max="100" value="'.$PpvPourcentage.'"></progress> '.$ppv_total.'W</div>';
 				}
 				?>
 				
 				<?php
 				$consommation=consommationCache(); 
 				if ($consommation !== null) {
+					$aucunAffichage=false;
 					echo '<div class="boxvaleur conso"><h3>Consommation de l\'habitat</h3>';
 					if ($consommation === 'NODATA') {
 						echo ' -- Indisponible --';
@@ -329,10 +330,10 @@ if ($_GET['cache'] == 'no') {
 				}
 				?>
 				
-				
 				<?php
 				$temperature=temperatureCache(); 
 				if ($temperature !== null) {
+					$aucunAffichage=false;
 					echo '<div class="boxvaleur temp"><h3>Température du local</h3>';
 					if ($temperature === 'NODATA') {
 						echo ' -- Indisponible --';
@@ -349,6 +350,12 @@ if ($_GET['cache'] == 'no') {
 				}
 				?>
 				
+				<?php
+				if ($aucunAffichage === true) {
+					echo '<div class="boxvaleur">Rien à afficher, copier le fichier config-default.php en config.php et modifier le pour vos paramètres</div>';
+				}
+				?>
+				
 			</div>
 			
 			<?php if (is_file('./windguru.php')) { ?>
@@ -358,12 +365,14 @@ if ($_GET['cache'] == 'no') {
 			</div>
 			<?php } ?>
 		
+			<!-- TRAP BOX -->
+		
 			<div style="clear:both"></div>
         </div>
         </div>
         <div id="footerwrap">
         <div id="footer">
-            <p class="footer_right">By <a href="http://david.mercereau.info/">David Mercereau</a></p>
+            <p class="footer_right">Par <a href="http://david.mercereau.info/">David Mercereau</a> (<a href="https://github.com/kepon85/PvMonit/">Dépôt github</a>)</p>
             <p class="footer_left">Copyleft - <a href="https://fr.wikipedia.org/wiki/Beerware">Licence Beerware</a></p>
         </div>
         </div>

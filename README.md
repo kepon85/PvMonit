@@ -1,18 +1,18 @@
 # PvMonit
 
-Il s'agit d'un petit projet de monitoring photovoltaique pour matériel Victron compatible Ve.direct. Il permet une vue "en direct" et un export de l'historique vers [emoncms](https://openenergymonitor.org/emon/emoncms) (une branche d'[OpenEnergyMonitor project](http://openenergymonitor.org)).
+Il s'agit d'un petit projet de monitoring photovoltaique pour matériel Victron compatible Ve.direct particulièrement adapté pour les installations autonômes. Il permet une vue "en direct" et un export de l'historique vers [emoncms](https://openenergymonitor.org/emon/emoncms) (une branche d'[OpenEnergyMonitor project](http://openenergymonitor.org)).
  
-Mon usage de PvMonit : je dipose d'un RaspberryPi connecté avec des câbles VE.Direct sur mes appareil Victron (MPTT, BMV). PvMonit est installé sur ce RaspberryPi et me permet : 
+Exemple d'usage de PvMonit : je dispose d'un RaspberryPi connecté avec des câbles VE.Direct sur mes appareils Victron (MPTT, BMV). PvMonit est installé sur ce RaspberryPi et me permet : 
 
-  - D'afficher les informations en temps réel sur une page web.
-  - De collecter les données toutes les X minutes, les mettres en caches et les expédier vers [emoncms](https://openenergymonitor.org/emon/node/90) quand internet est là (le wifi n'étant pas toujours allumé)
+  - D'afficher les informations en temps réel sur une page web (local)
+  - De collecter les données toutes les X minutes et les expédier vers [emoncms](https://openenergymonitor.org/emon/node/90) quand internet est là (le wifi n'étant pas toujours allumé)
 
 PvMonit support tout le matériel Victron compatible Ve Direct (via USB) : 
 
   - BMV : 600, 700, 702, 700H
- -  BlueSolar MPPT 75/10, 70/15, 75/14, 100/15, 100/30 rev1, 100/30 rev2, 150/35 rev1, 150/35 rev2, 150/45, 75/50, 100/50 rev1, 100/50 rev2, 150/60, 150/70, 150/85, 150/100
- -  SmartSolar MPPT 150/100,  250/100
- -  Phoenix Inverter 12V 250VA 230V, 24V 250VA 230V, 48V 250VA 230V, 12V 375VA 230V, 24V 375VA 230V, 48V 375VA 230V, 12V 500VA 230V, 24V 500VA 230V, 48V 500VA 230V
+  - BlueSolar MPPT 75/10, 70/15, 75/14, 100/15, 100/30 rev1, 100/30 rev2, 150/35 rev1, 150/35 rev2, 150/45, 75/50, 100/50 rev1, 100/50 rev2, 150/60, 150/70, 150/85, 150/100
+  - SmartSolar MPPT 150/100,  250/100
+  - Phoenix Inverter 12V 250VA 230V, 24V 250VA 230V, 48V 250VA 230V, 12V 375VA 230V, 24V 375VA 230V, 48V 375VA 230V, 12V 500VA 230V, 24V 500VA 230V, 48V 500VA 230V
 
 ### Requis
 
@@ -24,7 +24,7 @@ PvMonit support tout le matériel Victron compatible Ve Direct (via USB) :
 
 ### Installation
 
-PvMonit dipose deux fonctions principal que je vais distinguer :
+PvMonit dispose deux fonctions dissociées et indépendantes que je vais distinguer :
 
   * Interface en temps réèl
   * Export vers emoncms
@@ -223,7 +223,7 @@ Autres documentation à propos de cette sonde :
   - http://www.generation-linux.fr/index.php?post/2014/06/21/Relever-et-grapher-la-temp%C3%A9rature-de-sa-maison-sur-Debian
   - http://dev-random.net/temperature-measuring-using-linux-and-raspberry-pi/
 
-#### Pince amphèrpétrique (option)
+#### Pince ampèremétrique (option)
 
 J'utilise la pince ampèremétrique USB Aviosys 8870 pour mesurer ma consommation électrique. 
 
@@ -261,7 +261,7 @@ Ajout de celle-ci dans le fichier  */opt/PvMonit/config.php* :
 
 ### Todos
 
- - améliorer/passer en fonction pour les "progress" bar
+ - Responsive web interface
  - Traduction en anglais, autres langues
 
 ### Documentation

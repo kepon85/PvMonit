@@ -3,7 +3,11 @@
 # Fonction de debug
 function trucAdir($niveau, $msg) {
 	if ($GLOBALS['PRINTMESSAGE'] >= $niveau) {
-		echo  date('c') . ' - ' . $msg."\n";
+		if (isset($_SERVER['SERVER_NAME'])) {
+			echo  '<script type="text/javascript">console.log(\''.date('c') . ' - ' . strtr($msg, '\'', '\\\'').'\'); </script>';
+		} else {
+			echo  date('c') . ' - ' . $msg."\n";
+		}
 	}
 }
 
