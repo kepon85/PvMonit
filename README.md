@@ -2,10 +2,12 @@
 
 Il s'agit d'un petit projet de monitoring photovoltaique pour matériel Victron compatible Ve.direct particulièrement adapté pour les installations autonômes. Il permet une vue "en direct" et un export de l'historique vers [emoncms](https://openenergymonitor.org/emon/emoncms) (une branche d'[OpenEnergyMonitor project](http://openenergymonitor.org)).
  
-Exemple d'usage de PvMonit : je dispose d'un RaspberryPi connecté avec des câbles VE.Direct sur mes appareils Victron (MPTT, BMV). PvMonit est installé sur ce RaspberryPi et me permet : 
+Exemple d'usage de PvMonit : je dispose d'un RaspberryPi, mes appareils Victron (MPTT, BMV) sont connectés avec des câbles VE.Direct. PvMonit est installé sur ce RaspberryPi et me permet : 
 
   - D'afficher les informations en temps réel sur une page web (local)
   - De collecter les données toutes les X minutes et les expédier vers [emoncms](https://openenergymonitor.org/emon/node/90) quand internet est là (le wifi n'étant pas toujours allumé)
+
+![Schéma exemple utilisation PvMonit avec Raspberry](https://framapic.org/l2kmekL7AOzq/4nao9uYjviAW.png)
 
 PvMonit support tout le matériel Victron compatible Ve Direct (via USB) : 
 
@@ -16,7 +18,7 @@ PvMonit support tout le matériel Victron compatible Ve Direct (via USB) :
 
 ### Requis
 
-  * Linux
+  * Linux (le tutoriel ci-dessous est prévu pour Debian/Rasbian/Ubuntu like)
   * PHP (5.5-5.6 recomended)
   * Lighttpd/Apache (au autre serveur web)
   * Perl
@@ -33,7 +35,7 @@ Il y a bien sûr, une base commune :
 
 #### La base / le socle
 
-Installation des dépendances et de PvMonit via le dépôt git :
+Installation de PvMonit via le dépôt git et de ces dépendances :
 
 ```bash
 aptitude install php5-cli git python-serial sudo
@@ -42,7 +44,7 @@ git clone https://github.com/kepon85/PvMonit.git
 cp config-default.php config.php```
 ```
 
-Vous pouvez éditer le fichier config.php à votre guise !
+Vous pouvez maintenant éditer le fichier config.php à votre guise !
 
 Test du script vedirect.py : brancher un appareil Victron avec un Câble Ve.Direct USB et voici un exemple de ce que vous devriez optenir (Ici un MPTT BlueSolare branché sur le ttyUS0)
 
@@ -65,7 +67,6 @@ Test du script vedirect.py : brancher un appareil Victron avec un Câble Ve.Dire
     HSDS:52
 
 Pour comprendre chaque valeur télécharger la documentation *Victron VE Direct Protocol documentation* : https://www.victronenergy.fr/support-and-downloads/whitepapers
-
 
 #### Interface web en temps réèl
 
@@ -107,7 +108,7 @@ visudo
 Ajouter la ligne suivante : 
 
 ```diff
-+ www-data ALL=(ALL) NOPASSWD: /usr/bin/perl /opt/PvMonit/ampermetre.pl, /usr/bin/python /opt/PvMonit/vedirect.py /dev/tty*
++ www-data ALL=(ALL) NOPASSWD: /usr/bin/perl /opt/PvMonit/ampermetre.pl, /opt/temperv14/temperv14 -c, /usr/bin/python /opt/PvMonit/vedirect.py /dev/tty*
 ```
 
 C'est terminé, vous pouvez vous connecter sur votre IP local pour joindre votre serveur web : 
@@ -116,7 +117,7 @@ FIXME	SCREENSHOT
 
 #### Export vers emoncms
 
-Connectez-vous à votre interface emoncms hébergé ou créer un compte sur [emoncms.org](https://emoncms.org/) et rendez-vous sur la page Input api https://emoncms.org/input/api :
+Connectez-vous à votre interface emoncms hébergé ou créer un compte sur [emoncms.org](https://emoncms.org/) et rendez-vous sur la page "Input api" https://emoncms.org/input/api :
 
 ![Screenshot input API emoncms](http://david.mercereau.info/wp-content/uploads/2016/11/Sélection_011.png)
 
@@ -188,6 +189,7 @@ Je n'explique pas, ici comment configurer emoncms, les flux pour obtenir de beau
 
 ![Screenshot source config emoncms](http://david.mercereau.info/wp-content/uploads/2016/11/emoncms_source_config.png)
 
+Voici, pour exemple, mon dashboard : http://emoncms.mercereau.info/dashboard/view?id=1
 
 #### Sonde température (option)
 
@@ -261,7 +263,7 @@ Ajout de celle-ci dans le fichier  */opt/PvMonit/config.php* :
 
 ### Todos
 
- - Traduction en anglais, autres langues
+ - Traduction en anglais (tu veux le faire ?)
 
 ### Documentation
 
