@@ -9,7 +9,7 @@
 $PRINTMESSAGE=3;	# 0=0	5=debug
 
 # Binaire de vedirect.py
-$VEDIRECT_BIN = '/usr/bin/sudo /usr/bin/python /opt/PvMonit/vedirect.py';
+$VEDIRECT_BIN = '/usr/bin/sudo /usr/bin/python /opt/PvMonit/bin/vedirect.py';
 # MPTT donnée récolté (voir la doc victron sur le protocole VE.Direct)
 $VEDIRECT_MPTT_DATA=array ('CS', 'PPV', 'V', 'ERR', 'I', 'VPV', 'H19', 'H20', 'H21', 'H22', 'H23');
 # BMV donnée récolté (voir la doc victron sur le protocole VE.Direct)
@@ -29,7 +29,7 @@ $SONDE_TEMPERATURE_CORRECTION='0';
 ## Pince amphèrmétrique
 # Binaire ampèrmetre.pl
 $AMPEREMETRE_BIN = '';
-//$AMPEREMETRE_BIN = '/usr/bin/sudo /usr/bin/perl /opt/PvMonit/ampermetre.pl';
+//$AMPEREMETRE_BIN = '/usr/bin/sudo /usr/bin/perl /opt/PvMonit/bin/ampermetre.pl';
 # Plafont de consommation en W impossible à dépasser (techniquement, sinon c'est une erreur de sonde)
 $CONSO_PLAFOND = 1500;
 
