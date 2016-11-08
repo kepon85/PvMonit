@@ -65,5 +65,9 @@ $WWW_MENU='	<li><a href="http://pvmonit.zici.fr">PvMonit projet</a></li>
 			<li><a href="http://emoncms.org/dashboard/view?id=VOTREIDs">EmonCMS (historique)</a></li>
 			<li><a href="http://www.windguru.cz">Windguru</a></li>
 			';
+$WWW_VEDIRECT_DATA_PRIMAIRE=array ('V', 'PPV', 'ERR', 'CS', 'P', 'SOC', 'TTG', 'MODE', 'AC_OUT_V', 'AC_OUT_I', 'WARN');
+
+### En Shell
+$SHELL_VEDIRECT_DATA_PRIMAIRE=array ('V', 'PPV', 'ERR', 'CS', 'P', 'SOC', 'TTG', 'MODE', 'AC_OUT_V', 'AC_OUT_I', 'WARN');
 
 ?>
