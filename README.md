@@ -48,7 +48,7 @@ Vous pouvez maintenant éditer le fichier config.php à votre guise !
 
 Test du script vedirect.py : brancher un appareil Victron avec un Câble Ve.Direct USB et voici un exemple de ce que vous devriez optenir (Ici un MPTT BlueSolare branché sur le ttyUS0)
 
-    $ /opt/PvMonit/vedirect.py /dev/ttyUSB0 
+    $ /opt/PvMonit/bin/vedirect.py /dev/ttyUSB0 
     PID:0xA04A
     FW:119
     SER#:HQ********
@@ -108,7 +108,7 @@ visudo
 Ajouter la ligne suivante : 
 
 ```diff
-+ www-data ALL=(ALL) NOPASSWD: /usr/bin/perl /opt/PvMonit/ampermetre.pl, /opt/temperv14/temperv14 -c, /usr/bin/python /opt/PvMonit/vedirect.py /dev/tty*
++ www-data ALL=(ALL) NOPASSWD: /usr/bin/perl /opt/PvMonit/bin/ampermetre.pl, /opt/temperv14/temperv14 -c, /usr/bin/python /opt/PvMonit/bin/vedirect.py /dev/tty*
 ```
 
 C'est terminé, vous pouvez vous connecter sur votre IP local pour joindre votre serveur web : 
@@ -152,7 +152,7 @@ visudo
 Ajouter la ligne suivante : 
 
 ```diff
-+ pvmonit ALL=(ALL) NOPASSWD: /opt/temperv14/temperv14 -c, /usr/bin/perl /opt/PvMonit/ampermetre.pl, /usr/bin/python /opt/PvMonit/vedirect.py /dev/tty*Ajout de celle-ci dans le fichier  */opt/PvMonit/config.php* :
++ pvmonit ALL=(ALL) NOPASSWD: /opt/temperv14/temperv14 -c, /usr/bin/perl /opt/PvMonit/bin/ampermetre.pl, /usr/bin/python /opt/PvMonit/bin/vedirect.py /dev/tty*Ajout de celle-ci dans le fichier  */opt/PvMonit/config.php* :
 ```
 
 Test de collecte :
@@ -229,28 +229,17 @@ Autres documentation à propos de cette sonde :
 
 J'utilise la pince ampèremétrique USB Aviosys 8870 pour mesurer ma consommation électrique. 
 
-Ajouter un petit script perl (/opt/PvMonit/ampermetre.pl) très simple pour lire la pince ampèremétrique sui sera branché en USB et apparaîtra dans votre système sur le port /dev/ttyACM0
+Le petit script perl (/opt/PvMonit/bin/ampermetre.pl), très simple pour lire la pince ampèremétrique sui sera branché en USB et apparaîtra dans votre système sur le port /dev/ttyACM0
 
-```perl
-#!/usr/bin/perl
-use Device::SerialPort;
-my $file = "/dev/ttyACM0";
-my $port = Device::SerialPort -> new($file);
-$port -> baudrate(19200);
-$port->write_settings();
-open(DEV, "<$file") or die;
-$port->write(); 
-if ($_ = <DEV>) { print $_ ; }
-```
 Celui-ci dépend de la librairie serialport : 
 
 ```bash
-aptitde install  libdevice-serialport-perl
+aptitde install libdevice-serialport-perl
 ```
 
 Test : :
 ```bash
-$ /opt/PvMonit/ampermetre.pl 
+$ /opt/PvMonit/bin/ampermetre.pl 
 00.1A
 ```
 
@@ -258,7 +247,7 @@ Ajout de celle-ci dans le fichier  */opt/PvMonit/config.php* :
 
 ```diff
 - $AMPEREMETRE_BIN = '';
-+ $AMPEREMETRE_BIN = '/usr/bin/sudo /usr/bin/perl /opt/PvMonit/ampermetre.pl';
++ $AMPEREMETRE_BIN = '/usr/bin/sudo /usr/bin/perl /opt/PvMonit/bin/ampermetre.pl';
 ```
 
 ### Todos
