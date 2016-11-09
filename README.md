@@ -250,6 +250,37 @@ Ajout de celle-ci dans le fichier  */opt/PvMonit/config.php* :
 + $AMPEREMETRE_BIN = '/usr/bin/sudo /usr/bin/perl /opt/PvMonit/bin/ampermetre.pl';
 ```
 
+#### Ecran LED
+
+J'utilise un petit afficheur USB de chez [Dream Cheeky](http://www.dreamcheeky.com/index.php?pagename=product&pid=52)
+
+  - Documentation : http://www.last-outpost.com/~malakai/dcled/
+
+```bash
+aptitude install libusbhid-common
+cd /opt
+wget http://www.last-outpost.com/~malakai/dcled/dcled-2.2.tgz
+tar -xzvf dcled-2.2.tgz
+mv dcled-2.2 dcled
+cd dcled
+make
+# test : 
+./dcled --clock
+```
+
+Ajout de celle-ci dans le fichier  */opt/PvMonit/config.php* :
+
+```diff
+-$LED_BIN='';
++$LED_BIN='/opt/dcled/dcled';
+```
+
+Lancement du script 
+
+```bash
+/opt/PvMonit/getToLed.php &
+```
+
 ### Todos
 
  - www, shell & led : pouvoir configurer ce qui est afficher par défault de ce qui ne l'est pas ;

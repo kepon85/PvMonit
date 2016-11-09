@@ -70,4 +70,9 @@ $WWW_VEDIRECT_DATA_PRIMAIRE=array ('V', 'PPV', 'ERR', 'CS', 'P', 'SOC', 'TTG', '
 ### En Shell
 $SHELL_VEDIRECT_DATA_PRIMAIRE=array ('V', 'PPV', 'ERR', 'CS', 'P', 'SOC', 'TTG', 'MODE', 'AC_OUT_V', 'AC_OUT_I', 'WARN');
 
+### En Led
+//$LED_BIN='/opt/dcled/dcled';
+$LED_BIN='';
+$LED_VEDIRECT_DATA_PRIMAIRE=array ('PPV');
+
 ?>

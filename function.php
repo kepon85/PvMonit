@@ -72,11 +72,13 @@ function ve_label2($label, $valeur) {
 			$veData['units']='V';
 		break;
 		case 'I':
+			$veData['value']=$valeur*0.001;
 			$veData['desc']='Courant de la batterie';
-			$veData['units']='mA';
+			$veData['units']='A';
 		break;
 		case 'PPV':
 			$veData['desc']='Production des panneaux';
+			$veData['descShort']='PV';
 			$veData['units']='W';
 		break;
 		case 'ERR':
@@ -107,12 +109,12 @@ function ve_label2($label, $valeur) {
 			$veData['units']='mV';
 		break;
 		case 'H19':
-			$veData['value']=$valeur*0.001;
+			$veData['value']=$valeur*0.01;
 			$veData['desc']='Le rendement total';
 			$veData['units']='kWh';
 		break;
 		case 'H20':
-			$veData['value']=$valeur*0.001;
+			$veData['value']=$valeur*0.01;
 			$veData['desc']='Rendement aujourd\'hui';
 			$veData['units']='kWh';
 		break;
@@ -121,7 +123,7 @@ function ve_label2($label, $valeur) {
 			$veData['units']='W';
 		break;
 		case 'H22':
-			$veData['value']=$valeur*0.001;
+			$veData['value']=$valeur*0.01;
 			$veData['desc']='Rendemain hier';
 			$veData['units']='kWh';
 		break;
@@ -178,12 +180,12 @@ function ve_label2($label, $valeur) {
 		break;
 		case 'H17':
 			$veData['desc']='Amount of discharged energy';
-			$veData['value']=$valeur*0.001;
+			$veData['value']=$valeur*0.01;
 			$veData['units']='kWh';
 		break;
 		case 'H18':
 			$veData['desc']='Amount of charged energy';
-			$veData['value']=$valeur*0.001;
+			$veData['value']=$valeur*0.01;
 			$veData['units']='kWh';
 		break;
 		case 'H13':
@@ -281,10 +283,14 @@ function ve_label2($label, $valeur) {
 			}
 		break;
 		case 'AC_OUT_V':
-			$veData['desc']='AC output voltage (0,01V)';
+			$veData['value']=$valeur*0.01;
+			$veData['desc']='AC output voltage';
+			$veData['units']='V';
 		break;
 		case 'AC_OUT_I':
-			$veData['desc']='AC output current (0.1 A)';
+			$veData['desc']='AC output current';
+			$veData['value']=$valeur*0.1;
+			$veData['units']='A';
 		break;
 		case 'WARN':
 			$veData['desc']='Warning reason';
