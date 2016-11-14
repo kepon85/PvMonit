@@ -67,7 +67,7 @@ function ve_label2($label, $valeur) {
 	}
 	switch ($label) {
 		case 'V':
-			$veData['value']=$valeur*0.001;
+			$veData['value']=round($valeur*0.001, 2);
 			$veData['desc']='Tension de la batterie';
 			$veData['units']='V';
 		break;
@@ -179,12 +179,12 @@ function ve_label2($label, $valeur) {
 			$veData['units']='%';
 		break;
 		case 'H17':
-			$veData['desc']='Amount of discharged energy';
+			$veData['desc']='Quantité d\'énergie déchargée';
 			$veData['value']=$valeur*0.01;
 			$veData['units']='kWh';
 		break;
 		case 'H18':
-			$veData['desc']='Amount of charged energy';
+			$veData['desc']='Quantité d\'énergie chargée';
 			$veData['value']=$valeur*0.01;
 			$veData['units']='kWh';
 		break;
@@ -200,41 +200,53 @@ function ve_label2($label, $valeur) {
 			$veData['units']='V';
 		break;
 		case 'CE':
-			$veData['desc']='Consumed Amp Hours';
+			$veData['desc']='Ampères heures consommées';
 			$veData['value']=$valeur*0.001;
 			$veData['units']='Ah';
 		break;
 		case 'SOC':
-			$veData['desc']='State-of-charge';
+			$veData['desc']='État de charge';
+			$veData['value']=$valeur/10;
 			$veData['units']='%';
 		break;
 		case 'TTG':
-			$veData['desc']='Time-to-go';
-			$veData['units']='min.';
+			$total=$veData['value']*60;
+			$jours=floor($total/86400);
+			$reste=$total%86400;
+			$heures=floor($reste/3600);
+			$reste=$reste%3600;
+			$minutes=floor($reste/60);
+			$secondes=$reste%60;
+		    if ($veData['value'] > 1440) {				
+				$veData['value'] = $jours . 'j '. $heures. 'h ' . $minutes .'m';
+			} else {
+				$veData['value'] = '.<b>'.$heures. 'h ' . $minutes .'m</b>';
+			}
+			$veData['desc']='Temps restant';
 		break;
 		case 'Alarm':
-			$veData['desc']='Alarm condition active';
+			$veData['desc']='Condition d\'alarme active';
 		break;
 		case 'H1':
-			$veData['desc']='Depth of the deepest discharge';
+			$veData['desc']='Profondeur de la décharge la plus profonde';
 			$veData['value']=$valeur*0.001;
 			$veData['units']='Ah';
 		break;
 		case 'H2':
-			$veData['desc']='Depth of the last discharge';
+			$veData['desc']='Profondeur de la dernière décharge';
 			$veData['value']=$valeur*0.001;
 			$veData['units']='Ah';
 		break;
 		case 'H3':
-			$veData['desc']='Depth of the average discharge';
+			$veData['desc']='Profondeur de la décharge moyenne';
 			$veData['value']=$valeur*0.001;
 			$veData['units']='Ah';
 		break;
 		case 'H4':
-			$veData['desc']='Number of charge cycles';
+			$veData['desc']='Nombre de cycles de charge';
 		break;
 		case 'H5':
-			$veData['desc']='Number of full discharges';
+			$veData['desc']='Nombre de cycles de décharge';
 		break;
 		case 'H6':
 			$veData['desc']='Cumulative Amp Hours drawn';
@@ -242,27 +254,27 @@ function ve_label2($label, $valeur) {
 			$veData['units']='Ah';
 		break;
 		case 'H7':
-			$veData['desc']='Minimum main (battery) voltage';
+			$veData['desc']='Tension minimale batterie';
 			$veData['value']=$valeur*0.001;
 			$veData['units']='V';
 		break;
 		case 'H8':
-			$veData['desc']='Maximum main (battery) voltage';
+			$veData['desc']='Tension maximale de la batterie';
 			$veData['value']=$valeur*0.001;
 			$veData['units']='V';
 		break;
 		case 'H9':
-			$veData['desc']='Number of seconds since last full charge';
+			$veData['desc']='Nombre de secondes depuis la dernière charge complète';
 			$veData['units']='s';
 		break;
 		case 'H10':
-			$veData['desc']='Number of automatic synchronizations';
+			$veData['desc']='Nombre de synchronisations automatiques';
 		break;
 		case 'H11':
-			$veData['desc']='Number of low main voltage alarms';
+			$veData['desc']='Nombre d\'alarmes de tension faible';
 		break;
 		case 'H12':
-			$veData['desc']='Number of high main voltage alarms';
+			$veData['desc']='Nombre d\'alarmes de tension élevée';
 		break;
 		case 'H13':
 			$veData['desc']='Minimum auxiliary (battery) voltage';
@@ -474,6 +486,7 @@ function temperatureCache() {
 		}
 	}
 }
+
 function consommationCache() {
 	$ficherCache=$GLOBALS['WWW_CACHE_FILE'].'conso';
 	if (!file_exists($ficherCache)) {
@@ -491,6 +504,61 @@ function consommationCache() {
 			return $consommation;
 		}
 	}
+}
+
+// Class source : http://abhinavsingh.com/how-to-use-locks-in-php-cron-jobs-to-avoid-cron-overlaps/
+class cronHelper {
+
+	private static $pid;
+
+	function __construct() {}
+
+	function __clone() {}
+
+	private static function isrunning() {
+		$pids = explode(PHP_EOL, `ps -e | awk '{print $1}'`);
+		if(in_array(self::$pid, $pids))
+			return TRUE;
+		return FALSE;
+	}
+
+	public static function lock() {
+		global $argv;
+
+		$lock_file = $GLOBALS['LOCKFILE'];
+
+		if(file_exists($lock_file)) {
+			//return FALSE;
+
+			// Is running?
+			self::$pid = file_get_contents($lock_file);
+			if(self::isrunning()) {
+				error_log("==".self::$pid."== Already in progress...");
+				return FALSE;
+			}
+			else {
+				error_log("==".self::$pid."== Previous job died abruptly...");
+			}
+		}
+
+		self::$pid = getmypid();
+		file_put_contents($lock_file, self::$pid);
+		//error_log("==".self::$pid."== Lock acquired, processing the job...");
+		return self::$pid;
+	}
+
+	public static function unlock() {
+		global $argv;
+
+		$lock_file = $GLOBALS['LOCKFILE'];
+
+		if(file_exists($lock_file))
+			unlink($lock_file);
+
+		//error_log("==".self::$pid."== Releasing lock...");
+		return TRUE;
+	}
+
 }
 
 ?>

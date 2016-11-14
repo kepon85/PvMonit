@@ -36,7 +36,9 @@ function sauvegardeDesDonnes($data) {
 
 # Scan des périphérique VE.Direct Victron
 foreach (vedirect_scan() as $device) {
-	sauvegardeDesDonnes("www-browser --dump '".$EMONCMS_URL_INPUT_JSON_POST."?json={".$device['data']."}&node=".$device['nom']."&time=".time()."&apikey=".$EMONCMS_API_KEY."'\n");
+	if ($device['nom'] != '') {
+		sauvegardeDesDonnes("www-browser --dump '".$EMONCMS_URL_INPUT_JSON_POST."?json={".$device['data']."}&node=".$device['nom']."&time=".time()."&apikey=".$EMONCMS_API_KEY."'\n");
+	}
 }
 
 $dataNode1=null;

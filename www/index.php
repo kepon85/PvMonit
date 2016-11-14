@@ -102,6 +102,28 @@ $aucunAffichage=true;
 							echo $veData['value'];
 							echo '</div>';
 						break;
+						case 'SOC':
+							echo '<div class="boxvaleur soc"><h3>'.$veData['desc'].'</h3>';
+							$jaugeColor='jaugeVerte';
+							if ($veData['value'] < 80) 
+								$jaugeColor='jaugeOrange';
+							if ($veData['value'] < 60) 
+								$jaugeColor='jaugeRouge';
+							echo '<progress class="'.$jaugeColor.'" style="width: 200px" max="100" value="'.$veData['value'].'"></progress> ';
+							echo $veData['value'].$veData['units'];
+							echo '</div>';
+						break;
+						case 'AR':
+							echo '<div class="boxvaleur ar"><h3>'.$veData['desc'].'</h3>';
+							if ($veData['value'] == 'Aucune') {
+								echo $veData['value'];
+							} else {
+								echo '<b style="color: red">';
+								echo $veData['value'];
+								echo '</b>';
+							}
+							echo '</div>';
+						break;
 						default:
 							echo '<div class="boxvaleur '.$veData['plus'].'">'.$veData['desc'].' : '.$veData['value'].$veData['units'].'</div>';
 						break;

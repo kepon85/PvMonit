@@ -283,8 +283,6 @@ Lancement du script
 
 ### Todos
 
- - www, shell & led : pouvoir configurer ce qui est afficher par défault de ce qui ne l'est pas ;
- - led : affichage sur l'écran led (conso, température, total prod PV) ;
  - shell en couleur avec des jauges et tout ;
  - Traduction en anglais (tu veux le faire ?) ;
 

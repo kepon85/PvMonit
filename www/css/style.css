@@ -125,20 +125,23 @@ progress.jaugeBleu::-moz-progress-bar { background: #8590F7; }
 	background-position: left top;
     background-repeat: no-repeat;
 }
-.box .cs {
+.box .cs, 
+.box .soc {
 	height: 28px;
 	padding-left: 38px;
 	background-image: url("../images/CS.png");
 	background-position: left top;
     background-repeat: no-repeat;
 }
-.box .err {
+.box .err,
+.box .ar {
 	height: 28px;
 	padding-left: 38px;
 	background-image: url("../images/ERR.png");
 	background-position: left top;
     background-repeat: no-repeat;
 }
+
 .box .temp {
 	height: 28px;
 	padding-left: 38px;

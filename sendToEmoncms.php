@@ -13,6 +13,9 @@ if (is_file('/opt/PvMonit/config.php')) {
 }
 
 include('/opt/PvMonit/function.php');
+
+if(($pid = cronHelper::lock()) !== FALSE) {
+
 trucAdir(5, 'Lancement du script');
 
 // Test internet
@@ -36,6 +39,7 @@ if (!is_dir($GLOBALS['DATA_COLLECTE_ERROR'])) {
 // Expédition des données
 $dataOk=0;
 $dataNok=0;
+$attenteCompteur=10;
 foreach (scandir($GLOBALS['DATA_COLLECTE']) as $fichierData) {
 	if (is_file($GLOBALS['DATA_COLLECTE'].'/'.$fichierData)) {
 		// Compte le nombre de ligne pour savoir quel réponse (nombre de Ok) est attendu
@@ -57,13 +61,26 @@ foreach (scandir($GLOBALS['DATA_COLLECTE']) as $fichierData) {
 			trucAdir(4, 'Donnée '.$GLOBALS['DATA_COLLECTE'].'/'.$fichierData.' correctement envoyées');
 			unlink($GLOBALS['DATA_COLLECTE'].'/'.$fichierData);
 			$dataOk++;
+			sleep($GLOBALS['SLEEP_OK']);
+			if ($dataOk == $attenteCompteur) {
+				trucAdir(5, 'Patiente 3 seconde, le serveur HTTP t\'en remercie !');
+				sleep(3);
+				$attenteCompteur = $attenteCompteur + 10;
+			}
 		} else {
 			trucAdir(1, 'Problème avec le fichier '.$GLOBALS['DATA_COLLECTE'].'/'.$fichierData.' le retour est : '.$send_sortie[0]);
 			rename($GLOBALS['DATA_COLLECTE'].'/'.$fichierData, $GLOBALS['DATA_COLLECTE_ERROR'].'/'.$fichierData);
 			$dataNok++;
+			trucAdir(5, 'Patiente '.$GLOBALS['SLEEP_NOK'].' seconde, le serveur HTTP t\'en remercie !');
+			sleep($GLOBALS['SLEEP_NOK']);
 		}	
 	}
 }
 trucAdir(1, 'Données correctements envoyées : '.$dataOk.', données en erreurs : '.$dataNok);
-exit(0);
+
+cronHelper::unlock();
+} else {
+	trucAdir(1, 'Le script est déjà en cours d\'exécution, le fichier de lock est présent');
+}
+
 ?>

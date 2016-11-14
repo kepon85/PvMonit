@@ -13,7 +13,7 @@ $VEDIRECT_BIN = '/usr/bin/sudo /usr/bin/python /opt/PvMonit/bin/vedirect.py';
 # MPTT donnée récolté (voir la doc victron sur le protocole VE.Direct)
 $VEDIRECT_MPTT_DATA=array ('CS', 'PPV', 'V', 'ERR', 'I', 'VPV', 'H19', 'H20', 'H21', 'H22', 'H23');
 # BMV donnée récolté (voir la doc victron sur le protocole VE.Direct)
-$VEDIRECT_BMV_DATA=array ('V', 'VS', 'VM', 'DM', 'I', 'T', 'P', 'CE', 'SOC', 'TTG', 'Alarm', '', 'AR', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'H7', 'H8', 'H9', 'H10', 'H11', 'H12', 'H13', 'h14', 'H15', 'H16', 'H17', 'H18');
+$VEDIRECT_BMV_DATA=array ('V', 'VS', 'VM', 'DM', 'I', 'T', 'P', 'CE', 'SOC', 'TTG', 'AR', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'H7', 'H8', 'H9', 'H10', 'H11', 'H12', 'H13', 'h14', 'H15', 'H16', 'H17', 'H18');
 # Phoenix Inverter donnée récolté (voir la doc victron sur le protocole VE.Direct)
 $VEDIRECT_PHOENIX_DATA=array ('P', 'CS', 'MODE', 'AC_OUT_V', 'AC_OUT_I', 'WARN');
 # Numéro de série (champs SER#) en correspondance avec des nom buvables
@@ -45,6 +45,12 @@ $EMONCMS_API_KEY='XXXXXXXXXXXXXXXXXXXXXXXX';
 $DATA_COLLECTE='/tmp/PvMonit.collecteData';
 # Dossier ou ranger les erreurs
 $DATA_COLLECTE_ERROR=$DATA_COLLECTE.'_erreur';
+# Attente entre deux requête OK
+$SLEEP_OK=1;
+# Attente entre deux requête échoué
+$SLEEP_NOK=3;
+# Fichier de lock pour éviter les doublons
+$LOCKFILE='/tmp/PvMonit.sendToEmoncms.lock';
 
 
 ### Page Web : 
@@ -65,7 +71,7 @@ $WWW_MENU='	<li><a href="http://pvmonit.zici.fr">PvMonit projet</a></li>
 			<li><a href="http://emoncms.org/dashboard/view?id=VOTREIDs">EmonCMS (historique)</a></li>
 			<li><a href="http://www.windguru.cz">Windguru</a></li>
 			';
-$WWW_VEDIRECT_DATA_PRIMAIRE=array ('V', 'PPV', 'ERR', 'CS', 'P', 'SOC', 'TTG', 'MODE', 'AC_OUT_V', 'AC_OUT_I', 'WARN');
+$WWW_VEDIRECT_DATA_PRIMAIRE=array ('V', 'PPV', 'ERR', 'CS', 'SOC', 'AR', 'P', 'TTG', 'MODE', 'AC_OUT_V', 'AC_OUT_I', 'WARN');
 
 ### En Shell
 $SHELL_VEDIRECT_DATA_PRIMAIRE=array ('V', 'PPV', 'ERR', 'CS', 'P', 'SOC', 'TTG', 'MODE', 'AC_OUT_V', 'AC_OUT_I', 'WARN');
