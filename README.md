@@ -113,7 +113,7 @@ Ajouter la ligne suivante :
 
 C'est terminé, vous pouvez vous connecter sur votre IP local pour joindre votre serveur web : 
 
-FIXME	SCREENSHOT
+[![Screenshot input API emoncms]http://david.mercereau.info/wp-content/uploads/2016/11/PvMonit-300x205.png)](http://david.mercereau.info/wp-content/uploads/2016/11/PvMonit.png)
 
 #### Export vers emoncms
 
