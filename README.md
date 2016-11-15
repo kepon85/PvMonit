@@ -2,7 +2,7 @@
 
 Il s'agit d'un petit projet de monitoring photovoltaique pour matériel Victron compatible Ve.direct particulièrement adapté pour les installations autonômes. Il permet une vue "en direct" et un export de l'historique vers [emoncms](https://openenergymonitor.org/emon/emoncms) (une branche d'[OpenEnergyMonitor project](http://openenergymonitor.org)).
 
-![Screenshot PvMonit](http://david.mercereau.info/wp-content/uploads/2016/11/PvMonit.png) 
+![Screenshot PvMonit](http://david.mercereau.info/wp-content/uploads/2016/11/banPvMonit.jpeg) 
  
 Exemple d'usage de PvMonit : je dispose d'un RaspberryPi, mes appareils Victron (MPTT, BMV) sont connectés avec des câbles VE.Direct. PvMonit est installé sur ce RaspberryPi et me permet : 
 
@@ -22,22 +22,22 @@ PvMonit support tout le matériel Victron compatible Ve Direct (via USB) :
 
   * Linux (le tutoriel ci-dessous est prévu pour Debian/Rasbian/Ubuntu like)
   * PHP (5.5-5.6 recomended)
-  * Lighttpd/Apache (au autre serveur web)
+  * Lighttpd/Apache (ou autre serveur web)
   * Perl
   * Python
 
 ### Installation
 
-PvMonit dispose deux fonctions dissociées et indépendantes que je vais distinguer :
+PvMonit dispose de deux fonctions dissociées et indépendantes que je vais distinguer :
 
-  * Interface en temps réèl
+  * Interface en temps réel
   * Export vers emoncms
 
 Il y a bien sûr, une base commune :
 
 #### La base / le socle
 
-Installation de PvMonit via le dépôt git et de ces dépendances :
+Installation de PvMonit via le dépôt git et de ses dépendances :
 
 ```bash
 aptitude install php5-cli git python-serial sudo
@@ -48,7 +48,7 @@ cp config-default.php config.php```
 
 Vous pouvez maintenant éditer le fichier config.php à votre guise !
 
-Test du script vedirect.py : brancher un appareil Victron avec un Câble Ve.Direct USB et voici un exemple de ce que vous devriez optenir (Ici un MPTT BlueSolare branché sur le ttyUS0)
+Test du script vedirect.py : brancher un appareil Victron avec un Câble Ve.Direct USB et voici un exemple de ce que vous devriez obtenir (Ici un MPTT BlueSolare branché sur le ttyUS0)
 
     $ /opt/PvMonit/bin/vedirect.py /dev/ttyUSB0 
     PID:0xA04A
@@ -68,9 +68,9 @@ Test du script vedirect.py : brancher un appareil Victron avec un Câble Ve.Dire
     H23:167
     HSDS:52
 
-Pour comprendre chaque valeur télécharger la documentation *Victron VE Direct Protocol documentation* : https://www.victronenergy.fr/support-and-downloads/whitepapers
+Pour comprendre chaque valeur, téléchargez la documentation *Victron VE Direct Protocol documentation* : https://www.victronenergy.fr/support-and-downloads/whitepapers
 
-#### Interface web en temps réèl
+#### Interface web en temps réel
 
 Installation des dépendances : 
 
@@ -80,7 +80,7 @@ lighttpd-enable-mod fastcgi
 lighttpd-enable-mod fastcgi-php
 ```
 
-Configuration du du serveur http, avec le fichier /etc/lighttpd/lighttpd.conf : 
+Configuration du serveur http, avec le fichier /etc/lighttpd/lighttpd.conf : 
 
     server .document-root        = "/opt/PvMonit/www"
     server.pid-file             = "/var/run/lighttpd.pid"
@@ -99,7 +99,7 @@ On applique la configuration :
 service lighttpd restart
 ```
 
-On ajout ensuite la possibilité à l'utilisateur exécutant lighttpd de lancer les script avec sudo sans mot de passe : 
+On ajoute ensuite la possibilité à l'utilisateur exécutant lighttpd de lancer les script avec sudo sans mot de passe : 
 
 Lancer la commande :
 
@@ -119,11 +119,11 @@ C'est terminé, vous pouvez vous connecter sur votre IP local pour joindre votre
 
 #### Export vers emoncms
 
-Connectez-vous à votre interface emoncms hébergé ou créer un compte sur [emoncms.org](https://emoncms.org/) et rendez-vous sur la page "Input api" https://emoncms.org/input/api :
+Connectez-vous à votre interface emoncms hébergée ou créez un compte sur [emoncms.org](https://emoncms.org/) et rendez-vous sur la page "Input api" https://emoncms.org/input/api :
 
 ![Screenshot input API emoncms](http://david.mercereau.info/wp-content/uploads/2016/11/Sélection_011.png)
 
-Récupérer la valeur "Accès en écriture" et ajouter la dans le fichier de configuration Pvmonit  */opt/PvMonit/config.php* :
+Récupérez la valeur "Accès en écriture" et ajoutez-la dans le fichier de configuration Pvmonit  */opt/PvMonit/config.php* :
 
 ```diff
 - $EMONCMS_URL_INPUT_JSON_POST='https://emoncms.chezvous.org/input/post.json';
@@ -132,7 +132,7 @@ Récupérer la valeur "Accès en écriture" et ajouter la dans le fichier de con
 + $EMONCMS_API_KEY='????VOTRE API KEY?????';
 ```
 
-Création d'un utilisateur dédier avec pouvoir restreint 
+Création d'un utilisateur dédié avec pouvoir restreint 
 
 ```bash
 adduser --shell /bin/bash pvmonit
@@ -141,9 +141,10 @@ adduser --shell /bin/bash pvmonit
 Installation des dépendances :
 
 ```bash
-aptitde install lynx 
+aptitude install lynx 
 ```
-On ajout ensuite la possibilité à l'utilisateur exécutant l'export de lancer les script avec sudo sans mot de passe : 
+
+On ajoute ensuite la possibilité à l'utilisateur exécutant l'export de lancer les scripts avec sudo sans mot de passe : 
 
 Lancer la commande :
 
@@ -174,7 +175,7 @@ Test d'envoi des données :
     $ su - pvmonit -c /opt/PvMonit/sendToEmoncms.php 
     2016-11-02T10:56:44+01:00 - Données correctements envoyées : 1, données en erreurs : 0
 
-Mettre les script en tâche planifier
+Mettre les scripts en tâche planifiée
 
 ```bash
 crontab -e -u pvmonit
@@ -187,7 +188,7 @@ Ajouter :
 +3,33 * * * * /usr/bin/php /opt/PvMonit/sendToEmoncms.php >> /tmp/PvMonit.sendToEmoncms.log
 ```
 
-Je n'explique pas, ici comment configurer emoncms, les flux pour obtenir de beau dashboard, je vous laisse lire la documentation...
+Je n'explique pas ici comment configurer emoncms, les flux pour obtenir de beaux dashboard, je vous laisse lire la documentation...
 
 ![Screenshot source config emoncms](http://david.mercereau.info/wp-content/uploads/2016/11/emoncms_source_config.png)
 
@@ -225,7 +226,7 @@ Ajout de celle-ci dans le fichier  */opt/PvMonit/config.php* :
 + $TEMPERV14_BIN='/usr/bin/sudo /opt/temperv14/temperv14';
 ```
 
-Autres documentation à propos de cette sonde :
+Autres documentations à propos de cette sonde :
 
   - http://www.generation-linux.fr/index.php?post/2014/06/21/Relever-et-grapher-la-temp%C3%A9rature-de-sa-maison-sur-Debian
   - http://dev-random.net/temperature-measuring-using-linux-and-raspberry-pi/
@@ -234,7 +235,7 @@ Autres documentation à propos de cette sonde :
 
 J'utilise la pince ampèremétrique USB Aviosys 8870 pour mesurer ma consommation électrique. 
 
-Le petit script perl (/opt/PvMonit/bin/ampermetre.pl), très simple pour lire la pince ampèremétrique sui sera branché en USB et apparaîtra dans votre système sur le port /dev/ttyACM0
+Le petit script perl (/opt/PvMonit/bin/ampermetre.pl) est très simple pour lire la pince ampèremétrique qui sera branchée en USB et apparaîtra dans votre système sur le port /dev/ttyACM0
 
 Celui-ci dépend de la librairie serialport : 
 
@@ -297,7 +298,7 @@ Lancement du script
 
 ### Auteur
 
-  - David Mercereau [david #arobase# mercereau #point# info[](http://david.mercereau.info/contact/)
+  - David Mercereau [david #arobase# mercereau #point# info](http://david.mercereau.info/contact/)
 
 ### License BEERWARE
 
