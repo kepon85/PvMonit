@@ -1,6 +1,8 @@
 # PvMonit
 
 Il s'agit d'un petit projet de monitoring photovoltaique pour matériel Victron compatible Ve.direct particulièrement adapté pour les installations autonômes. Il permet une vue "en direct" et un export de l'historique vers [emoncms](https://openenergymonitor.org/emon/emoncms) (une branche d'[OpenEnergyMonitor project](http://openenergymonitor.org)).
+
+![Screenshot PvMonit](http://david.mercereau.info/wp-content/uploads/2016/11/PvMonit.png) 
  
 Exemple d'usage de PvMonit : je dispose d'un RaspberryPi, mes appareils Victron (MPTT, BMV) sont connectés avec des câbles VE.Direct. PvMonit est installé sur ce RaspberryPi et me permet : 
 
@@ -113,7 +115,7 @@ Ajouter la ligne suivante :
 
 C'est terminé, vous pouvez vous connecter sur votre IP local pour joindre votre serveur web : 
 
-[![Screenshot input API emoncms]http://david.mercereau.info/wp-content/uploads/2016/11/PvMonit-300x205.png)](http://david.mercereau.info/wp-content/uploads/2016/11/PvMonit.png)
+![Screenshot PvMonit](http://david.mercereau.info/wp-content/uploads/2016/11/PvMonit_Full.png)
 
 #### Export vers emoncms
 
@@ -190,6 +192,9 @@ Je n'explique pas, ici comment configurer emoncms, les flux pour obtenir de beau
 ![Screenshot source config emoncms](http://david.mercereau.info/wp-content/uploads/2016/11/emoncms_source_config.png)
 
 Voici, pour exemple, mon dashboard : http://emoncms.mercereau.info/dashboard/view?id=1
+
+Une capture : 
+![Screenshot emoncms dashboard](http://david.mercereau.info/wp-content/uploads/2016/11/emoncms-mon-dashboard-pvmonit.png)
 
 #### Sonde température (option)
 

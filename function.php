@@ -210,6 +210,9 @@ function ve_label2($label, $valeur) {
 			$veData['units']='%';
 		break;
 		case 'TTG':
+			if ($veData['value'] == '-1') {				
+				$veData['value'] = '&infin;';
+			} else {
 			$total=$veData['value']*60;
 			$jours=floor($total/86400);
 			$reste=$total%86400;
@@ -217,10 +220,11 @@ function ve_label2($label, $valeur) {
 			$reste=$reste%3600;
 			$minutes=floor($reste/60);
 			$secondes=$reste%60;
-		    if ($veData['value'] > 1440) {				
+			if ($veData['value'] > 1440) {				
 				$veData['value'] = $jours . 'j '. $heures. 'h ' . $minutes .'m';
 			} else {
 				$veData['value'] = '.<b>'.$heures. 'h ' . $minutes .'m</b>';
+			}
 			}
 			$veData['desc']='Temps restant';
 		break;
