@@ -134,6 +134,7 @@ $aucunAffichage=true;
 			}
 
 			?>
+
 			<div class="box">
 				<div class="title">Divers</div>
 				<?php 
@@ -201,13 +202,13 @@ $aucunAffichage=true;
 				
 			</div>
 			
-			<?php if (is_file('./windguru.php')) { ?>
-			<div style="width: 500px" class="box">
-			<div class="title">Météo Windguru</div>
-				<?php include('./windguru.php'); ?>
-			</div>
-			<?php } ?>
-		
+                        <?php if (is_file('./windguru.php')) { ?>
+                        <div style="width: 500px" class="box">
+                        <div class="title">Météo Windguru</div>
+                                <?php include('./windguru.php'); ?>
+                        </div>
+                        <?php } ?>
+
 			<!-- TRAP BOX -->
 		
 			<div style="clear:both"></div>

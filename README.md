@@ -289,6 +289,7 @@ Lancement du script
 
 ### Todos
 
+ - sendToEmonCMS : collect data error, retry 3x (ajouter une valeur à la fin du bash "type export retry=1" ;
  - shell en couleur avec des jauges et tout ;
  - Traduction en anglais (tu veux le faire ?) ;
 
