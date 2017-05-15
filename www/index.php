@@ -44,8 +44,21 @@ $aucunAffichage=true;
         </div>
         <div id="contentwrap">
         <div id="content">
-						
+
 			<?php 
+			
+			// Check heure système
+			if (date('Y') < '2016') {
+				echo '<div class="box" id="errordate">';
+				echo '<div class="title">Erreur</div>';
+					echo '<div class="boxvaleur ar"><h3>Heure du système : </h3>';
+						echo '<b style="color: red">';
+							echo 'incorrect, on ne collecte rien.';
+						echo '</b>';
+					echo '</div>';
+				echo '</div>';	
+			}
+			
 			// VE.DIRECT SCAN 
 			
 			$ppv_total=null;
