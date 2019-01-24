@@ -155,8 +155,10 @@ visudo
 Ajouter la ligne suivante : 
 
 ```diff
-+ pvmonit ALL=(ALL) NOPASSWD: /opt/temperv14/temperv14 -c, /usr/bin/perl /opt/PvMonit/bin/ampermetre.pl, /usr/bin/python /opt/PvMonit/bin/vedirect.py /dev/tty*Ajout de celle-ci dans le fichier  */opt/PvMonit/config.php* :
++ pvmonit ALL=(ALL) NOPASSWD: /opt/temperv14/temperv14 -c, /usr/bin/perl /opt/PvMonit/bin/ampermetre.pl, /usr/bin/python /opt/PvMonit/bin/vedirect.py /dev/tty*
 ```
+
+Ajout de celle-ci dans le fichier  */opt/PvMonit/config.php* (FIXME)
 
 Test de collecte :
 
