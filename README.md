@@ -75,7 +75,7 @@ Pour comprendre chaque valeur, téléchargez la documentation *Victron VE Direct
 Installation des dépendances : 
 
 ```bash
-aptitude lighttpd php5-cgi 
+aptitude install lighttpd php5-cgi 
 lighttpd-enable-mod fastcgi
 lighttpd-enable-mod fastcgi-php
 ```
