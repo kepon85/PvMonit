@@ -9,7 +9,7 @@ include_once('/opt/PvMonit/config-default.php');
 include_once('/opt/PvMonit/config.php');
 $PRINTMESSAGE=0;
 
-include('/opt/PvMonit/function-v2.php');
+include('/opt/PvMonit/function.php');
 
 
 			$ppv_total=null;
