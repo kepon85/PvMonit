@@ -82,7 +82,7 @@ Pour comprendre chaque valeur, téléchargez la documentation *Victron VE Direct
 Installation des dépendances : 
 
 ```bash
-aptitude lighttpd php5-cgi 
+aptitude install lighttpd php5-cgi 
 lighttpd-enable-mod fastcgi
 lighttpd-enable-mod fastcgi-php
 ```
@@ -162,8 +162,10 @@ visudo
 Ajouter la ligne suivante : 
 
 ```diff
-+ pvmonit ALL=(ALL) NOPASSWD: /opt/temperv14/temperv14 -c, /usr/bin/perl /opt/PvMonit/bin/ampermetre.pl, /usr/bin/python /opt/PvMonit/bin/vedirect.py /dev/tty*Ajout de celle-ci dans le fichier  */opt/PvMonit/config.php* :
++ pvmonit ALL=(ALL) NOPASSWD: /opt/temperv14/temperv14 -c, /usr/bin/perl /opt/PvMonit/bin/ampermetre.pl, /usr/bin/python /opt/PvMonit/bin/vedirect.py /dev/tty*
 ```
+
+Ajout de celle-ci dans le fichier  */opt/PvMonit/config.php* (FIXME)
 
 Test de collecte :
 
