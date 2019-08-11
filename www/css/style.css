@@ -77,11 +77,17 @@ p {
 progress {
 	background: #e5e4e0;
 	border: none; 
+	width: 200px;
 }
 progress.jaugeRouge::-moz-progress-bar { background: #FF785B; }
 progress.jaugeOrange::-moz-progress-bar { background: #FFBB3E; }
 progress.jaugeVerte::-moz-progress-bar { background: #76D176; }
 progress.jaugeBleu::-moz-progress-bar { background: #8590F7; }
+
+.waitFirst {
+	width: 100%; 
+	text-align:center;
+}
 
 .box {
 	margin: 8px;
@@ -93,10 +99,14 @@ progress.jaugeBleu::-moz-progress-bar { background: #8590F7; }
 .box .plus {
 	display: none;
 }
-.box .plusboutton {
+.box .plusboutton,
+.box .moinsboutton {
 	text-align: center;
 	font-size: 80%;
 	cursor: pointer;
+}
+.box .moinsboutton {
+	display: none;
 }
 .box .title {
 	border-radius: 10px 10px 0 0;
@@ -111,7 +121,8 @@ progress.jaugeBleu::-moz-progress-bar { background: #8590F7; }
 .box h3 {
 	font-size: 80%;
 }
-.box .pvw {
+.box .ppv,
+.box .ppvt {
 	height: 28px;
 	padding-left: 38px;
 	background-image: url("../images/PPV.png");
@@ -140,6 +151,10 @@ progress.jaugeBleu::-moz-progress-bar { background: #8590F7; }
 	background-image: url("../images/ERR.png");
 	background-position: left top;
     background-repeat: no-repeat;
+}
+.souligner {
+	color: red;
+	font-weight: bold;
 }
 
 .box .temp {
@@ -192,5 +207,11 @@ progress.jaugeBleu::-moz-progress-bar { background: #8590F7; }
 	}
 	#footerwrap {
 		width: 100%;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	.box .plusplus {
+		display: none;
 	}
 }

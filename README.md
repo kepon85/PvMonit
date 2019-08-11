@@ -18,6 +18,13 @@ PvMonit support tout le matériel Victron compatible Ve Direct (via USB) :
   - SmartSolar MPPT 150/100,  250/100
   - Phoenix Inverter 12V 250VA 230V, 24V 250VA 230V, 48V 250VA 230V, 12V 375VA 230V, 24V 375VA 230V, 48V 375VA 230V, 12V 500VA 230V, 24V 500VA 230V, 48V 500VA 230V
 
+### Changelog
+
+  * V1.0 (08/2019)
+	* Collecte des informations via un XML
+	* Chargement de la page en ajax, récupération des infos via le XML
+  * V?
+
 ### Requis
 
   * Linux (le tutoriel ci-dessous est prévu pour Debian/Rasbian/Ubuntu like)

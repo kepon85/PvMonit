@@ -57,14 +57,18 @@ function ve_modele($ve_pid) {
 # Victron : détermine plein de trucs en fonction du label
 # Source doc Victron "VE.Direct Protocol"
 function ve_label2($label, $valeur) {
+	$veData['label']=$label;
 	$veData['desc']=$label;
 	$veData['value']=$valeur;
 	$veData['units']='';
-	if (in_array($label, $GLOBALS['WWW_VEDIRECT_DATA_PRIMAIRE'])) {
-		$veData['plus']='';
-	} else {
-		$veData['plus']='plus';
-	}
+	$veData['screen']=0;
+	$veData['smallScreen']=0;
+	if (in_array($label, $GLOBALS['WWW_DATA_PRIMAIRE'])) {
+		$veData['screen']=1;
+	} 
+	if (in_array($label, $GLOBALS['WWW_DATA_PRIMAIRE_SMALLSCREEN'])) {
+		$veData['smallScreen']=1;
+	} 
 	switch ($label) {
 		case 'V':
 			$veData['value']=round($valeur*0.001, 2);
@@ -211,7 +215,7 @@ function ve_label2($label, $valeur) {
 		break;
 		case 'TTG':
 			if ($veData['value'] == '-1') {				
-				$veData['value'] = '&infin;';
+				$veData['value'] = '&#8734;';
 			} else {
 			$total=$veData['value']*60;
 			$jours=floor($total/86400);
@@ -350,6 +354,7 @@ function vedirect_scan() {
 							$ve_modele=ve_modele($vedirect_data[1]);
 						break;
 						case 'SER#':
+							$ve_serial=$vedirect_data[1];
 							$ve_nom=ve_nom($vedirect_data[1]);
 						break;
 						case 'BMV':
@@ -390,6 +395,7 @@ function vedirect_scan() {
 				trucAdir(3, 'Les données sont formatées comme ceci : '.$vedirect_data_formate );
 				$vedirect_scan_return[$idDevice]['nom']=$ve_nom;
 				$vedirect_scan_return[$idDevice]['type']=$ve_type;
+				$vedirect_scan_return[$idDevice]['serial']=$ve_serial;
 				$vedirect_scan_return[$idDevice]['modele']=$ve_modele;
 				$vedirect_scan_return[$idDevice]['data']=$vedirect_data_formate;
 				$idDevice++;

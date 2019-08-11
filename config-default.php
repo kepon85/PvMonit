@@ -2,7 +2,7 @@
 ######################################################################
 # PvMonit - By David Mercereau : http://david.mercereau.info/contact/
 # Licence BEERWARE
-# Version 0.2	2016
+# Version 1.0	2019
 ######################################################################
 
 # Niveau d'affichage des messages
@@ -54,8 +54,10 @@ $LOCKFILE='/tmp/PvMonit.sendToEmoncms.lock';
 
 
 ### Page Web : 
-# Niveau d'affichage de l'interface web (dans la console du navigateur)
-$PRINTMESSAGEWWW=0;	# 0=0	5=debug
+# URL data
+$URL_DATA_XML='http://localhost/data-xml.php';
+# Délais de raffraichissement de la page (en seconde) 300000 = 5 minutes
+$WWW_REFRESH_TIME=300000;
 # Chemin du cache
 $WWW_CACHE_FILE='/tmp/PvMonit.cache-';
 # Âge du cache
@@ -64,14 +66,18 @@ $WWW_CACHE_AGE=10;
 $WWW_VBAT_MAX=30;
 # Max de la jauge puissance PV (en W)
 $WWW_PPV_MAX=500;	# max Jauge puissance PV (en W)
+# Max de la jauge puissance PV total (si plusieurs régulateur) (en W)
+$WWW_PPVT_MAX=500;	# max Jauge puissance PV (en W)
 # Max de la jauge consommation (en W)
-$WWW_CONSO_MAX=800;
+$WWW_CONSO_MAX=750;
 # Menu 
 $WWW_MENU='	<li><a href="http://pvmonit.zici.fr">PvMonit projet</a></li>
 			<li><a href="http://emoncms.org/dashboard/view?id=VOTREIDs">EmonCMS (historique)</a></li>
 			<li><a href="http://www.windguru.cz">Windguru</a></li>
 			';
-$WWW_VEDIRECT_DATA_PRIMAIRE=array ('V', 'PPV', 'ERR', 'CS', 'SOC', 'AR', 'P', 'TTG', 'MODE', 'AC_OUT_V', 'AC_OUT_I', 'WARN');
+
+$WWW_DATA_PRIMAIRE=array ('V', 'PPV', 'ERR', 'CS', 'SOC', 'AR', 'P', 'TTG', 'MODE', 'AC_OUT_V', 'AC_OUT_I', 'WARN', 'PPVT', 'CONSO', 'TEMP');
+$WWW_DATA_PRIMAIRE_SMALLSCREEN=array ('SOC', 'P', 'PPVT', 'CONSO');
 
 ### En Shell
 $SHELL_VEDIRECT_DATA_PRIMAIRE=array ('V', 'PPV', 'ERR', 'CS', 'P', 'SOC', 'TTG', 'MODE', 'AC_OUT_V', 'AC_OUT_I', 'WARN');
