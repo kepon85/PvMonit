@@ -8,10 +8,6 @@ include_once('/opt/PvMonit/config.php');
 
 include('/opt/PvMonit/function.php');
 
-if ($_GET['cache'] == 'no') {
-	$WWW_CACHE_AGE=1;
-}
-$aucunAffichage=true;
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -49,7 +45,7 @@ $aucunAffichage=true;
         </div>
         <div id="contentwrap">
         <div id="content">
-			<div id="waitFirst" class="boxvaleur waitFirst">Patience<img src="images/wait2.gif" width="100%" /></div>
+			<div id="waitFirst" class="boxvaleur waitFirst">Patience...<img src="images/wait2.gif" width="100%" /></div>
 			<?php 
 			
 			// Check heure système
@@ -64,9 +60,8 @@ $aucunAffichage=true;
 				echo '</div>';	
 			}
 			?>
-			Ajouter notion de "ping" blanc... pour test la réception de l'XML...
-			date /heure derier raffraichissemet
-			<div style="display: none" id="nodata" class="boxvaleur">Rien à afficher, copier le fichier config-default.php en config.php et modifier le pour vos paramètres. <br /><span id="textStatus"></span> : <span id="errorThrown"></span></div>
+
+			<div style="display: none" id="nodata" class="boxvaleur">Rien à afficher, vérifier le fichier config.php. <br /><span style="color: red" id="textStatus"></span> : <span id="errorThrown"></span></div>
 	    
 			<script>
 		
@@ -95,8 +90,10 @@ $aucunAffichage=true;
 						trucAdir(5, 'Récupération de l\'id ' + id);
 						var nom = $(this).find('nom').text();
 						var modele = $(this).find('modele').text();
-						$('#content').append('<div class="box" id="box_' + id + '"></div>');
-						$('#box_' + id + '').prepend('<div class="title">[' + nom + '] ' + modele + '</div>');
+                                                if ($('#box_' + id + '').length == 0) {
+                                                        $('#content').append('<div class="box" id="box_' + id + '"></div>');
+                                                        $('#box_' + id + '').prepend('<div class="title">[' + nom + '] ' + modele + '</div>');
+                                                }
 						$(this).find('data').each( function() 	{
 								var data_id = $(this).attr('id');
 								var screen = '';
@@ -209,28 +206,48 @@ $aucunAffichage=true;
 								}
 								
 							});
-							$('#box_' + id + '').append('<div class="boxvaleur plusboutton" onclick="PlusPrint(\''+id+'\')">...</div>'+
-														'<div class="boxvaleur moinsboutton" onclick="MoinsPrint(\''+id+'\')">...</div>');
+                                                
+					});
+                                        $(xml).find('device').each(function() {
+						var id = $(this).attr('id');
+						trucAdir(5, 'Pour les plus, on re-récupère les id ' + id);
+                                                if ($('#Plus'+id).length == 0) {
+                                                $('#box_' + id + '').append('<div id="Plus'+id+'" class="boxvaleur plusboutton" onclick="PlusPrint(\''+id+'\')">...</div>'+
+                                                                                '<div class="boxvaleur moinsboutton" onclick="MoinsPrint(\''+id+'\')">...</div>');
+                                                }
 					});
 					$('#content').append('<div style="clear:both"></div>');
 				  }
-
-				function reloadData() {
+                                var uneDate;
+				function reloadData(force = 0) {
 					trucAdir(3, 'Reload');
 					$("#refreshImg").val('1');
+                                        var dt = new Date();
+                                        var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+                                        $("#refreshImg").attr('title', 'Actualiser (dernier à '+time+')')
 					$("#refreshImg").attr('src', "images/wait.gif");
-					$.ajax( {
-						type: "GET",
-						url: "<?= $URL_DATA_XML ?>",
-						dataType: "xml",
-						success: readData,
-						  error : traiteErreur
-					});
+                                        if (force == 0) {
+                                                $.ajax( {
+                                                        type: "GET",
+                                                        url: "<?= $URL_DATA_XML ?>",
+                                                        dataType: "xml",
+                                                        success: readData,
+                                                          error : traiteErreur
+                                                });
+                                        } else {
+                                                $.ajax( {
+                                                        type: "GET",
+                                                        url: "<?= $URL_DATA_XML ?>?nocache=1",
+                                                        dataType: "xml",
+                                                        success: readData,
+                                                          error : traiteErreur
+                                                });
+                                        }
 				  }
 
 				$( "#refresh" ).click(function() {
 					if ($("#refreshImg").val() == 0){
-						reloadData();		
+						reloadData(1);		
 					} else {
 						trucAdir(3, 'Un reload à la fois...');
 					}
@@ -247,7 +264,7 @@ $aucunAffichage=true;
 				var intervalId = null;
 				var refreshTime = <?= $WWW_REFRESH_TIME ?>;
 				function refreshNow() {
-					trucAdir(5, 'Fonctio refresh Now go');
+					trucAdir(5, 'Fonction refresh Now go');
 					reloadData();
 				}
 				$(document).ready(function() {  

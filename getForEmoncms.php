@@ -7,12 +7,12 @@
 # Version 0.2	2016
 ######################################################################
 
+
 include_once('/opt/PvMonit/config-default.php');
-if (is_file('/opt/PvMonit/config.php')) {
-	include_once('/opt/PvMonit/config.php');
-}
+include_once('/opt/PvMonit/config.php');
 
 include('/opt/PvMonit/function.php');
+
 trucAdir(5, 'Lancement du script');
 $timestamp=time();
 
@@ -35,24 +35,43 @@ function sauvegardeDesDonnes($data) {
 }
 
 # Scan des périphérique VE.Direct Victron
-foreach (vedirect_scan() as $device) {
-	if ($device['nom'] != '') {
+
+$cache_file=$CACHE_DIR.'/'.$CACHE_PREFIX.'vedirect_scan';
+if(!checkCacheTime($cache_file)) {
+        file_put_contents($cache_file, json_encode(vedirect_scan()));
+        chmod($cache_file, 0777);
+} 
+$timerefresh=filemtime($cache_file);
+foreach (json_decode(file_get_contents($cache_file), true) as $device) {
+        if ($device['nom'] != '') {
 		sauvegardeDesDonnes("www-browser --dump '".$EMONCMS_URL_INPUT_JSON_POST."?json={".$device['data']."}&node=".$device['nom']."&time=".time()."&apikey=".$EMONCMS_API_KEY."'\n");
 	}
 }
 
+
 $dataNode1=null;
-$temperature=temperature();
-if ($temperature !== 'NODATA') {
-	$dataNode1='temp:'.$temperature;
+// Scan du répertoire bin-enabled
+$bin_enabled_data = scandir($BIN_ENABLED_DIR);
+foreach ($bin_enabled_data as $bin_script_enabled) { 
+        $bin_script_info = pathinfo($BIN_ENABLED_DIR.'/'.$bin_script_enabled);
+        if ($bin_script_info['extension'] == 'php') {
+                $cache_file_script=$CACHE_DIR.'/'.$CACHE_PREFIX.$bin_script_enabled;
+                if(!checkCacheTime($cache_file_script)) {
+                        $script_return = (include $BIN_ENABLED_DIR.'/'.$bin_script_enabled);
+                        file_put_contents($cache_file_script, json_encode($script_return));
+                        chmod($cache_file_script, 0777);
+                } 
+                $timerefresh=filemtime($cache_file_script);
+                $script_return_data = json_decode(file_get_contents($cache_file_script), true) ;
+                $filenameSplit = explode("-", $bin_script_info['filename']);
+                $id=$filenameSplit[1];
+                if (!is_null($dataNode1)) {
+                        $dataNode1=$dataNode1.',';
+                }
+                $dataNode1=$dataNode1.strtolower($id).':'.$script_return_data['value'];
+        } 
 }
-$consommation=consommation();
-if ($consommation !== 'NODATA') {
-	if (!is_null($dataNode1)) {
-		$dataNode1=$dataNode1.',';
-	}
-	$dataNode1=$dataNode1.'conso:'.$consommation;
-}
+
 if (!is_null($dataNode1)) {
 	sauvegardeDesDonnes("www-browser --dump '".$EMONCMS_URL_INPUT_JSON_POST."?json={".$dataNode1."}&node=1&time=".time()."&apikey=".$EMONCMS_API_KEY."'\n");
 }

@@ -8,6 +8,13 @@
 # Niveau d'affichage des messages
 $PRINTMESSAGE=3;	# 0=0	5=debug
 
+$BIN_DIR='/opt/PvMonit/bin/';
+$BIN_ENABLED_DIR='/opt/PvMonit/bin-enabled/';
+
+$CACHE_DIR='/tmp/pvmonit-cache'; // in tmpfs
+$CACHE_PREFIX=''; 
+$CACHE_TIME=60; // in second
+
 # Binaire de vedirect.py
 $VEDIRECT_BIN = '/usr/bin/sudo /usr/bin/python /opt/PvMonit/bin/vedirect.py';
 # MPTT donnée récolté (voir la doc victron sur le protocole VE.Direct)
@@ -19,20 +26,8 @@ $VEDIRECT_PHOENIX_DATA=array ('P', 'CS', 'MODE', 'AC_OUT_V', 'AC_OUT_I', 'WARN')
 # Numéro de série (champs SER#) en correspondance avec des nom buvables
 $VEDIRECT_DEVICE_CORRESPONDANCE=array ('HQXXXXXXXX' => 'MpttGarage', 'HQYYYYYY' => 'MpttToit'); 
 
-## Sonde de température 
-# Binaire du logiciel de sonde température
-$TEMPERV14_BIN='';
-//$TEMPERV14_BIN='/usr/bin/sudo /opt/temperv14/temperv14';
-# Ma sonde n'est pas juste, il faut une correction de quelques degrés (exemple : -3)
-$SONDE_TEMPERATURE_CORRECTION='0';	
-
-## Pince amphèrmétrique
-# Binaire ampèrmetre.pl
-$AMPEREMETRE_BIN = '';
-//$AMPEREMETRE_BIN = '/usr/bin/sudo /usr/bin/perl /opt/PvMonit/bin/ampermetre.pl';
 # Plafont de consommation en W impossible à dépasser (techniquement, sinon c'est une erreur de sonde)
 $CONSO_PLAFOND = 1500;
-
 
 ### Export vers Emoncms
 # Test la connexion internet
@@ -52,16 +47,11 @@ $SLEEP_NOK=3;
 # Fichier de lock pour éviter les doublons
 $LOCKFILE='/tmp/PvMonit.sendToEmoncms.lock';
 
-
 ### Page Web : 
 # URL data
 $URL_DATA_XML='http://localhost/data-xml.php';
 # Délais de raffraichissement de la page (en seconde) 300000 = 5 minutes
 $WWW_REFRESH_TIME=300000;
-# Chemin du cache
-$WWW_CACHE_FILE='/tmp/PvMonit.cache-';
-# Âge du cache
-$WWW_CACHE_AGE=10;
 # Max de la jauge voltage batterie (en V) 
 $WWW_VBAT_MAX=30;
 # Max de la jauge puissance PV (en W)
@@ -76,15 +66,8 @@ $WWW_MENU='	<li><a href="http://pvmonit.zici.fr">PvMonit projet</a></li>
 			<li><a href="http://www.windguru.cz">Windguru</a></li>
 			';
 
-$WWW_DATA_PRIMAIRE=array ('V', 'PPV', 'ERR', 'CS', 'SOC', 'AR', 'P', 'TTG', 'MODE', 'AC_OUT_V', 'AC_OUT_I', 'WARN', 'PPVT', 'CONSO', 'TEMP');
-$WWW_DATA_PRIMAIRE_SMALLSCREEN=array ('SOC', 'P', 'PPVT', 'CONSO');
-
-### En Shell
-$SHELL_VEDIRECT_DATA_PRIMAIRE=array ('V', 'PPV', 'ERR', 'CS', 'P', 'SOC', 'TTG', 'MODE', 'AC_OUT_V', 'AC_OUT_I', 'WARN');
-
-### En Led
-//$LED_BIN='/opt/dcled/dcled';
-$LED_BIN='';
-$LED_VEDIRECT_DATA_PRIMAIRE=array ('PPV');
+$WWW_DATA_PRIMAIRE=array ('V', 'PPV', 'ERR', 'CS', 'SOC', 'AR', 'P', 'TTG', 'MODE', 'AC_OUT_V', 'AC_OUT_I', 'WARN', 'PPVT');
+$WWW_DATA_PRIMAIRE_SMALLSCREEN=array ('SOC', 'P', 'PPVT');
+// + ce qu'il y a dans les scripts bin-enabled/*.php 
 
 ?>

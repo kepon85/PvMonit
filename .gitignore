@@ -2,3 +2,4 @@ config.php
 demo.sh
 gitPush.sh
 www/data-xml.php-test.html
+bin-enabled/*.php

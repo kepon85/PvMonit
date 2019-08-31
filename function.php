@@ -417,104 +417,54 @@ function trucAdir($niveau, $msg) {
 }
 
 # Récupérer les informations de la sonde de température
-function temperature() {
-	if ($GLOBALS['TEMPERV14_BIN'] == '') {
-		trucAdir(5, 'Pas de prise de température par temperv14');
-		$temperature_retour=null;
-	} else {
-		# Exécussion du programme pour récupérer les inforamtions de la sonde de température
-		exec($GLOBALS['TEMPERV14_BIN'].' -c 2>/dev/null', $temperv14_sortie, $temperv14_retour);
-		if ($temperv14_retour != 0){
-			trucAdir(3, 'La sonde de température n\'est probablement pas connecté.');
-			trucAdir(5, 'Erreur '.$temperv14_retour.' à l\'exécussion du programme .'.$GLOBALS['TEMPERV14_BIN']);
-			$temperature_retour='NODATA';
-		} else {
-			trucAdir(4, 'La sonde de température indique '.$temperv14_sortie[0].'°C');
-			$temperature=$temperv14_sortie[0]+$GLOBALS['SONDE_TEMPERATURE_CORRECTION'];
-			trucAdir(3, 'Après correction, la température est de '.$temperature.'°C');
-			$temperature_retour=$temperature;
-		}
-	}
+function Temperature_USB($TEMPERV14_BIN) {
+        # Exécussion du programme pour récupérer les inforamtions de la sonde de température
+        exec($TEMPERV14_BIN, $temperv14_sortie, $temperv14_retour);
+        if ($temperv14_retour != 0){
+                trucAdir(3, 'La sonde de température n\'est probablement pas connecté.');
+                trucAdir(5, 'Erreur '.$temperv14_retour.' à l\'exécussion du programme .'.$GLOBALS['TEMPERV14_BIN']);
+                $temperature_retour='NODATA';
+        } else {
+                trucAdir(4, 'La sonde de température indique '.$temperv14_sortie[0].'°C, il y aura peut être correction.');
+                $temperature_retour=$temperv14_sortie[0];
+        }
 	return $temperature_retour;
 }
 
-# Récupérer les informations de l'amphèrmètre}
-function consommation() {
-	$consommation_retour='NODATA';
-	if ($GLOBALS['AMPEREMETRE_BIN'] != '') {
-		for ($i = 1; $i <= 3; $i++) {
-			trucAdir(3, 'Tentative '.$i.' de récupération de consommation');
-			//trucAdir(5, 'Lancement de la commande : echo "~" | head -n 1 '.$GLOBALS['DEV_AMPEREMETRE'].'  | tail -c6 | sed "s/A//" 2>/dev/null');
-			exec($GLOBALS['AMPEREMETRE_BIN'].' | sed "s/A//" 2>/dev/null', $exec_consommation_sortie, $exec_consommation_retour);
-			if ($exec_consommation_retour != 0){
-				trucAdir(3, 'L\'amphèrmètre n\'est probablement pas connecté.');
-				trucAdir(5, 'Erreur '.$exec_consommation_retour.' avec pour sortie .'.$exec_consommation_sortie);
-			} else {
-				if ($exec_consommation_sortie[0] != '') {
-					trucAdir(3, 'Trouvé à la tentative '.$i.' : la La consommation trouvé est '.$exec_consommation_sortie[0].'A');
-					$re = '/^[0-9][0-9]+.[0-9]$/';
-					if (!preg_match_all($re, $exec_consommation_sortie[0])) {
-						trucAdir(5, 'La vérification par expression régulière à échoué ('.$re.')');
-					} else {				
-						$conso_en_w=$exec_consommation_sortie[0]*230;
-						trucAdir(1, 'La consommation est de '.$exec_consommation_sortie[0].'A soit '.$conso_en_w.'W');
-						if ($conso_en_w > $GLOBALS['CONSO_PLAFOND']) {
-							trucAdir(1, 'C`est certainement une erreur, le plafond possible est atteind');
-						} else {
-							$consommation_retour=$conso_en_w;
-						}
-					}
-					break;
-				} else {
-					trucAdir(5, 'Echec à la tentative '.$i.' : la La consommation trouvé est null');
-					sleep(1);
-				}
-			}
-		}
-	} else {
-		trucAdir(3, 'Le périphérique '.$GLOBALS['DEV_AMPEREMETRE'].' n\'est pas configuré');
-		$consommation_retour=null;
-	}
-	return $consommation_retour;
+function Amp_USB($bin) {
+        $consommation_retour='NODATA';
+        for ($i = 1; $i <= 3; $i++) {
+                trucAdir(3, 'Tentative '.$i.' de récupération de la sonde ');
+                exec($bin.' | sed "s/A//" 2>/dev/null', $exec_consommation_sortie, $exec_consommation_retour);
+                if ($exec_consommation_retour != 0){
+                        trucAdir(3, 'L\'amphèrmètre n\'est probablement pas connecté.');
+                        trucAdir(5, 'Erreur '.$exec_consommation_retour.' avec pour sortie .'.$exec_consommation_sortie);
+                } else {
+                        if ($exec_consommation_sortie[0] != '') {
+                                trucAdir(3, 'Trouvé à la tentative '.$i.' : la La consommation trouvé est '.$exec_consommation_sortie[0].'A');
+                                $re = '/^[0-9][0-9]+.[0-9]$/';
+                                if (!preg_match_all($re, $exec_consommation_sortie[0])) {
+                                        trucAdir(5, 'La vérification par expression régulière à échoué ('.$re.')');
+                                } else {				
+                                        $conso_en_w=$exec_consommation_sortie[0]*230;
+                                        trucAdir(1, 'La consommation est de '.$exec_consommation_sortie[0].'A soit '.$conso_en_w.'W');
+                                        if ($conso_en_w > $GLOBALS['CONSO_PLAFOND']) {
+                                                trucAdir(1, 'C`est certainement une erreur, le plafond possible est atteind');
+                                        } else {
+                                                $consommation_retour=$exec_consommation_sortie[0];
+                                        }
+                                }
+                                break;
+                        } else {
+                                trucAdir(5, 'Echec à la tentative '.$i.' : la La consommation trouvé est null');
+                                sleep(1);
+                        }
+                }
+        }
+        return $consommation_retour;
 }
 
-function temperatureCache() {
-	$ficherCache=$GLOBALS['WWW_CACHE_FILE'].'temp';
-	if (!file_exists($ficherCache)) {
-		$temperature=temperature();
-		file_put_contents($ficherCache, $temperature);
-		return $temperature;
-	} else {
-		$dateFichierCache=filemtime($ficherCache);
-		$finDuCache=$dateFichierCache+$GLOBALS['WWW_CACHE_AGE'];
-		if (time() < $finDuCache) {
-			return file_get_contents($ficherCache);
-		} else {
-			$temperature=temperature();
-			file_put_contents($ficherCache, $temperature);
-			return $temperature;
-		}
-	}
-}
 
-function consommationCache() {
-	$ficherCache=$GLOBALS['WWW_CACHE_FILE'].'conso';
-	if (!file_exists($ficherCache)) {
-		$consommation=consommation();
-		file_put_contents($ficherCache, $consommation);
-		return $consommation;
-	} else {
-		$dateFichierCache=filemtime($ficherCache);
-		$finDuCache=$dateFichierCache+$GLOBALS['WWW_CACHE_AGE'];
-		if (time() < $finDuCache) {
-			return file_get_contents($ficherCache);
-		} else {
-			$consommation=consommation();
-			file_put_contents($ficherCache, $consommation);
-			return $consommation;
-		}
-	}
-}
 
 // Class source : http://abhinavsingh.com/how-to-use-locks-in-php-cron-jobs-to-avoid-cron-overlaps/
 class cronHelper {
@@ -569,6 +519,24 @@ class cronHelper {
 		return TRUE;
 	}
 
+}
+
+// Check cache expire
+function checkCacheTime($file) {
+        global $CACHE_TIME, $CACHE_DIR;
+        if (!is_dir($CACHE_DIR)) {
+                mkdir($CACHE_DIR, 0777);
+                chmod($CACHE_DIR, 0777);
+        }
+        if (!is_file($file)) {
+                return false;
+        } else if (filemtime($file)+$CACHE_TIME < time()) {
+                return false;
+        } else if (isset($_GET['nocache'])) {
+                return false;
+        } else {
+                return true;
+        }
 }
 
 ?>

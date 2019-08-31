@@ -20,6 +20,9 @@ PvMonit support tout le matériel Victron compatible Ve Direct (via USB) :
 
 ### Changelog
 
+  * V1.1 (08/2019)
+    * Cache pour le XML, tout les scripts (page web & getForEmoncms le récupère)
+    * Support d'un LCD adafruit 16*2 pour l'affichage des informations
   * V1.0 (08/2019)
 	* Collecte des informations via un XML
 	* Chargement de la page en ajax, récupération des infos via le XML
@@ -117,7 +120,7 @@ visudo
 Ajouter la ligne suivante : 
 
 ```diff
-+ www-data ALL=(ALL) NOPASSWD: /usr/bin/perl /opt/PvMonit/bin/ampermetre.pl, /opt/temperv14/temperv14 -c, /usr/bin/python /opt/PvMonit/bin/vedirect.py /dev/tty*
++ www-data ALL=(ALL) NOPASSWD:  /opt/temperv14/temperv14 -c, /usr/bin/python /opt/PvMonit/bin/vedirect.py /dev/tty*, /opt/PvMonit/bin/*
 ```
 
 C'est terminé, vous pouvez vous connecter sur votre IP local pour joindre votre serveur web : 
@@ -162,7 +165,7 @@ visudo
 Ajouter la ligne suivante : 
 
 ```diff
-+ pvmonit ALL=(ALL) NOPASSWD: /opt/temperv14/temperv14 -c, /usr/bin/perl /opt/PvMonit/bin/ampermetre.pl, /usr/bin/python /opt/PvMonit/bin/vedirect.py /dev/tty*
++ pvmonit ALL=(ALL) NOPASSWD:  /opt/temperv14/temperv14 -c, /usr/bin/python /opt/PvMonit/bin/vedirect.py /dev/tty*, /opt/PvMonit/bin/*
 ```
 
 Ajout de celle-ci dans le fichier  */opt/PvMonit/config.php* (FIXME)
@@ -206,9 +209,9 @@ Voici, pour exemple, mon dashboard : http://emoncms.mercereau.info/dashboard/vie
 Une capture : 
 ![Screenshot emoncms dashboard](http://david.mercereau.info/wp-content/uploads/2016/11/emoncms-mon-dashboard-pvmonit.png)
 
-#### Sonde température (option)
+#### Sonde température USB (option)
 
-J'utilise la sonde *thermomètre USB TEMPer*, cette sonde fonctionne avec le logiciel temperv14 qui est plutôt simple à installer
+La sonde *thermomètre USB TEMPer*, cette sonde fonctionne avec le logiciel temperv14 qui est plutôt simple à installer
 
 ```bash
 apt-get install libusb-dev libusb-1.0-0-dev unzip
@@ -228,11 +231,10 @@ $ /opt/temperv14/temperv14 -c
 18.50
 ```
 
-Ajout de celle-ci dans le fichier  */opt/PvMonit/config.php* :
+Activer le script (et l'éditer au besoin)
 
-```diff
-- $TEMPERV14_BIN='';
-+ $TEMPERV14_BIN='/usr/bin/sudo /opt/temperv14/temperv14';
+```bash
+ln -s /opt/PvMonit/bin-available/TemperatureUSB.php /opt/PvMonit/bin-enabled/other-TEMP.php
 ```
 
 Autres documentations à propos de cette sonde :
@@ -254,52 +256,18 @@ aptitde install libdevice-serialport-perl
 
 Test : :
 ```bash
-$ /opt/PvMonit/bin/ampermetre.pl 
+$ /opt/PvMonit/bin-available/ampermetre.pl 
 00.1A
 ```
 
-Ajout de celle-ci dans le fichier  */opt/PvMonit/config.php* :
-
-```diff
-- $AMPEREMETRE_BIN = '';
-+ $AMPEREMETRE_BIN = '/usr/bin/sudo /usr/bin/perl /opt/PvMonit/bin/ampermetre.pl';
-```
-
-#### Ecran LED
-
-J'utilise un petit afficheur USB de chez [Dream Cheeky](http://www.dreamcheeky.com/index.php?pagename=product&pid=52)
-
-  - Documentation : http://www.last-outpost.com/~malakai/dcled/
+Activer le script (et l'éditer au besoin)
 
 ```bash
-aptitude install libusbhid-common
-cd /opt
-wget http://www.last-outpost.com/~malakai/dcled/dcled-2.2.tgz
-tar -xzvf dcled-2.2.tgz
-mv dcled-2.2 dcled
-cd dcled
-make
-# test : 
-./dcled --clock
-```
-
-Ajout de celle-ci dans le fichier  */opt/PvMonit/config.php* :
-
-```diff
--$LED_BIN='';
-+$LED_BIN='/opt/dcled/dcled';
-```
-
-Lancement du script 
-
-```bash
-/opt/PvMonit/getToLed.php &
+ln -s /opt/PvMonit/bin-available/AmpermetreUSB.php /opt/PvMonit/bin-enabled/other-CONSO.php
 ```
 
 ### Todos
 
- - sendToEmonCMS : collect data error, retry 3x (ajouter une valeur à la fin du bash "type export retry=1" ;
- - shell en couleur avec des jauges et tout ;
  - Traduction en anglais (tu veux le faire ?) ;
 
 ### Documentation
