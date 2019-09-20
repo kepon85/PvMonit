@@ -50,13 +50,15 @@ Il y a bien sûr, une base commune :
 Installation de PvMonit via le dépôt git et de ses dépendances :
 
 ```bash
-aptitude install php5-cli git python-serial sudo
+aptitude install php-cli php-yaml git python-serial sudo 
 cd /opt
 git clone https://github.com/kepon85/PvMonit.git
 cp config-default.php config.php```
 ```
 
 Vous pouvez maintenant éditer le fichier config.php à votre guise !
+
+### Par VeDirect USB
 
 Test du script vedirect.py : brancher un appareil Victron avec un Câble Ve.Direct USB et voici un exemple de ce que vous devriez obtenir (Ici un MPTT BlueSolare branché sur le ttyUS0)
 
@@ -79,6 +81,25 @@ Test du script vedirect.py : brancher un appareil Victron avec un Câble Ve.Dire
     HSDS:52
 
 Pour comprendre chaque valeur, téléchargez la documentation *Victron VE Direct Protocol documentation* : https://www.victronenergy.fr/support-and-downloads/whitepapers
+
+### Par VeDirect via Arduino
+
+Pour ça il vous faut être sur un raspbery pi et que le port série soit actif
+
+```bash
+raspi-config
+    # Interfacing Option / P6 Serial / 
+    # Login shell : NO
+    # Serial port harware enable : Yes
+```reboot
+
+Dans le fichier config.php mentionner : 
+
+```php
+$VEDIRECT_BY='arduino'
+```
+
+
 
 #### Interface web en temps réel
 
