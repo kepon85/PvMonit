@@ -14,7 +14,7 @@ include('/opt/PvMonit/function.php');
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
 <title>Pv Monit</title>
-<!--[if IE]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+<!--[if IE]><script src="http://html5shiv.googlecode.comdevice_id/svn/trunk/html5.js"></script><![endif]-->
 <link rel="stylesheet" type="text/css" href="./css/style.css" />
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
 <meta http-equiv="cache-control" content="max-age=0" />
@@ -45,6 +45,7 @@ include('/opt/PvMonit/function.php');
         </div>
         <div id="contentwrap">
         <div id="content">
+                <p><b>@todo </b>Capteur de courant, UNIFORMISER FICHIER DE CONF DANS : yaml, re-tester avec ve direct USB ?</p>
 			<div id="waitFirst" class="boxvaleur waitFirst">Patience...<img src="images/wait2.gif" width="100%" /></div>
 			<?php 
 			

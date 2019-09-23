@@ -8,10 +8,10 @@ from lxml import etree
 from urllib.request import urlopen
 
 # conf
-data_url = 'http://192.168.1.1/data-xml.php'
+data_url = 'http://192.168.1.2/data-xml.php'
 tmp_data_file='/tmp/pvmonit-data-xml.php.tmp'
 rafraichissement=0.1 # en seconde pour les boutons
-data_update=60 # en seconde pour le rafraichissement des données
+data_update=30 # en seconde pour le rafraichissement des données
 lcd_on_timer=60 # en seconde le temps que l'écran reste allumé si par défaut éteind
 est_ce_la_nuit_timer=600 # détection de la nuit tout les x secondes
 dataprint = ['SOC', 'P', 'PPVT', 'CONSO']
@@ -33,6 +33,7 @@ lcd.clear()
 lcd.color = [100, 0, 0]
 # on dit bonjour (si si)
 lcd.message = "Bonjour !\nOn boot ..."
+time.sleep(2)
 
 # Fonction de debug
 def debugTerm(msg) :
@@ -40,7 +41,7 @@ def debugTerm(msg) :
 
 # Détection du dodo (pour extinction de l'écran)
 def est_ce_la_nuit() :
-    if int(time.strftime ('%H')) > lcd_off_at or int(time.strftime ('%H')) < lcd_on_at:
+    if int(time.strftime ('%H')) >= lcd_off_at or int(time.strftime ('%H')) <= lcd_on_at:
         return True
     else:
         return False
@@ -48,6 +49,19 @@ def est_ce_la_nuit() :
 def update_data():
     # Récupération des données
     debugTerm('Update data')
+    
+    lcd.clear()
+    lcd.message = '|'
+    lcd.clear()
+    lcd.message = '/'
+    lcd.clear()
+    lcd.message = '-'
+    lcd.clear()
+    lcd.message = '\\'
+    lcd.clear()
+    lcd.message = '-'
+    lcd.clear()
+    lcd.message = '|'
     with open(tmp_data_file, 'wb') as tmpxml:
         tmpxml.write(urlopen(data_url).read())
 
@@ -65,13 +79,13 @@ def update_data():
             for data in datas.getchildren():
                 if data.tag == "value":
                     if datas.get("id") == 'SOC':
-                        debugTerm(data.text + '%')
-                        if float(data.text) > 95:
-                            debugTerm('vert !!!')
-                        elif float(data.text) > 90:
-                            debugTerm('orange !!!')
-                        elif float(data.text) < 90:
-                            debugTerm('rouge !!!')
+                        # ~ debugTerm(data.text + '%')
+                        # ~ if float(data.text) > 95:
+                            # ~ debugTerm('vert !!!')
+                        # ~ elif float(data.text) > 90:
+                            # ~ debugTerm('orange !!!')
+                        # ~ elif float(data.text) < 90:
+                            # ~ debugTerm('rouge !!!')
                         msg_soc='BA:'+data.text + '%'
                     elif datas.get("id") == 'P':
                         msg_p = 'P:'+data.text + 'W'
@@ -113,19 +127,7 @@ est_ce_la_nuit_last=time.time()
 force_lcd_on=False
 while True:
 
-    if lcd.left_button:
-        debugTerm("Left : update data !")
-        update_data_last=update_data()
-
-    elif lcd.up_button:
-        debugTerm("Up : update data !")
-        update_data_last=update_data()
-
-    elif lcd.down_button:
-        debugTerm("Down : update data !")
-        update_data_last=update_data()
-
-    elif lcd.right_button:
+    if lcd.right_button:
         debugTerm("Boutton Right : LCD control")
         force_lcd_on=False
         # Si c'est éteind on allume
@@ -143,6 +145,18 @@ while True:
             etat_lcd = False
             debugTerm('LCD à Off')
         time.sleep(1)
+
+    elif lcd.left_button:
+        debugTerm("Left : update data !")
+        update_data_last=update_data()
+
+    # ~ elif lcd.up_button:
+        # ~ debugTerm("Up : update data !")
+        # ~ update_data_last=update_data()
+
+    # ~ elif lcd.down_button:
+        # ~ debugTerm("Down : update data !")
+        # ~ update_data_last=update_data()
 
     elif lcd.select_button:
         debugTerm("Select : L'heure SVP !")
@@ -179,6 +193,8 @@ while True:
             etat_lcd = False
             force_lcd_on = False
             debugTerm("Extinction de l'écran au bout des" + str(lcd_on_timer) + "s c'est la nuit...")
-
+    
+    time.sleep(0.1)
+    
 # On supprime le fichier temporaire (pour la forme)
 remove(tmp_data_file) 

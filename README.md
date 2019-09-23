@@ -58,7 +58,7 @@ cp config-default.php config.php```
 
 Vous pouvez maintenant éditer le fichier config.php à votre guise !
 
-### Par VeDirect USB
+### Ve.direct via USB
 
 Test du script vedirect.py : brancher un appareil Victron avec un Câble Ve.Direct USB et voici un exemple de ce que vous devriez obtenir (Ici un MPTT BlueSolare branché sur le ttyUS0)
 
@@ -82,7 +82,7 @@ Test du script vedirect.py : brancher un appareil Victron avec un Câble Ve.Dire
 
 Pour comprendre chaque valeur, téléchargez la documentation *Victron VE Direct Protocol documentation* : https://www.victronenergy.fr/support-and-downloads/whitepapers
 
-### Par VeDirect via Arduino
+### Ve.direct via Arduino
 
 Pour ça il vous faut être sur un raspbery pi et que le port série soit actif
 
@@ -91,7 +91,8 @@ raspi-config
     # Interfacing Option / P6 Serial / 
     # Login shell : NO
     # Serial port harware enable : Yes
-```reboot
+reboot
+```
 
 Dans le fichier config.php mentionner : 
 
@@ -99,7 +100,14 @@ Dans le fichier config.php mentionner :
 $VEDIRECT_BY='arduino'
 ```
 
+Vous pouvez aussi configurer le fichier config-vedirectOnArduinoRemote.yaml
 
+Connecter l'arduino
+
+Ajouter dans le fichier rc.local : 
+cd /opt/PvMonit/bin &&  ./vedirectOnArduinoRemote-launch.sh &>/dev/null &
+
+Vous pouvez le lancer "à la main" avec la même commande et vous assurez que le fichier /tmp/PvMonit_vedirectOnAdruino.data.yaml existe bien et que les données sont justes
 
 #### Interface web en temps réel
 
@@ -128,20 +136,6 @@ On applique la configuration :
 
 ```bash
 service lighttpd restart
-```
-
-On ajoute ensuite la possibilité à l'utilisateur exécutant lighttpd de lancer les script avec sudo sans mot de passe : 
-
-Lancer la commande :
-
-```sh
-visudo
-```
-
-Ajouter la ligne suivante : 
-
-```diff
-+ www-data ALL=(ALL) NOPASSWD:  /opt/temperv14/temperv14 -c, /usr/bin/python /opt/PvMonit/bin/vedirect.py /dev/tty*, /opt/PvMonit/bin/*
 ```
 
 C'est terminé, vous pouvez vous connecter sur votre IP local pour joindre votre serveur web : 
@@ -174,22 +168,6 @@ Installation des dépendances :
 ```bash
 aptitude install lynx 
 ```
-
-On ajoute ensuite la possibilité à l'utilisateur exécutant l'export de lancer les scripts avec sudo sans mot de passe : 
-
-Lancer la commande :
-
-```sh
-visudo
-```
-
-Ajouter la ligne suivante : 
-
-```diff
-+ pvmonit ALL=(ALL) NOPASSWD:  /opt/temperv14/temperv14 -c, /usr/bin/python /opt/PvMonit/bin/vedirect.py /dev/tty*, /opt/PvMonit/bin/*
-```
-
-Ajout de celle-ci dans le fichier  */opt/PvMonit/config.php* (FIXME)
 
 Test de collecte :
 
@@ -252,6 +230,26 @@ $ /opt/temperv14/temperv14 -c
 18.50
 ```
 
+On ajoute ensuite la possibilité à des utilisateurs "restrint" d'exécutant de lancer les script avec sudo sans mot de passe : 
+
+Lancer la commande :
+
+```sh
+visudo
+```
+
+Si vous utilisez l'interface web pvmonit, ajouter :
+
+```diff
++ www-data ALL=(ALL) NOPASSWD:  /opt/temperv14/temperv14 -c
+```
+
+Si vous utilisez l'export vers emoncms, ajouter : 
+
+```diff
++ pvmonit ALL=(ALL) NOPASSWD:  /opt/temperv14/temperv14 -c
+```
+
 Activer le script (et l'éditer au besoin)
 
 ```bash
@@ -281,15 +279,68 @@ $ /opt/PvMonit/bin-available/ampermetre.pl
 00.1A
 ```
 
+Si vous utilisez l'interface web pvmonit, ajouter :
+
+```diff
++ www-data ALL=(ALL) NOPASSWD: /opt/PvMonit/bin/*
+```
+
+Si vous utilisez l'export vers emoncms, ajouter : 
+
+```diff
++ pvmonit ALL=(ALL) NOPASSWD:  /opt/PvMonit/bin/*
+```
+
 Activer le script (et l'éditer au besoin)
 
 ```bash
 ln -s /opt/PvMonit/bin-available/AmpermetreUSB.php /opt/PvMonit/bin-enabled/other-CONSO.php
 ```
 
+#### Raspberry Adafruit LCD RGB - 16x2 + Keypad
+
+Uniquement pour les Raspbery Pi
+
+Permet d'afficher les informations principales sur le raspbery pi (Etat des batteries, puissance en cours...)
+
+```bash
+raspi-config
+    # Interfacing Option / P6 Serial / 
+    # Login shell : NO
+    # Serial port harware enable : Yes
+reboot
+aptitude install i2c-tools
+i2cdetect 1
+```
+
+La dernière commande (i2cdetect 1) doit afficher quelque chose comme : 
+
+```     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00:          *-- -- -- -- -- -- -- -- -- -- -- -- -- 
+10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+20: 20 -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+70: -- -- -- -- -- -- -- --   
+```
+
+Pour tester le LCD lancer la commande : 
+
+```bash
+python3 /opt/PvMonit/lcd/ada-lcd.py
+```
+
+Pour que le LCD fonctionne au démarrage, ajouter avant "exit 0" dans le fichier /etc/rc.local la ligne suivant
+
+```
+screen -A -m -d -S arduino python3 /opt/PvMonit/lcd/ada-lcd.py
+```
+
 ### Todos
 
- - Traduction en anglais (tu veux le faire ?) ;
+ - https://framagit.org/kepon/PvMonit/issues?label_name%5B%5D=enhancement
 
 ### Documentation
 

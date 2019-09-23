@@ -15,8 +15,14 @@ $CACHE_DIR='/tmp/pvmonit-cache'; // in tmpfs
 $CACHE_PREFIX=''; 
 $CACHE_TIME=60; // in second
 
-# Binaire de vedirect.py
-$VEDIRECT_BIN = '/usr/bin/sudo /usr/bin/python /opt/PvMonit/bin/vedirect.py';
+# Methode de récupération des données VE DIRECT (par USB - vedirect OU serial par Arduino)
+$VEDIRECT_BY='usb';  // usb OR arduino
+# For USB : 
+        # Binaire de vedirect.py USB
+        $VEDIRECT_BIN = '/usr/bin/sudo /usr/bin/python /opt/PvMonit/bin/vedirect.py';
+# For Arduino :
+        # Fichier de data YAML enregistré par le script vedirectOnArduinoRemote.py  cohérence avec config-vedirectOnArduinoRemote.yaml
+        $VEDIRECT_DATA_FILE = '/tmp/PvMonit_getSerialArduino.data.yaml'; 
 # MPTT donnée récolté (voir la doc victron sur le protocole VE.Direct)
 $VEDIRECT_MPTT_DATA=array ('CS', 'PPV', 'V', 'ERR', 'I', 'VPV', 'H19', 'H20', 'H21', 'H22', 'H23');
 # BMV donnée récolté (voir la doc victron sur le protocole VE.Direct)
@@ -28,6 +34,8 @@ $VEDIRECT_DEVICE_CORRESPONDANCE=array ('HQXXXXXXXX' => 'MpttGarage', 'HQYYYYYY' 
 
 # Plafont de consommation en W impossible à dépasser (techniquement, sinon c'est une erreur de sonde)
 $CONSO_PLAFOND = 1500;
+# Tension standard du réseau (110V, 230V)
+$TENSION_RESEAU=230;
 
 ### Export vers Emoncms
 # Test la connexion internet

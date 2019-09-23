@@ -5,7 +5,7 @@ import time
 #import pprint
 
 # Read the conf file
-with open('../config.yaml') as f:
+with open('/opt/PvMonit/config-getSerialArduino.yaml') as f:
     config = yaml.load(f, Loader=yaml.FullLoader)
 
 # Function for log
@@ -18,10 +18,16 @@ ser = serial.Serial(config['serial']['port'], config['serial']['baudRate'], time
 line=''
 dataFile={}
 while True:
-        # Lecture du caractère en UTF 8
-        c = ser.read().decode('utf-8')
+        time.sleep(config['serial']['whileSleep'])
+        try:
+                # Lecture du caractère en UTF 8
+                c = ser.read().decode('utf-8')
+                readSerial=1
+        except:
+                logMsg(3, "Erreur sur le read ")
+                readSerial=0
         # Si un caractère est présent
-        if c:
+        if c and readSerial == 1:
                 # Si c'est un saut de ligne, la ligne est complète
                 if c == "\n":
                         isStop=line[0:4]
@@ -34,6 +40,7 @@ while True:
                                 logMsg(2, "Détection du STOP, on write le fichier")
                                 with open(config['dataPath'], 'w') as yaml_file:
                                         yaml.dump(dataFile, yaml_file, default_flow_style=False)
+                                time.sleep(1)
                         # Le serial
                         elif patternSerial.match(isSerial):
                                 logMsg(4, "Un serial ;")

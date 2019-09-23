@@ -35,14 +35,27 @@ function sauvegardeDesDonnes($data) {
 }
 
 # Scan des périphérique VE.Direct Victron
+if ($VEDIRECT_BY == 'USB') {
+        $cache_file=$CACHE_DIR.'/'.$CACHE_PREFIX.'vedirect_scan';
+        if(!checkCacheTime($cache_file)) {
+                file_put_contents($cache_file, json_encode(vedirect_scan()));
+                chmod($cache_file, 0777);
+        } 
+        $timerefresh=filemtime($cache_file);
+        $vedirect_data_ready=json_decode(file_get_contents($cache_file), true);
+} elseif ($VEDIRECT_BY == 'arduino') { 
+        $arduino_data=yaml_parse_file($VEDIRECT_DATA_FILE);
+        $idDevice=0;
+        foreach ($arduino_data as $device_id => $device_data) {
+                if (preg_match_all('/^Serial[0-9]$/m', $device_id)) {
+                        $device_vedirect_data[$idDevice]=vedirect_parse_arduino($device_data);
+                        $idDevice++;
+                }
+        }
+        $vedirect_data_ready = $device_vedirect_data;
+}
 
-$cache_file=$CACHE_DIR.'/'.$CACHE_PREFIX.'vedirect_scan';
-if(!checkCacheTime($cache_file)) {
-        file_put_contents($cache_file, json_encode(vedirect_scan()));
-        chmod($cache_file, 0777);
-} 
-$timerefresh=filemtime($cache_file);
-foreach (json_decode(file_get_contents($cache_file), true) as $device) {
+foreach ($vedirect_data_ready as $device) {
         if ($device['nom'] != '') {
 		sauvegardeDesDonnes("www-browser --dump '".$EMONCMS_URL_INPUT_JSON_POST."?json={".$device['data']."}&node=".$device['nom']."&time=".time()."&apikey=".$EMONCMS_API_KEY."'\n");
 	}

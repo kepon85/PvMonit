@@ -12,16 +12,42 @@ include('/opt/PvMonit/function.php');
 $PRINTMESSAGE=0;
 
 
+function onScreenPrint($name) {
+        if (in_array($name, $GLOBALS['WWW_DATA_PRIMAIRE'])) {
+                $screenVal=' screen="1"';
+        } else {
+                $screenVal= ' screen="0"';
+        }
+        if (in_array($name, $GLOBALS['WWW_DATA_PRIMAIRE_SMALLSCREEN'])) {
+                $screenVal.= ' smallScreen="1"';
+        }  else {
+                $screenVal.= ' smallScreen="0"';
+        }
+        return $screenVal;
+}
+
 $ppv_total=null;
 $nb_ppv_total=0;
-
-$cache_file=$CACHE_DIR.'/'.$CACHE_PREFIX.'vedirect_scan';
-if(!checkCacheTime($cache_file)) {
-        file_put_contents($cache_file, json_encode(vedirect_scan()));
-        chmod($cache_file, 0777);
-} 
-$timerefresh=filemtime($cache_file);
-foreach (json_decode(file_get_contents($cache_file), true) as $device) {
+if ($VEDIRECT_BY == 'USB') {
+        $cache_file=$CACHE_DIR.'/'.$CACHE_PREFIX.'vedirect_scan';
+        if(!checkCacheTime($cache_file)) {
+                file_put_contents($cache_file, json_encode(vedirect_scan()));
+                chmod($cache_file, 0777);
+        } 
+        $timerefresh=filemtime($cache_file);
+        $vedirect_data_ready = json_decode(file_get_contents($cache_file), true);
+} elseif ($VEDIRECT_BY == 'arduino') { 
+        $arduino_data=yaml_parse_file($VEDIRECT_DATA_FILE);
+        $idDevice=0;
+        foreach ($arduino_data as $device_id => $device_data) {
+                if (preg_match_all('/^Serial[0-9]$/m', $device_id)) {
+                        $device_vedirect_data[$idDevice]=vedirect_parse_arduino($device_data);
+                        $idDevice++;
+                }
+        }
+        $vedirect_data_ready = $device_vedirect_data;
+}
+foreach ($vedirect_data_ready as $device) {
         if ($device['serial']  == '') {
                 $device['serial'] = $device['nom'];
         }
@@ -50,6 +76,8 @@ foreach (json_decode(file_get_contents($cache_file), true) as $device) {
         echo "\n\t".'</device>';
 }
 
+
+
 ?>
 
 	<device id="other">
@@ -62,26 +90,13 @@ foreach (json_decode(file_get_contents($cache_file), true) as $device) {
 			<?php 
 			// Production totale
 			if ($ppv_total !== null) {
-				echo "".'<data id="PPVT" ';
-				if (in_array('PPVT', $GLOBALS['WWW_DATA_PRIMAIRE'])) {
-					echo ' screen="1"';
-				} else {
-					echo ' screen="0"';
-				}
-				if (in_array('PPVT', $GLOBALS['WWW_DATA_PRIMAIRE_SMALLSCREEN'])) {
-					echo ' smallScreen="1"';
-				}  else {
-					echo ' smallScreen="0"';
-				}
-				echo '>
+				echo '<data id="PPVT"'.onScreenPrint('PPVT').'>
 				<desc>Production total des panneaux</desc>
 				<value>'.$ppv_total.'</value>
 				<units>W</units>
 				</data>';
 			}
-			
 			?>
-		
 		</datas>		
 	</device>
 <?php 
@@ -90,6 +105,9 @@ $bin_enabled_data = scandir($BIN_ENABLED_DIR);
 foreach ($bin_enabled_data as $bin_script_enabled) { 
         $bin_script_info = pathinfo($BIN_ENABLED_DIR.'/'.$bin_script_enabled);
         if ($bin_script_info['extension'] == 'php') {
+                $filenameSplit = explode("-", $bin_script_info['filename']);
+                $idParent=$filenameSplit[0];
+                $id=$filenameSplit[1];
                 $cache_file_script=$CACHE_DIR.'/'.$CACHE_PREFIX.$bin_script_enabled;
                 if(!checkCacheTime($cache_file_script)) {
                         $script_return = (include $BIN_ENABLED_DIR.'/'.$bin_script_enabled);
@@ -97,22 +115,26 @@ foreach ($bin_enabled_data as $bin_script_enabled) {
                         chmod($cache_file_script, 0777);
                 } 
                 $timerefresh=filemtime($cache_file_script);
-                $script_return_data = json_decode(file_get_contents($cache_file_script), true) ;
-                $filenameSplit = explode("-", $bin_script_info['filename']);
-                $idParent=$filenameSplit[0];
-                $id=$filenameSplit[1];
-                echo "\n\t<device id=\"".$idParent."\">";
+                $script_return_datas = json_decode(file_get_contents($cache_file_script), true) ;
+                echo "\n\t<device id=\"".strtolower($idParent)."\">";
                 echo "\n\t\t<nom></nom>";
                 echo "\n\t\t<timerefresh>".$timerefresh."</timerefresh>";
                 echo "\n\t\t<type></type>";
                 echo "\n\t\t<modele></modele>";
                 echo "\n\t\t<serial></serial>";
                 echo "\n\t\t<datas>";
-                echo "\n\t\t\t<data id='".$id."' screen='".$script_return_data['screen']."' smallScreen='".$script_return_data['smallScreen']."'>";
-                echo "\n\t\t\t\t<desc>".$script_return_data['desc']."</desc>";
-                echo "\n\t\t\t\t<value>".$script_return_data['value']."</value>";
-                echo "\n\t\t\t\t<units>".$script_return_data['units']."</units>";
-                echo "\n\t\t\t</data>";
+                foreach ($script_return_datas as $script_return_data) {
+                        if (isset($script_return_data['id'])) {
+                                $id_data=$script_return_data['id'];
+                        } else {
+                                $id_data=$id;
+                        }
+                        echo "\n\t\t\t<data id='".$id_data."' screen='".$script_return_data['screen']."' smallScreen='".$script_return_data['smallScreen']."'>";
+                        echo "\n\t\t\t\t<desc>".$script_return_data['desc']."</desc>";
+                        echo "\n\t\t\t\t<value>".$script_return_data['value']."</value>";
+                        echo "\n\t\t\t\t<units>".$script_return_data['units']."</units>";
+                        echo "\n\t\t\t</data>";
+                }
                 echo "\n\t\t</datas>";
                 echo "\n\t</device>";
         } 

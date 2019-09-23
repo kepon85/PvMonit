@@ -346,6 +346,9 @@ function vedirect_scan() {
 				// Pour gérer le BMV-600
 				$BMV600=false;
 				$ve_nom=null;
+                                $ve_type='Inconnu';
+                                $ve_modele='Inconnu';
+                                $ve_type='Inconnu';
 				foreach ($vedirect_sortie as $vedirect_ligne) {
 					$vedirect_data = explode(':', $vedirect_ligne);
 					switch ($vedirect_data[0]) {
@@ -371,7 +374,7 @@ function vedirect_scan() {
 						case 'MPTT':
 							if (in_array($vedirect_data[0], $GLOBALS['VEDIRECT_MPTT_DATA'])) {
 								# éviter les doublons
-								if (!stristr($vedirect_data_formate, $vedirect_data[0])) {
+								if (!stristr($vedirect_data_formate, "$key:$value")) {
 									trucAdir(5, 'Valeur trouvé : '.$vedirect_data[0].':'.$vedirect_data[1]);
 									if ($vedirect_data_formate != '') {	
 										$vedirect_data_formate = $vedirect_data_formate.',';
@@ -390,6 +393,19 @@ function vedirect_scan() {
 								$vedirect_data_formate = $vedirect_data_formate.$vedirect_data[0].':'.$vedirect_data[1];
 							}
 						break;
+                                                case 'PhoenixInverter':
+                                                        if (in_array($key, $GLOBALS['VEDIRECT_PHOENIX_DATA'])) {
+                                                                if ($vedirect_data_formate != '') {
+                                                                        $vedirect_data_formate = $vedirect_data_formate.',';
+                                                                }
+                                                                $vedirect_data_formate = $vedirect_data_formate.$key.':'.$value;
+                                                        }
+                                                break;
+                                                default:
+                                                        if ($vedirect_data_formate != '') {
+                                                                $vedirect_data_formate = $vedirect_data_formate.',';
+                                                        }
+                                                        $vedirect_data_formate = $vedirect_data_formate.$key.':'.$value;
 					}
 				}
 				trucAdir(3, 'Les données sont formatées comme ceci : '.$vedirect_data_formate );
@@ -403,6 +419,80 @@ function vedirect_scan() {
 		}
 	}
 	return $vedirect_scan_return;
+}
+
+function vedirect_parse_arduino($data) {
+        // Pour gérer le BMV-600
+        $BMV600=false;
+        $ve_nom=null;
+        $ve_type='Inconnu';
+        $ve_modele='Inconnu';
+        $ve_serial='Inconnu';
+        foreach ($data as $key => $value) {
+                switch ($key) {
+                        case 'PID':
+                                $ve_type=ve_type($value);
+                                $ve_modele=ve_modele($value);
+                        break;
+                        case 'SER#':
+                                $ve_serial=$value;
+                                $ve_nom=ve_nom($value);
+                        break;
+                        case 'BMV':
+                                $ve_type='BMV';
+                                $ve_nom=$value;
+                        break;    
+                } 
+        }
+        trucAdir(3, 'C\'est un '.$ve_type.', modèle "'.$ve_modele.'" du nom de '.$ve_nom);
+        $vedirect_data_formate='';
+        krsort($data);
+        foreach ($data as $key => $value) {
+                switch ($ve_type) {
+                        case 'MPTT':
+                                if (in_array($key, $GLOBALS['VEDIRECT_MPTT_DATA'])) {
+                                        # éviter les doublons
+                                        if (!stristr($vedirect_data_formate, "$key:$value")) {
+                                                trucAdir(5, 'Valeur trouvé : '.$key.':'.$value);
+                                                if ($vedirect_data_formate != '') {	
+                                                        $vedirect_data_formate = $vedirect_data_formate.',';
+                                                }
+                                                $vedirect_data_formate = $vedirect_data_formate.$key.':'.$value;
+                                        } else {
+                                                trucAdir(5, 'Doublon, on passe');
+                                        }
+                                }
+                        break;
+                        case 'BMV':
+                                if (in_array($key, $GLOBALS['VEDIRECT_BMV_DATA'])) {
+                                        if ($vedirect_data_formate != '') {
+                                                $vedirect_data_formate = $vedirect_data_formate.',';
+                                        }
+                                        $vedirect_data_formate = $vedirect_data_formate.$key.':'.$value;
+                                }
+                        break;
+                        case 'PhoenixInverter':
+                                if (in_array($key, $GLOBALS['VEDIRECT_PHOENIX_DATA'])) {
+                                        if ($vedirect_data_formate != '') {
+                                                $vedirect_data_formate = $vedirect_data_formate.',';
+                                        }
+                                        $vedirect_data_formate = $vedirect_data_formate.$key.':'.$value;
+                                }
+                        break;
+                        default:
+                                if ($vedirect_data_formate != '') {
+                                        $vedirect_data_formate = $vedirect_data_formate.',';
+                                }
+                                $vedirect_data_formate = $vedirect_data_formate.$key.':'.$value;
+                }
+        }
+        trucAdir(3, 'Les données sont formatées comme ceci : '.$vedirect_data_formate );
+        $vedirect_scan_return['nom']=$ve_nom;
+        $vedirect_scan_return['type']=$ve_type;
+        $vedirect_scan_return['serial']=$ve_serial;
+        $vedirect_scan_return['modele']=$ve_modele;
+        $vedirect_scan_return['data']=$vedirect_data_formate;
+        return $vedirect_scan_return;
 }
 
 # Fonction de debug
@@ -538,5 +628,6 @@ function checkCacheTime($file) {
                 return true;
         }
 }
+
 
 ?>
