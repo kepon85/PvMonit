@@ -1,5 +1,31 @@
 <?php
 
+function getConfigYaml($config_dir){
+        $config=yaml_parse_file($config_dir.'/config-default.yaml');
+        $config_perso=yaml_parse_file($config_dir.'/config.yaml');
+        
+        foreach($config_perso as $key1=>$perso1) {
+                if ($key1 == 'deviceCorrespondance') {
+                        $config[$key1]=$perso1;
+                } elseif (is_array($perso1)) {
+                        foreach($perso1 as $key2=>$perso2) {
+                                if (is_array($perso2)) {
+                                        foreach($perso2 as $key3=>$perso3) {
+                                                if (isset($config[$key1][$key2][$key3]))  {
+                                                        $config[$key1][$key2][$key3]=$perso3;
+                                                }
+                                        }
+                                }elseif (isset($config[$key1][$key2]))  {
+                                        $config[$key1][$key2]=$perso2;
+                                }
+                        }
+                } elseif (isset($config[$key1]))  {
+                        $config[$key1]=$perso1;
+                }
+        }
+        return $config;
+}
+
 # Victron : détermine le type d'appareil
 # Source doc Victron "VE.Direct Protocol"
 function ve_type($ve_pid) {
@@ -57,18 +83,21 @@ function ve_modele($ve_pid) {
 # Victron : détermine plein de trucs en fonction du label
 # Source doc Victron "VE.Direct Protocol"
 function ve_label2($label, $valeur) {
+        global $config;
 	$veData['label']=$label;
 	$veData['desc']=$label;
 	$veData['value']=$valeur;
 	$veData['units']='';
 	$veData['screen']=0;
 	$veData['smallScreen']=0;
-	if (in_array($label, $GLOBALS['WWW_DATA_PRIMAIRE'])) {
+        
+	if (in_array($label, $config['www']['dataPrimaire'])) {
 		$veData['screen']=1;
 	} 
-	if (in_array($label, $GLOBALS['WWW_DATA_PRIMAIRE_SMALLSCREEN'])) {
+	if (in_array($label, $config['www']['dataPrimaireSmallScreen'])) {
 		$veData['smallScreen']=1;
 	} 
+        
 	switch ($label) {
 		case 'V':
 			$veData['value']=round($valeur*0.001, 2);
@@ -321,8 +350,9 @@ function ve_label2($label, $valeur) {
 
 
 function ve_nom($ve_serial) {
+        global $config;
 	$ve_nom=$ve_serial;
-	foreach ($GLOBALS['VEDIRECT_DEVICE_CORRESPONDANCE'] as $serialName => $nom) {
+	foreach ($config['deviceCorrespondance'] as $serialName => $nom) {
 		if ($ve_serial == $serialName) {
 			$ve_nom=$nom;
 		}
@@ -332,6 +362,7 @@ function ve_nom($ve_serial) {
 
 # Fonction vedirect MPTT / BMV
 function vedirect_scan() {
+        global $config;
 	trucAdir(4, 'Recherche de périphérique vedirect');
 	$idDevice=0;
 	foreach (scandir('/dev') as $unDev) {
@@ -339,7 +370,7 @@ function vedirect_scan() {
 			trucAdir(4, 'Un périphérique TTY à été trouvé : '.$unDev);
 			unset($vedirect_sortie);
 			unset($vedirect_retour);
-			exec($GLOBALS['VEDIRECT_BIN'].' /dev/'.$unDev, $vedirect_sortie, $vedirect_retour);
+			exec($config['vedirect']['usb']['bin'].' /dev/'.$unDev, $vedirect_sortie, $vedirect_retour);
 			if ($vedirect_retour != 0){
 				trucAdir(1, 'Erreur à l\'exécution du script '.VEDIRECT_BIN.' sur le '.$unDev);
 			} else {
@@ -372,7 +403,7 @@ function vedirect_scan() {
 					$vedirect_data = explode(':', $vedirect_ligne);
 					switch ($ve_type) {
 						case 'MPTT':
-							if (in_array($vedirect_data[0], $GLOBALS['VEDIRECT_MPTT_DATA'])) {
+							if (in_array($vedirect_data[0], $config['vedirect']['data_ok']['mppt'])) {
 								# éviter les doublons
 								if (!stristr($vedirect_data_formate, "$key:$value")) {
 									trucAdir(5, 'Valeur trouvé : '.$vedirect_data[0].':'.$vedirect_data[1]);
@@ -386,7 +417,7 @@ function vedirect_scan() {
 							}
 						break;
 						case 'BMV':
-							if (in_array($vedirect_data[0], $GLOBALS['VEDIRECT_BMV_DATA'])) {
+							if (in_array($vedirect_data[0], $config['vedirect']['data_ok']['bmv'])) {
 								if ($vedirect_data_formate != '') {
 									$vedirect_data_formate = $vedirect_data_formate.',';
 								}
@@ -394,7 +425,7 @@ function vedirect_scan() {
 							}
 						break;
                                                 case 'PhoenixInverter':
-                                                        if (in_array($key, $GLOBALS['VEDIRECT_PHOENIX_DATA'])) {
+                                                        if (in_array($key, $config['vedirect']['data_ok']['phoenix'])) {
                                                                 if ($vedirect_data_formate != '') {
                                                                         $vedirect_data_formate = $vedirect_data_formate.',';
                                                                 }
@@ -422,6 +453,7 @@ function vedirect_scan() {
 }
 
 function vedirect_parse_arduino($data) {
+        global $config;
         // Pour gérer le BMV-600
         $BMV600=false;
         $ve_nom=null;
@@ -450,7 +482,7 @@ function vedirect_parse_arduino($data) {
         foreach ($data as $key => $value) {
                 switch ($ve_type) {
                         case 'MPTT':
-                                if (in_array($key, $GLOBALS['VEDIRECT_MPTT_DATA'])) {
+                                if (in_array($key, $config['vedirect']['data_ok']['mppt'])) {
                                         # éviter les doublons
                                         if (!stristr($vedirect_data_formate, "$key:$value")) {
                                                 trucAdir(5, 'Valeur trouvé : '.$key.':'.$value);
@@ -464,7 +496,7 @@ function vedirect_parse_arduino($data) {
                                 }
                         break;
                         case 'BMV':
-                                if (in_array($key, $GLOBALS['VEDIRECT_BMV_DATA'])) {
+                                if (in_array($key, $config['vedirect']['data_ok']['bmv'])) {
                                         if ($vedirect_data_formate != '') {
                                                 $vedirect_data_formate = $vedirect_data_formate.',';
                                         }
@@ -472,7 +504,7 @@ function vedirect_parse_arduino($data) {
                                 }
                         break;
                         case 'PhoenixInverter':
-                                if (in_array($key, $GLOBALS['VEDIRECT_PHOENIX_DATA'])) {
+                                if (in_array($key, $config['vedirect']['data_ok']['phoenix'])) {
                                         if ($vedirect_data_formate != '') {
                                                 $vedirect_data_formate = $vedirect_data_formate.',';
                                         }
@@ -497,7 +529,8 @@ function vedirect_parse_arduino($data) {
 
 # Fonction de debug
 function trucAdir($niveau, $msg) {
-	if ($GLOBALS['PRINTMESSAGE'] >= $niveau) {
+        global $config;
+	if ($config['printMessage'] >= $niveau) {
 		if (isset($_SERVER['SERVER_NAME'])) {
 			echo  '<script type="text/javascript">console.log(\''.date('c') . ' - ' . strtr($msg, '\'', '\\\'').'\'); </script>';
 		} else {
@@ -508,11 +541,12 @@ function trucAdir($niveau, $msg) {
 
 # Récupérer les informations de la sonde de température
 function Temperature_USB($TEMPERV14_BIN) {
+        global $config;
         # Exécussion du programme pour récupérer les inforamtions de la sonde de température
         exec($TEMPERV14_BIN, $temperv14_sortie, $temperv14_retour);
         if ($temperv14_retour != 0){
                 trucAdir(3, 'La sonde de température n\'est probablement pas connecté.');
-                trucAdir(5, 'Erreur '.$temperv14_retour.' à l\'exécussion du programme .'.$GLOBALS['TEMPERV14_BIN']);
+                trucAdir(5, 'Erreur '.$temperv14_retour.' à l\'exécussion du programme .'.$TEMPERV14_BIN);
                 $temperature_retour='NODATA';
         } else {
                 trucAdir(4, 'La sonde de température indique '.$temperv14_sortie[0].'°C, il y aura peut être correction.');
@@ -522,6 +556,7 @@ function Temperature_USB($TEMPERV14_BIN) {
 }
 
 function Amp_USB($bin) {
+        global $config;
         $consommation_retour='NODATA';
         for ($i = 1; $i <= 3; $i++) {
                 trucAdir(3, 'Tentative '.$i.' de récupération de la sonde ');
@@ -538,7 +573,7 @@ function Amp_USB($bin) {
                                 } else {				
                                         $conso_en_w=$exec_consommation_sortie[0]*230;
                                         trucAdir(1, 'La consommation est de '.$exec_consommation_sortie[0].'A soit '.$conso_en_w.'W');
-                                        if ($conso_en_w > $GLOBALS['CONSO_PLAFOND']) {
+                                        if ($conso_en_w > $config['consoPlafond']) {
                                                 trucAdir(1, 'C`est certainement une erreur, le plafond possible est atteind');
                                         } else {
                                                 $consommation_retour=$exec_consommation_sortie[0];
@@ -558,7 +593,6 @@ function Amp_USB($bin) {
 
 // Class source : http://abhinavsingh.com/how-to-use-locks-in-php-cron-jobs-to-avoid-cron-overlaps/
 class cronHelper {
-
 	private static $pid;
 
 	function __construct() {}
@@ -573,9 +607,10 @@ class cronHelper {
 	}
 
 	public static function lock() {
+                global $config;
 		global $argv;
 
-		$lock_file = $GLOBALS['LOCKFILE'];
+		$lock_file = $config['emoncms']['lockFile'];
 
 		if(file_exists($lock_file)) {
 			//return FALSE;
@@ -599,8 +634,8 @@ class cronHelper {
 
 	public static function unlock() {
 		global $argv;
-
-		$lock_file = $GLOBALS['LOCKFILE'];
+                global $config;
+		$lock_file = $config['emoncms']['lockFile'];
 
 		if(file_exists($lock_file))
 			unlink($lock_file);
@@ -613,14 +648,14 @@ class cronHelper {
 
 // Check cache expire
 function checkCacheTime($file) {
-        global $CACHE_TIME, $CACHE_DIR;
-        if (!is_dir($CACHE_DIR)) {
-                mkdir($CACHE_DIR, 0777);
-                chmod($CACHE_DIR, 0777);
+        global $config;
+        if (!is_dir($config['cache']['dir'])) {
+                mkdir($config['cache']['dir'], 0777);
+                chmod($config['cache']['dir'], 0777);
         }
         if (!is_file($file)) {
                 return false;
-        } else if (filemtime($file)+$CACHE_TIME < time()) {
+        } else if (filemtime($file)+$config['cache']['time'] < time()) {
                 return false;
         } else if (isset($_GET['nocache'])) {
                 return false;

@@ -3,21 +3,38 @@
 import time
 import board
 import busio
+import yaml
 import adafruit_character_lcd.character_lcd_rgb_i2c as character_lcd
 from lxml import etree
 from urllib.request import urlopen
+import pprint
 
-# conf
-data_url = 'http://192.168.1.2/data-xml.php'
-tmp_data_file='/tmp/pvmonit-data-xml.php.tmp'
-rafraichissement=0.1 # en seconde pour les boutons
-data_update=30 # en seconde pour le rafraichissement des données
-lcd_on_timer=60 # en seconde le temps que l'écran reste allumé si par défaut éteind
-est_ce_la_nuit_timer=600 # détection de la nuit tout les x secondes
-dataprint = ['SOC', 'P', 'PPVT', 'CONSO']
-lcd_on_at=8 # heure d'allumage du LCD
-lcd_off_at=21 # heure d'extinction du LCD
+with open('/opt/PvMonit/config-default.yaml') as f1:
+    config = yaml.load(f1, Loader=yaml.FullLoader)
+with open('/opt/PvMonit/config.yaml') as f2:
+    config_perso = yaml.load(f2, Loader=yaml.FullLoader)
 
+def configGet(key1, key2=None, key3=None, key4=None):
+    if key4 != None:
+        try:
+            return config_perso[key1][key2][key3][key4]
+        except:
+            return config[key1][key2][key3][key4]
+    elif key3 != None:
+        try:
+            return config_perso[key1][key2][key3]
+        except:
+            return config[key1][key2][key3]
+    elif key2 != None:
+        try:
+            return config_perso[key1][key2]
+        except:
+            return config[key1][key2]
+    else:
+        try:
+            return config_perso[key1]
+        except:
+            return config[key1]
 
 ## LCD prepar :
 # Modify this if you have a different sized Character LCD
@@ -41,7 +58,7 @@ def debugTerm(msg) :
 
 # Détection du dodo (pour extinction de l'écran)
 def est_ce_la_nuit() :
-    if int(time.strftime ('%H')) >= lcd_off_at or int(time.strftime ('%H')) <= lcd_on_at:
+    if int(time.strftime ('%H')) >= configGet('lcd','offAt') or int(time.strftime ('%H')) <= configGet('lcd','onAt'):
         return True
     else:
         return False
@@ -62,19 +79,19 @@ def update_data():
     lcd.message = '-'
     lcd.clear()
     lcd.message = '|'
-    with open(tmp_data_file, 'wb') as tmpxml:
-        tmpxml.write(urlopen(data_url).read())
+    with open(configGet('tmpFileDataXml'), 'wb') as tmpxml:
+        tmpxml.write(urlopen(configGet('urlDataXml')).read())
 
-    datatotal = len(dataprint)
+    datatotal = len(configGet('lcd','dataPrint'))
 
     datacount = 0
-    tree = etree.parse(tmp_data_file)
+    tree = etree.parse(configGet('tmpFileDataXml'))
     msg_soc='BA:?'
     msg_p='P:?'
     msg_ppvt='PV:?'
     msg_conso='CON:?'
     for datas in tree.xpath("/devices/device/datas/data"):
-        if datas.get("id") in dataprint:
+        if datas.get("id") in configGet('lcd','dataPrint'):
             datacount = datacount + 1
             for data in datas.getchildren():
                 if data.tag == "value":
@@ -137,8 +154,8 @@ while True:
             debugTerm('LCD à ON')
             # Si c'est la nuit alors on met un timer pour l'extinction
             if est_ce_la_nuit() == True:
-                force_lcd_on=lcd_on_timer
-                debugTerm("Force LCD à ON pendant " + str(lcd_on_timer) + "s")
+                force_lcd_on=configGet('lcd','OnTimer')
+                debugTerm("Force LCD à ON pendant " + str(configGet('lcd','OnTimer')) + "s")
         # Si c'est allumé on éteind
         elif etat_lcd == True:
             lcd.color = [0, 0, 0]
@@ -166,15 +183,15 @@ while True:
         update_data_last=update_data()
 
     else:
-        time.sleep(rafraichissement)
+        time.sleep(configGet('lcd','rafraichissement'))
         
         # Update data frequence
-        update_data_time=update_data_last+data_update
+        update_data_time=update_data_last+configGet('lcd','dataUpdate')
         if update_data_time < time.time():
             update_data_last=update_data()
         
         # On se repose la question de la nuit...
-        est_ce_la_nuit_time=est_ce_la_nuit_last+est_ce_la_nuit_timer
+        est_ce_la_nuit_time=est_ce_la_nuit_last+configGet('lcd','estCeLaNuitTimer')
         if est_ce_la_nuit_time < time.time():
             debugTerm('c est la nuit ou bien ?')
             est_ce_la_nuit_last = time.time()
@@ -187,14 +204,14 @@ while True:
 
         # Timer d'extinction si c'est la nuit
         if force_lcd_on != False:
-            force_lcd_on=force_lcd_on-rafraichissement
+            force_lcd_on=force_lcd_on-configGet('lcd','rafraichissement')
         if force_lcd_on != False and force_lcd_on < 0:
             lcd.color = [0, 0, 0]
             etat_lcd = False
             force_lcd_on = False
-            debugTerm("Extinction de l'écran au bout des" + str(lcd_on_timer) + "s c'est la nuit...")
+            debugTerm("Extinction de l'écran au bout des" + str(configGet('lcd','OnTimer')) + "s c'est la nuit...")
     
     time.sleep(0.1)
     
 # On supprime le fichier temporaire (pour la forme)
-remove(tmp_data_file) 
+remove(configGet('tmpFileDataXml')) 

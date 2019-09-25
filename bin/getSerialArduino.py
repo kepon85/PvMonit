@@ -4,21 +4,45 @@ import re
 import time
 #import pprint
 
-# Read the conf file
-with open('/opt/PvMonit/config-getSerialArduino.yaml') as f:
-    config = yaml.load(f, Loader=yaml.FullLoader)
+
+with open('/opt/PvMonit/config-default.yaml') as f1:
+    config = yaml.load(f1, Loader=yaml.FullLoader)
+with open('/opt/PvMonit/config.yaml') as f2:
+    config_perso = yaml.load(f2, Loader=yaml.FullLoader)
+
+def configGet(key1, key2=None, key3=None, key4=None):
+    if key4 != None:
+        try:
+            return config_perso[key1][key2][key3][key4]
+        except:
+            return config[key1][key2][key3][key4]
+    elif key3 != None:
+        try:
+            return config_perso[key1][key2][key3]
+        except:
+            return config[key1][key2][key3]
+    elif key2 != None:
+        try:
+            return config_perso[key1][key2]
+        except:
+            return config[key1][key2]
+    else:
+        try:
+            return config_perso[key1]
+        except:
+            return config[key1]
 
 # Function for log
 def logMsg(level, msg):
-    if level <= config['PrintMessage'] :
+    if level <= configGet('printMessage') :
         print(time.strftime ('%m/%d/%Y %H:%M') ," - ",msg)
     return -1
 
-ser = serial.Serial(config['serial']['port'], config['serial']['baudRate'], timeout=config['serial']['timeout'])
+ser = serial.Serial(configGet('vedirect', 'arduino', 'serial', 'port'), configGet('vedirect', 'arduino', 'serial', 'baudRate'), timeout=configGet('vedirect', 'arduino', 'serial', 'timeout'))
 line=''
 dataFile={}
 while True:
-        time.sleep(config['serial']['whileSleep'])
+        time.sleep(configGet('vedirect', 'arduino', 'serial', 'whileSleep'))
         try:
                 # Lecture du caractère en UTF 8
                 c = ser.read().decode('utf-8')
@@ -34,11 +58,11 @@ while True:
                         isSonde=line[0:2]
                         isSerial=line[0:3]
                         patternSerial = re.compile(r"S:[1-3]")
-                        logMsg(4, config['serial']['port'] + " : " + line)
+                        logMsg(4, configGet('vedirect', 'arduino', 'serial', 'port') + " : " + line)
                         # le stop
                         if isStop == "STOP":
                                 logMsg(2, "Détection du STOP, on write le fichier")
-                                with open(config['dataPath'], 'w') as yaml_file:
+                                with open(configGet('tmpFileDataXml'), 'w') as yaml_file:
                                         yaml.dump(dataFile, yaml_file, default_flow_style=False)
                                 time.sleep(1)
                         # Le serial

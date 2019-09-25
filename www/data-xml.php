@@ -5,20 +5,20 @@
 # Script sous licence BEERWARE
 # Version 1.0	2019
 ###################################
-include_once('/opt/PvMonit/config-default.php');
-include_once('/opt/PvMonit/config.php');
 
 include('/opt/PvMonit/function.php');
-$PRINTMESSAGE=0;
 
-
+// Chargement de la config
+$config = getConfigYaml('/opt/PvMonit');
+$config['printMessage']=0;
 function onScreenPrint($name) {
-        if (in_array($name, $GLOBALS['WWW_DATA_PRIMAIRE'])) {
+        global $config;
+        if (in_array($name, $config['www']['dataPrimaire'])) {
                 $screenVal=' screen="1"';
         } else {
                 $screenVal= ' screen="0"';
         }
-        if (in_array($name, $GLOBALS['WWW_DATA_PRIMAIRE_SMALLSCREEN'])) {
+        if (in_array($name, $config['www']['dataPrimaireSmallScreen'])) {
                 $screenVal.= ' smallScreen="1"';
         }  else {
                 $screenVal.= ' smallScreen="0"';
@@ -28,16 +28,16 @@ function onScreenPrint($name) {
 
 $ppv_total=null;
 $nb_ppv_total=0;
-if ($VEDIRECT_BY == 'USB') {
-        $cache_file=$CACHE_DIR.'/'.$CACHE_PREFIX.'vedirect_scan';
+if ($config['vedirect']['by'] == 'USB') {
+        $cache_file=$config['cache']['dir'].'/'.$config['cache']['file_prefix'].'vedirect_scan';
         if(!checkCacheTime($cache_file)) {
                 file_put_contents($cache_file, json_encode(vedirect_scan()));
                 chmod($cache_file, 0777);
         } 
         $timerefresh=filemtime($cache_file);
         $vedirect_data_ready = json_decode(file_get_contents($cache_file), true);
-} elseif ($VEDIRECT_BY == 'arduino') { 
-        $arduino_data=yaml_parse_file($VEDIRECT_DATA_FILE);
+} elseif ($config['vedirect']['by'] == 'arduino') { 
+        $arduino_data=yaml_parse_file($config['vedirect']['arduino']['data_file']);
         $idDevice=0;
         foreach ($arduino_data as $device_id => $device_data) {
                 if (preg_match_all('/^Serial[0-9]$/m', $device_id)) {
@@ -48,12 +48,12 @@ if ($VEDIRECT_BY == 'USB') {
         $vedirect_data_ready = $device_vedirect_data;
 }
 foreach ($vedirect_data_ready as $device) {
-        if ($device['serial']  == '') {
+        if ($device['serial']  == 'Inconnu' || $device['serial']  == '') {
                 $device['serial'] = $device['nom'];
         }
         echo "\n\t".'<device id="'.$device['serial'].'">';
         echo "\n\t\t".'<nom>'.$device['nom'].'</nom>';
-        echo "\n\t\t".'<timerefresh>'.$timerefresh.'</timerefresh>';
+        echo "\n\t\t".'<timerefresh>'.time().'</timerefresh>';
         echo "\n\t\t".'<type>'.$device['type'].'</type>';
         echo "\n\t\t".'<modele>'.$device['modele'].'</modele>';
         echo "\n\t\t".'<serial>'.$device['serial'].'</serial>';
@@ -101,16 +101,16 @@ foreach ($vedirect_data_ready as $device) {
 	</device>
 <?php 
 // Scan du répertoire bin-enabled
-$bin_enabled_data = scandir($BIN_ENABLED_DIR);
+$bin_enabled_data = scandir($config['dir']['bin_enabled']);
 foreach ($bin_enabled_data as $bin_script_enabled) { 
-        $bin_script_info = pathinfo($BIN_ENABLED_DIR.'/'.$bin_script_enabled);
+        $bin_script_info = pathinfo($config['dir']['bin_enabled'].'/'.$bin_script_enabled);
         if ($bin_script_info['extension'] == 'php') {
                 $filenameSplit = explode("-", $bin_script_info['filename']);
                 $idParent=$filenameSplit[0];
                 $id=$filenameSplit[1];
-                $cache_file_script=$CACHE_DIR.'/'.$CACHE_PREFIX.$bin_script_enabled;
+                $cache_file_script=$config['cache']['dir'].'/'.$config['cache']['file_prefix'].$bin_script_enabled;
                 if(!checkCacheTime($cache_file_script)) {
-                        $script_return = (include $BIN_ENABLED_DIR.'/'.$bin_script_enabled);
+                        $script_return = (include $config['dir']['bin_enabled'].'/'.$bin_script_enabled);
                         file_put_contents($cache_file_script, json_encode($script_return));
                         chmod($cache_file_script, 0777);
                 } 

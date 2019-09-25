@@ -7,11 +7,9 @@
 # Version 0.2	2016
 ######################################################################
 
-
-include_once('/opt/PvMonit/config-default.php');
-include_once('/opt/PvMonit/config.php');
-
 include('/opt/PvMonit/function.php');
+// Chargement de la config
+$config = getConfigYaml('/opt/PvMonit');
 
 trucAdir(5, 'Lancement du script');
 $timestamp=time();
@@ -23,28 +21,29 @@ if (date('Y') < '2016') {
 }
 
 # Test du répertoire de collecte
-if (!is_dir($GLOBALS['DATA_COLLECTE'])) {
-	trucAdir(3, 'Création du répertoire '.$GLOBALS['DATA_COLLECTE']);
-	mkdir($GLOBALS['DATA_COLLECTE']);
+if (!is_dir($config['emoncms']['dataCollecte'])) {
+	trucAdir(3, 'Création du répertoire '.$config['emoncms']['dataCollecte']);
+	mkdir($config['emoncms']['dataCollecte']);
 }
 
 function sauvegardeDesDonnes($data) {
-	$fichier=$GLOBALS['DATA_COLLECTE'].'/'.$GLOBALS['timestamp'];
+        global $config;
+	$fichier=$config['emoncms']['dataCollecte'].'/'.$GLOBALS['timestamp'];
 	trucAdir(5, 'Les données ##'.$data.'## sont mise à l\'expédition dans '.$fichier);
 	file_put_contents($fichier, $data, FILE_APPEND);
 }
 
 # Scan des périphérique VE.Direct Victron
-if ($VEDIRECT_BY == 'USB') {
-        $cache_file=$CACHE_DIR.'/'.$CACHE_PREFIX.'vedirect_scan';
+if ($config['vedirect']['by'] == 'USB') {
+        $cache_file=$config['cache']['dir'].'/'.$config['cache']['file_prefix'].'vedirect_scan';
         if(!checkCacheTime($cache_file)) {
                 file_put_contents($cache_file, json_encode(vedirect_scan()));
                 chmod($cache_file, 0777);
         } 
         $timerefresh=filemtime($cache_file);
         $vedirect_data_ready=json_decode(file_get_contents($cache_file), true);
-} elseif ($VEDIRECT_BY == 'arduino') { 
-        $arduino_data=yaml_parse_file($VEDIRECT_DATA_FILE);
+} elseif ($config['vedirect']['by'] == 'arduino') { 
+        $arduino_data=yaml_parse_file($config['vedirect']['arduino']['data_file']);
         $idDevice=0;
         foreach ($arduino_data as $device_id => $device_data) {
                 if (preg_match_all('/^Serial[0-9]$/m', $device_id)) {
@@ -57,36 +56,45 @@ if ($VEDIRECT_BY == 'USB') {
 
 foreach ($vedirect_data_ready as $device) {
         if ($device['nom'] != '') {
-		sauvegardeDesDonnes("www-browser --dump '".$EMONCMS_URL_INPUT_JSON_POST."?json={".$device['data']."}&node=".$device['nom']."&time=".time()."&apikey=".$EMONCMS_API_KEY."'\n");
+		sauvegardeDesDonnes("www-browser --dump '".$config['emoncms']['urlInputJsonPost']."?json={".$device['data']."}&node=".$device['nom']."&time=".time()."&apikey=".$config['emoncms']['apiKey']."'\n");
 	}
 }
 
 
 $dataNode1=null;
 // Scan du répertoire bin-enabled
-$bin_enabled_data = scandir($BIN_ENABLED_DIR);
+$bin_enabled_data = scandir($config['dir']['bin_enabled']);
 foreach ($bin_enabled_data as $bin_script_enabled) { 
-        $bin_script_info = pathinfo($BIN_ENABLED_DIR.'/'.$bin_script_enabled);
+        $bin_script_info = pathinfo($config['dir']['bin_enabled'].'/'.$bin_script_enabled);
         if ($bin_script_info['extension'] == 'php') {
-                $cache_file_script=$CACHE_DIR.'/'.$CACHE_PREFIX.$bin_script_enabled;
+                $filenameSplit = explode("-", $bin_script_info['filename']);
+                $idParent=$filenameSplit[0];
+                $id=$filenameSplit[1];
+                $cache_file_script=$config['cache']['dir'].'/'.$config['cache']['file_prefix'].$bin_script_enabled;
                 if(!checkCacheTime($cache_file_script)) {
-                        $script_return = (include $BIN_ENABLED_DIR.'/'.$bin_script_enabled);
+                        $script_return = (include $config['dir']['bin_enabled'].'/'.$bin_script_enabled);
                         file_put_contents($cache_file_script, json_encode($script_return));
                         chmod($cache_file_script, 0777);
                 } 
                 $timerefresh=filemtime($cache_file_script);
-                $script_return_data = json_decode(file_get_contents($cache_file_script), true) ;
-                $filenameSplit = explode("-", $bin_script_info['filename']);
-                $id=$filenameSplit[1];
-                if (!is_null($dataNode1)) {
-                        $dataNode1=$dataNode1.',';
+                $script_return_datas = json_decode(file_get_contents($cache_file_script), true) ;
+                foreach ($script_return_datas as $script_return_data) {
+                        if (isset($script_return_data['id'])) {
+                                $id_data=$script_return_data['id'];
+                        } else {
+                                $id_data=$id;
+                        }
+                        if (!is_null($dataNode1)) {
+                                $dataNode1=$dataNode1.',';
+                        }
+                        $dataNode1=$dataNode1.strtolower($id_data).':'.$script_return_data['value'];
                 }
-                $dataNode1=$dataNode1.strtolower($id).':'.$script_return_data['value'];
+                
         } 
 }
 
 if (!is_null($dataNode1)) {
-	sauvegardeDesDonnes("www-browser --dump '".$EMONCMS_URL_INPUT_JSON_POST."?json={".$dataNode1."}&node=1&time=".time()."&apikey=".$EMONCMS_API_KEY."'\n");
+	sauvegardeDesDonnes("www-browser --dump '".$config['emoncms']['urlInputJsonPost']."?json={".$dataNode1."}&node=1&time=".time()."&apikey=".$config['emoncms']['apiKey']."'\n");
 }
 
 

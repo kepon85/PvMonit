@@ -1,0 +1,174 @@
+######################################################################
+# PvMonit - By David Mercereau : http://david.mercereau.info/contact/
+# Licence BEERWARE
+# Version 2.0	2019
+######################################################################
+
+
+##############################
+#
+# NE MODIFIER PAS CE FICHIER !
+# copier config-default.yaml dans config.yaml et modifier config.yaml (supprimer tout ce qui ne vous intéresse pas de modifier)
+#
+##############################
+
+
+# Niveau d'affichage des messages
+printMessage: 0                             # 0=0	5=debug
+# URL data
+urlDataXml: http://127.0.0.1/data-xml.php
+tmpFileDataXml: /tmp/PvMonit_data-xml.php.tmp
+
+dir:
+    bin: /opt/PvMonit/bin/
+    bin_enabled: /opt/PvMonit/bin-enabled/
+
+cache:
+    dir: /tmp/PvMonit_cache                 # in tmpfs
+    file_prefix: 
+    time: 60                                # in second
+
+# Methode de récupération des données VE DIRECT (par USB - vedirect OU serial par Arduino)
+vedirect:
+    by: usb                                 # usb OR arduino
+    usb:
+        # Binaire de vedirect.py USB
+        bin: /usr/bin/sudo /usr/bin/python /opt/PvMonit/bin/vedirect.py
+    arduino:
+        # Fichier de data YAML enregistré par le script vedirectOnArduinoRemote.py  cohérence avec config-vedirectOnArduinoRemote.yaml
+        data_file: /tmp/PvMonit_getSerialArduino.data.yaml
+        serial:
+            port: /dev/ttyAMA0                  # ttyAMA0 pour le serial via GPIO, ttyUSB0 pour le port USB...
+            timeout: 0
+            baudRate: 4800
+            # Débit du serial 0 qui va vers l'Arduino (doit être cohérent entre les 2, diffère selon la distance de câble)
+            # Débit   Longueur (m)
+            # 2400   60
+            # 4 800   30
+            # 9 600   15
+            # 19 200  7,6
+            # https://fr.wikipedia.org/wiki/RS-232#Limites
+            whileSleep: 0.04     
+    # donnée récolté (voir la doc victron sur le protocole VE.Direct)
+    data_ok:
+        mppt:
+            - CS
+            - PPV
+            - V
+            - ERR
+            - I
+            - VPV
+            - H19
+            - H20
+            - H21
+            - H22
+            - H23
+        bmv:
+            - V
+            - VS
+            - VM
+            - DM
+            - I
+            - T
+            - P
+            - CE
+            - SOC
+            - TTG
+            - AR
+            - H1
+            - H2
+            - H3
+            - H4
+            - H5
+            - H6
+            - H7
+            - H8
+            - H9
+            - H10
+            - H11
+            - H12
+            - H13
+            - h14
+            - H15
+            - H16
+            - H17
+            - H18
+        phoenix:
+            - P
+            - CS
+            - MODE
+            - AC_OUT_V
+            - AC_OUT_I
+            - WARN
+
+# Numéro de série (champs SER#) en correspondance avec des nom buvables
+deviceCorrespondance:
+    HQXXXXXXXX: MpttGarage
+    HQYYYYYYYY: MpttToit
+
+# Plafont de consommation en W impossible à dépasser (techniquement, sinon c'est une erreur de sonde)
+consoPlafond: 1500
+# Tension standard du réseau (110V ou 230V)
+tensionNorme: 230
+
+### Export vers Emoncms
+emoncms:
+    # Test la connexion internet
+    testInternetHost: emoncms.org
+    testInternetPort: 80
+    # emoncms URL du post.json & API key
+    urlInputJsonPost: https://emoncms.org/input/post.json
+    apiKey: XXXXXXXXXXXXXXXXXXXXXXXX
+    # Répertoire de collecte de données
+    dataCollecte: /tmp/PvMonit_collecteData
+    # Dossier ou ranger les erreurs
+    dataCollecteError: /tmp/PvMonit_collecteDataError
+    # Attente entre deux requête OK
+    sleepOk: 1
+    # Attente entre deux requête échoué
+    sleepNok: 3
+    # Fichier de lock pour éviter les doublons
+    lockFile: /tmp/PvMonit_sendToEmoncms.lock
+
+### Page Web : 
+www:
+    # Délais de raffraichissement de la page (en seconde) 300000 = 5 minutes
+    refreshTime: 300000
+    # Max de la jauge voltage batterie (en V) 
+    vbatMax: 30
+    # Max de la jauge puissance PV (en W)
+    PpvMax: 500                         # max Jauge puissance PV (en W)
+    # Max de la jauge puissance PV total (si plusieurs régulateur) (en W)
+    PpvtMax: 500                        # max Jauge puissance PV (en W)
+    dataPrimaire:
+        - V
+        - PPV
+        - ERR
+        - CS
+        - SOC
+        - AR
+        - P
+        - TTG
+        - MODE
+        - AC_OUT_V
+        - AC_OUT_I
+        - WARN
+        - PPVT
+    dataPrimaireSmallScreen:
+        - SOC
+        - P
+        - PPVT
+
+lcd:
+    rafraichissement: 0.1                           # en seconde pour les boutons
+    dataUpdate: 30                                  # en seconde pour le rafraichissement des données
+    onTimer: 60                                     # en seconde le temps que l'écran reste allumé si par défaut éteind
+    estCeLaNuitTimer: 600                           # détection de la nuit tout les x secondes
+    dataPrint:
+        - SOC
+        - P
+        - PPVT
+        - CONSO
+    onAt: 8                                         # heure d'allumage du LCD
+    offAt: 21                                       # heure d'extinction du LCD
+

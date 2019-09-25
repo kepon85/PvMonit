@@ -3,10 +3,12 @@
 # Script sous licence BEERWARE
 # Version 1.0	2019
 ###################################
-include_once('/opt/PvMonit/config-default.php');
-include_once('/opt/PvMonit/config.php');
+
 
 include('/opt/PvMonit/function.php');
+
+// Chargement de la config
+$config = getConfigYaml('/opt/PvMonit');
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -34,7 +36,7 @@ include('/opt/PvMonit/function.php');
 			  <ul>
 				  <!-- TRAP MENU -->
 				<?php echo $WWW_MENU; ?>
-				<li><input type="checkbox" id="autoRefresh" title="Actualisation automatique tout les <?= $WWW_REFRESH_TIME/1000 ?> secondes" checked='checked' />
+				<li><input type="checkbox" id="autoRefresh" title="Actualisation automatique tout les <?= $config['www']['refreshTime']/1000 ?> secondes" checked='checked' />
 				<input type="hidden" name="refreshBusy" id="refreshBusy" /></li>
 				<li><a id="refresh"><img id="refreshImg" src="images/refresh.png" width="20" alt="Refresh" title="Actualiser" /></a></li>
 			  </ul>
@@ -45,7 +47,7 @@ include('/opt/PvMonit/function.php');
         </div>
         <div id="contentwrap">
         <div id="content">
-                <p><b>@todo </b>Capteur de courant, UNIFORMISER FICHIER DE CONF DANS : yaml, re-tester avec ve direct USB ?</p>
+                <p><b>@todo </b>SI DATA PERMIE arduino... Capteur de courant, UNIFORMISER FICHIER DE CONF DANS : yaml, re-tester avec ve direct USB ?</p>
 			<div id="waitFirst" class="boxvaleur waitFirst">Patience...<img src="images/wait2.gif" width="100%" /></div>
 			<?php 
 			
@@ -62,12 +64,12 @@ include('/opt/PvMonit/function.php');
 			}
 			?>
 
-			<div style="display: none" id="nodata" class="boxvaleur">Rien à afficher, vérifier le fichier config.php. <br /><span style="color: red" id="textStatus"></span> : <span id="errorThrown"></span></div>
+			<div style="display: none" id="nodata" class="boxvaleur">Rien à afficher, vérifier le fichier config.yaml. <br /><span style="color: red" id="textStatus"></span> : <span id="errorThrown"></span></div>
 	    
 			<script>
 		
 				function trucAdir(niveau, msg) {
-					if (<?= $GLOBALS['PRINTMESSAGE'] ?> >= niveau) {
+					if (<?= $config['printMessage'] ?> >= niveau) {
 						console.log(msg)
 					}
 				}
@@ -110,7 +112,7 @@ include('/opt/PvMonit/function.php');
 								var units = $(this).find('units').text();
 								switch (data_id) {
 									case 'V':
-										var VbatEnPourcentage=Math.round(value*100/<?= $WWW_VBAT_MAX ?>);
+										var VbatEnPourcentage=Math.round(value*100/<?= $config['www']['vbatMax'] ?>);
 										var jaugeColor='jaugeVerte';
 										if (VbatEnPourcentage < 80) {
 											jaugeColor='jaugeOrange';
@@ -135,7 +137,7 @@ include('/opt/PvMonit/function.php');
 										value+units+'</div>');
 									break;
 									case 'PPV':
-										var PpvPourcentage=Math.round(value*100/<?= $WWW_PPV_MAX ?>);
+										var PpvPourcentage=Math.round(value*100/<?= $config['www']['PpvMax'] ?>);
 										var jaugeColor='jaugeVerte';
 										if (PpvPourcentage < 25) {
 											jaugeColor='jaugeOrange';
@@ -165,7 +167,7 @@ include('/opt/PvMonit/function.php');
 										$('#box_' + id + '').append('<div class="boxvaleur cs '+screen+' '+smallScreen+'"><h3>'+desc+'</h3> '+value+units+'</div>');
 									break;
 									case 'PPVT':
-										var PpvtPourcentage=Math.round(value*100/<?= $WWW_PPVT_MAX ?>);
+										var PpvtPourcentage=Math.round(value*100/<?= $config['www']['PpvtMax'] ?>);
 										var jaugeColor='jaugeVerte';
 										if (PpvtPourcentage < 25) {
 											jaugeColor='jaugeOrange';
@@ -178,7 +180,7 @@ include('/opt/PvMonit/function.php');
 										value+units+'</div>');
 									break;
 									case 'CONSO':
-										var ConsoPourcentage=Math.round(value*100/<?= $WWW_CONSO_MAX ?>);
+										var ConsoPourcentage=Math.round(value*100/<?= $config['consoPlafond'] ?>);
 										var jaugeColor='jaugeVerte';
 										if (ConsoPourcentage > 50) {
 											jaugeColor='jaugeOrange';
@@ -230,7 +232,7 @@ include('/opt/PvMonit/function.php');
                                         if (force == 0) {
                                                 $.ajax( {
                                                         type: "GET",
-                                                        url: "<?= $URL_DATA_XML ?>",
+                                                        url: "<?= $config['urlDataXml'] ?>",
                                                         dataType: "xml",
                                                         success: readData,
                                                           error : traiteErreur
@@ -238,7 +240,7 @@ include('/opt/PvMonit/function.php');
                                         } else {
                                                 $.ajax( {
                                                         type: "GET",
-                                                        url: "<?= $URL_DATA_XML ?>?nocache=1",
+                                                        url: "<?= $config['urlDataXml'] ?>?nocache=1",
                                                         dataType: "xml",
                                                         success: readData,
                                                           error : traiteErreur
@@ -263,7 +265,7 @@ include('/opt/PvMonit/function.php');
 					}
 				});
 				var intervalId = null;
-				var refreshTime = <?= $WWW_REFRESH_TIME ?>;
+				var refreshTime = <?= $config['www']['refreshTime'] ?>;
 				function refreshNow() {
 					trucAdir(5, 'Fonction refresh Now go');
 					reloadData();
