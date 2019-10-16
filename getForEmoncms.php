@@ -4,7 +4,7 @@
 ######################################################################
 # PvMonit - By David Mercereau : http://david.mercereau.info/contact/
 # Script sous licence BEERWARE
-# Version 0.2	2016
+# Version 1.0	2016
 ######################################################################
 
 include('/opt/PvMonit/function.php');
@@ -34,7 +34,7 @@ function sauvegardeDesDonnes($data) {
 }
 
 # Scan des périphérique VE.Direct Victron
-if ($config['vedirect']['by'] == 'USB') {
+if ($config['vedirect']['by'] == 'usb') {
         $cache_file=$config['cache']['dir'].'/'.$config['cache']['file_prefix'].'vedirect_scan';
         if(!checkCacheTime($cache_file)) {
                 file_put_contents($cache_file, json_encode(vedirect_scan()));
@@ -67,17 +67,23 @@ $bin_enabled_data = scandir($config['dir']['bin_enabled']);
 foreach ($bin_enabled_data as $bin_script_enabled) { 
         $bin_script_info = pathinfo($config['dir']['bin_enabled'].'/'.$bin_script_enabled);
         if ($bin_script_info['extension'] == 'php') {
+                trucAdir(3, "Le script ".$config['dir']['bin_enabled'].'/'.$bin_script_enabled." est appelé");
                 $filenameSplit = explode("-", $bin_script_info['filename']);
                 $idParent=$filenameSplit[0];
                 $id=$filenameSplit[1];
                 $cache_file_script=$config['cache']['dir'].'/'.$config['cache']['file_prefix'].$bin_script_enabled;
                 if(!checkCacheTime($cache_file_script)) {
+                        // Ménage
+                        foreach ($array_data as $i => $value) {
+                            unset($array_data[$i]);
+                        }
                         $script_return = (include $config['dir']['bin_enabled'].'/'.$bin_script_enabled);
                         file_put_contents($cache_file_script, json_encode($script_return));
                         chmod($cache_file_script, 0777);
                 } 
                 $timerefresh=filemtime($cache_file_script);
                 $script_return_datas = json_decode(file_get_contents($cache_file_script), true) ;
+                #print_r($script_return_datas);
                 foreach ($script_return_datas as $script_return_data) {
                         if (isset($script_return_data['id'])) {
                                 $id_data=$script_return_data['id'];

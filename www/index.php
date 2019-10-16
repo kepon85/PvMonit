@@ -35,7 +35,10 @@ $config = getConfigYaml('/opt/PvMonit');
             <nav>
 			  <ul>
 				  <!-- TRAP MENU -->
-				<?php echo $WWW_MENU; ?>
+				<?php
+                                foreach ($config['www']['menu'] as $menu) {
+                                        echo $menu;
+                                } ?>
 				<li><input type="checkbox" id="autoRefresh" title="Actualisation automatique tout les <?= $config['www']['refreshTime']/1000 ?> secondes" checked='checked' />
 				<input type="hidden" name="refreshBusy" id="refreshBusy" /></li>
 				<li><a id="refresh"><img id="refreshImg" src="images/refresh.png" width="20" alt="Refresh" title="Actualiser" /></a></li>
@@ -47,7 +50,6 @@ $config = getConfigYaml('/opt/PvMonit');
         </div>
         <div id="contentwrap">
         <div id="content">
-                <p><b>@todo </b>SI DATA PERMIE arduino... Capteur de courant, UNIFORMISER FICHIER DE CONF DANS : yaml, re-tester avec ve direct USB ?</p>
 			<div id="waitFirst" class="boxvaleur waitFirst">Patience...<img src="images/wait2.gif" width="100%" /></div>
 			<?php 
 			

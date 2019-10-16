@@ -1,7 +1,7 @@
 ######################################################################
 # PvMonit - By David Mercereau : http://david.mercereau.info/contact/
 # Licence BEERWARE
-# Version 2.0	2019
+# Version 1.0
 ######################################################################
 
 
@@ -16,12 +16,13 @@
 # Niveau d'affichage des messages
 printMessage: 0                             # 0=0	5=debug
 # URL data
-urlDataXml: http://127.0.0.1/data-xml.php
+urlDataXml: http://pvmonit.chezvous/data-xml.php # Utiliser un domaine qui pointe vers l'ip, not localhost or 127.0.0.1
 tmpFileDataXml: /tmp/PvMonit_data-xml.php.tmp
 
 dir:
     bin: /opt/PvMonit/bin/
     bin_enabled: /opt/PvMonit/bin-enabled/
+    lcd: /opt/PvMonit/lcd/
 
 cache:
     dir: /tmp/PvMonit_cache                 # in tmpfs
@@ -37,10 +38,10 @@ vedirect:
     arduino:
         # Fichier de data YAML enregistré par le script vedirectOnArduinoRemote.py  cohérence avec config-vedirectOnArduinoRemote.yaml
         data_file: /tmp/PvMonit_getSerialArduino.data.yaml
+        data_file_expir: 300                           # Expiration 
         serial:
             port: /dev/ttyAMA0                  # ttyAMA0 pour le serial via GPIO, ttyUSB0 pour le port USB...
             timeout: 0
-            baudRate: 4800
             # Débit du serial 0 qui va vers l'Arduino (doit être cohérent entre les 2, diffère selon la distance de câble)
             # Débit   Longueur (m)
             # 2400   60
@@ -48,7 +49,9 @@ vedirect:
             # 9 600   15
             # 19 200  7,6
             # https://fr.wikipedia.org/wiki/RS-232#Limites
-            whileSleep: 0.04     
+            baudRate: 4800
+            whileSleep: 0.001
+            whileSleepAfterStop: 3
     # donnée récolté (voir la doc victron sur le protocole VE.Direct)
     data_ok:
         mppt:
@@ -158,17 +161,54 @@ www:
         - SOC
         - P
         - PPVT
+    menu:
+        - <li><a href="http://emoncms.org/dashboard/view?id=VOTREIDs">EmonCMS (historique)</a></li>
+        - <li><a href="http://pvmonit.zici.fr">PvMonit projet</a></li>
+        - <li><a href="https://david.mercereau.info/soutenir/">Soutenir l'auteur</a></li>
 
+# Ecran LCD (avec script PvMonit/lcd
 lcd:
     rafraichissement: 0.1                           # en seconde pour les boutons
-    dataUpdate: 30                                  # en seconde pour le rafraichissement des données
+    dataUpdate: 45                                  # en seconde pour le rafraichissement des données
     onTimer: 60                                     # en seconde le temps que l'écran reste allumé si par défaut éteind
     estCeLaNuitTimer: 600                           # détection de la nuit tout les x secondes
     dataPrint:
         - SOC
         - P
         - PPVT
-        - CONSO
     onAt: 8                                         # heure d'allumage du LCD
     offAt: 21                                       # heure d'extinction du LCD
 
+# Domotique (avec script PvMonit/domo)
+domo:
+    dataCheckTime: 30
+    i2c:
+        adress: 0x04
+        device: 1
+    heartbeatTime: 1                       # Fréquence du bâtement de coeur (en seconde)
+    fileExpir: 300                     # Age en seconde après laquel le fichier n'est plus considéré comme ok
+    checkTime: 10                        # Fréquece de la vérificatio du XML (en seconde)
+    checkError: 3                        # nombre d'erreurs sur le xml avant de sortir du mode automatique / stopper le heartbeat
+                                         # temps avant erreur = $checkTime * $checkError
+    expir: 600                      # Age en seconde après laquel la donnée n'est plus considérer comme viable
+    downloadRetry: 3
+    valueUse:
+        - SOC
+        - P
+        - PPVT
+        - CS
+        #- CONSO
+    relay:
+        nb: 5
+        scriptDir: /opt/PvMonit/domo/relay.script.d/
+        scriptExecInterval: 5              # Interval d'execution des script de relais
+    relayCorrespondance:                     # A commencer par 0
+        0: Pompe de relevage
+        1: Box Internet
+        2: Téléphone
+        3: Disque dur externe
+        4: Chargeur outil électroportatif   # Sonde courant !
+        #5: Chauffe eau
+        #6: Batterie de vélo életrique
+        #7: Surpresseur
+        #8:

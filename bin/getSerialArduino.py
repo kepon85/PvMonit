@@ -62,9 +62,9 @@ while True:
                         # le stop
                         if isStop == "STOP":
                                 logMsg(2, "Détection du STOP, on write le fichier")
-                                with open(configGet('tmpFileDataXml'), 'w') as yaml_file:
+                                with open(configGet('vedirect', 'arduino', 'data_file'), 'w') as yaml_file:
                                         yaml.dump(dataFile, yaml_file, default_flow_style=False)
-                                time.sleep(1)
+                                time.sleep(configGet('vedirect', 'arduino', 'serial', 'whileSleepAfterStop'))
                         # Le serial
                         elif patternSerial.match(isSerial):
                                 logMsg(4, "Un serial ;")

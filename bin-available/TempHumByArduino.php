@@ -1,6 +1,4 @@
 <?php
-$value="Inconnu";
-$units="Inconnu";
 
 $arduino_data=yaml_parse_file($config['vedirect']['arduino']['data_file']);
 foreach ($arduino_data as $device_id => $device_data) {

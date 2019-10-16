@@ -7,6 +7,9 @@ import yaml
 import adafruit_character_lcd.character_lcd_rgb_i2c as character_lcd
 from lxml import etree
 from urllib.request import urlopen
+from past.builtins import execfile
+import os
+import re
 import pprint
 
 with open('/opt/PvMonit/config-default.yaml') as f1:
@@ -44,13 +47,12 @@ lcd_rows = 2
 i2c = busio.I2C(board.SCL, board.SDA)
 # Initialise the LCD class
 lcd = character_lcd.Character_LCD_RGB_I2C(i2c, lcd_columns, lcd_rows)
-
 lcd.clear()
 # on allume
 lcd.color = [100, 0, 0]
 # on dit bonjour (si si)
 lcd.message = "Bonjour !\nOn boot ..."
-time.sleep(2)
+# ~ time.sleep(2)
 
 # Fonction de debug
 def debugTerm(msg) :
@@ -63,10 +65,7 @@ def est_ce_la_nuit() :
     else:
         return False
 
-def update_data():
-    # Récupération des données
-    debugTerm('Update data')
-    
+def print_wait():
     lcd.clear()
     lcd.message = '|'
     lcd.clear()
@@ -79,57 +78,23 @@ def update_data():
     lcd.message = '-'
     lcd.clear()
     lcd.message = '|'
+
+def download_data():
+    # téléchargement des données
+    debugTerm('Download data')
     with open(configGet('tmpFileDataXml'), 'wb') as tmpxml:
         tmpxml.write(urlopen(configGet('urlDataXml')).read())
+    return time.time()
 
-    datatotal = len(configGet('lcd','dataPrint'))
-
-    datacount = 0
-    tree = etree.parse(configGet('tmpFileDataXml'))
-    msg_soc='BA:?'
-    msg_p='P:?'
-    msg_ppvt='PV:?'
-    msg_conso='CON:?'
-    for datas in tree.xpath("/devices/device/datas/data"):
-        if datas.get("id") in configGet('lcd','dataPrint'):
-            datacount = datacount + 1
-            for data in datas.getchildren():
-                if data.tag == "value":
-                    if datas.get("id") == 'SOC':
-                        # ~ debugTerm(data.text + '%')
-                        # ~ if float(data.text) > 95:
-                            # ~ debugTerm('vert !!!')
-                        # ~ elif float(data.text) > 90:
-                            # ~ debugTerm('orange !!!')
-                        # ~ elif float(data.text) < 90:
-                            # ~ debugTerm('rouge !!!')
-                        msg_soc='BA:'+data.text + '%'
-                    elif datas.get("id") == 'P':
-                        msg_p = 'P:'+data.text + 'W'
-                    elif datas.get("id") == 'PPVT':
-                        msg_ppvt = 'PV:'+data.text + 'W'
-                    elif datas.get("id") == 'CONSO' and data.text != 'NODATA':
-                        msg_conso = 'CON:'+data.text + 'W'
-    # Construction de l'affichage
-    lcd.clear()
-    nb_ligne1_space=lcd_columns-len(msg_soc)-len(msg_p)
-    ligne1_msg=msg_soc
-    for nb_space1 in range(nb_ligne1_space):
-        ligne1_msg=ligne1_msg+' '
-    ligne1_msg=ligne1_msg+msg_p
-    
-    nb_ligne2_space=lcd_columns-len(msg_ppvt)-len(msg_conso)
-    ligne2_msg=msg_ppvt
-    for nb_space2 in range(nb_ligne2_space):
-        ligne2_msg=ligne2_msg+' '
-    ligne2_msg=ligne2_msg+msg_conso
-    
-    lcd.message = ligne1_msg+'\n'+ligne2_msg
-    debugTerm('Affichage\n' + ligne1_msg+'\n'+ligne2_msg)
+def update_menu(number):
+    print_wait()
+    debugTerm('Update du menu '+str(number))
+    execfile(configGet('dir','lcd') + "Menu" + str(number) + ".py")
     return time.time()
 
 #1er lancement
-update_data_last=update_data()
+download_data_last=download_data()
+update_data_last=update_menu(0)
 
 # Au lancement on allume ou on éteind si c'est la nuit ou pas...
 if est_ce_la_nuit() == True:
@@ -140,8 +105,18 @@ else:
     etat_lcd=True
 est_ce_la_nuit_last=time.time()
 
+# Nombre de menu 
+patternMenu = re.compile(r"Menu[0-9]+.py")
+files = os.listdir(configGet('dir','lcd'))
+nbMenu=0
+for name in files:
+    if patternMenu.match(name):
+        nbMenu=nbMenu+1
+nbMenu=nbMenu-1 # pour le 0...
+
 # Compteur si on force l'écran à On alors que c'est la nuit
 force_lcd_on=False
+menuEnCours=0
 while True:
 
     if lcd.right_button:
@@ -154,8 +129,8 @@ while True:
             debugTerm('LCD à ON')
             # Si c'est la nuit alors on met un timer pour l'extinction
             if est_ce_la_nuit() == True:
-                force_lcd_on=configGet('lcd','OnTimer')
-                debugTerm("Force LCD à ON pendant " + str(configGet('lcd','OnTimer')) + "s")
+                force_lcd_on=configGet('lcd','onTimer')
+                debugTerm("Force LCD à ON pendant " + str(configGet('lcd','onTimer')) + "s")
         # Si c'est allumé on éteind
         elif etat_lcd == True:
             lcd.color = [0, 0, 0]
@@ -165,30 +140,43 @@ while True:
 
     elif lcd.left_button:
         debugTerm("Left : update data !")
-        update_data_last=update_data()
+        download_data_last=download_data()
+        update_data_last=update_menu(menuEnCours)
 
-    # ~ elif lcd.up_button:
-        # ~ debugTerm("Up : update data !")
-        # ~ update_data_last=update_data()
-
-    # ~ elif lcd.down_button:
-        # ~ debugTerm("Down : update data !")
-        # ~ update_data_last=update_data()
-
+    elif lcd.up_button:
+        menuEnCours=menuEnCours+1
+        if menuEnCours > nbMenu:
+            menuEnCours=0
+        debugTerm("Up : Menu +, vers ")
+        debugTerm(menuEnCours)
+        update_data_last=update_menu(menuEnCours)
+        # Evite le rebond
+        time.sleep(0.5)
+    elif lcd.down_button:
+        menuEnCours=menuEnCours-1
+        if menuEnCours < 0:
+            menuEnCours=nbMenu
+        debugTerm("Down : Menu -, vers ")
+        debugTerm(menuEnCours)
+        update_data_last=update_menu(menuEnCours)
+        # Evite le rebond
+        time.sleep(0.5)
     elif lcd.select_button:
-        debugTerm("Select : L'heure SVP !")
-        lcd.clear()
-        lcd.message = time.strftime ('%m/%d/%Y %H:%M');
-        time.sleep(5)
-        update_data_last=update_data()
-
+        debugTerm("Select : Update data")
+        download_data_last=download_data()
+        update_data_last=update_menu(menuEnCours)
     else:
         time.sleep(configGet('lcd','rafraichissement'))
-        
+                
+        download_data_time=download_data_last+configGet('lcd','dataUpdate')
+        if download_data_time < time.time():
+                download_data_last=download_data()
+
         # Update data frequence
         update_data_time=update_data_last+configGet('lcd','dataUpdate')
         if update_data_time < time.time():
-            update_data_last=update_data()
+            debugTerm('Refresh data')
+            update_data_last=update_menu(menuEnCours)
         
         # On se repose la question de la nuit...
         est_ce_la_nuit_time=est_ce_la_nuit_last+configGet('lcd','estCeLaNuitTimer')
@@ -209,7 +197,7 @@ while True:
             lcd.color = [0, 0, 0]
             etat_lcd = False
             force_lcd_on = False
-            debugTerm("Extinction de l'écran au bout des" + str(configGet('lcd','OnTimer')) + "s c'est la nuit...")
+            debugTerm("Extinction de l'écran au bout des" + str(configGet('lcd','onTimer')) + "s c'est la nuit...")
     
     time.sleep(0.1)
     

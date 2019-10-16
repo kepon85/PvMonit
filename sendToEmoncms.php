@@ -4,7 +4,7 @@
 ######################################################################
 # PvMonit - By David Mercereau : http://david.mercereau.info/contact/
 # Licence BEERWARE
-# Version 0.2	2016
+# Version 1.0
 ######################################################################
 
 include('/opt/PvMonit/function.php');
@@ -55,7 +55,11 @@ foreach (scandir($config['emoncms']['dataCollecte']) as $fichierData) {
 		$send_retour=null;
 		$send_sortie=null;
 		exec('/bin/bash '.$config['emoncms']['dataCollecte'].'/'.$fichierData, $send_sortie, $send_retour);
-		if ($send_retour == 0 && $send_sortie[0] == $retourAttendu){
+                $sortie_en_ligne='';
+                foreach ($send_sortie as $une_sortie) {
+                        $sortie_en_ligne=$sortie_en_ligne.$une_sortie;
+                }
+		if ($send_retour == 0 && $sortie_en_ligne == $retourAttendu){
 			trucAdir(4, 'Donnée '.$config['emoncms']['dataCollecte'].'/'.$fichierData.' correctement envoyées');
 			unlink($config['emoncms']['dataCollecte'].'/'.$fichierData);
 			$dataOk++;
@@ -66,7 +70,7 @@ foreach (scandir($config['emoncms']['dataCollecte']) as $fichierData) {
 				$attenteCompteur = $attenteCompteur + 10;
 			}
 		} else {
-			trucAdir(1, 'Problème avec le fichier '.$config['emoncms']['dataCollecte'].'/'.$fichierData.' le retour est : '.$send_sortie[0]);
+			trucAdir(1, 'Problème avec le fichier '.$config['emoncms']['dataCollecte'].'/'.$fichierData.' le retour est : '.$sortie_en_ligne);
 			rename($config['emoncms']['dataCollecte'].'/'.$fichierData, $config['emoncms']['dataCollecteError'].'/'.$fichierData);
 			$dataNok++;
 			trucAdir(5, 'Patiente '.$config['emoncms']['sleepNok'].' seconde, le serveur HTTP t\'en remercie !');

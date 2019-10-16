@@ -28,7 +28,7 @@ function onScreenPrint($name) {
 
 $ppv_total=null;
 $nb_ppv_total=0;
-if ($config['vedirect']['by'] == 'USB') {
+if ($config['vedirect']['by'] == 'usb') {
         $cache_file=$config['cache']['dir'].'/'.$config['cache']['file_prefix'].'vedirect_scan';
         if(!checkCacheTime($cache_file)) {
                 file_put_contents($cache_file, json_encode(vedirect_scan()));
@@ -37,15 +37,27 @@ if ($config['vedirect']['by'] == 'USB') {
         $timerefresh=filemtime($cache_file);
         $vedirect_data_ready = json_decode(file_get_contents($cache_file), true);
 } elseif ($config['vedirect']['by'] == 'arduino') { 
-        $arduino_data=yaml_parse_file($config['vedirect']['arduino']['data_file']);
-        $idDevice=0;
-        foreach ($arduino_data as $device_id => $device_data) {
-                if (preg_match_all('/^Serial[0-9]$/m', $device_id)) {
-                        $device_vedirect_data[$idDevice]=vedirect_parse_arduino($device_data);
-                        $idDevice++;
+        if (! is_file($config['vedirect']['arduino']['data_file'])) {
+                $vedirect_data_ready[0]['id'] = 'Vedirect serial get by arduino';
+                $vedirect_data_ready[0]['nom'] = 'Vedirect erreur';
+                $vedirect_data_ready[0]['serial'] = 'vedirect';
+                $vedirect_data_ready[0]['data']= 'Fichier de donnée:Introuvable';
+        } else if (filemtime($config['vedirect']['arduino']['data_file'])+$config['vedirect']['arduino']['data_file_expir']  < time()) {
+                $vedirect_data_ready[0]['id'] = 'Vedirect serial get by arduino';
+                $vedirect_data_ready[0]['nom'] = 'Vedirect erreur';
+                $vedirect_data_ready[0]['serial'] = 'vedirect';
+                $vedirect_data_ready[0]['data']= 'Fichier de donnée :Périmé';
+        } else {
+                $arduino_data=yaml_parse_file($config['vedirect']['arduino']['data_file']);
+                $idDevice=0;
+                foreach ($arduino_data as $device_id => $device_data) {
+                        if (preg_match_all('/^Serial[0-9]$/m', $device_id)) {
+                                $device_vedirect_data[$idDevice]=vedirect_parse_arduino($device_data);
+                                $idDevice++;
+                        }
                 }
-        }
-        $vedirect_data_ready = $device_vedirect_data;
+                $vedirect_data_ready = $device_vedirect_data;
+        } 
 }
 foreach ($vedirect_data_ready as $device) {
         if ($device['serial']  == 'Inconnu' || $device['serial']  == '') {
@@ -82,7 +94,7 @@ foreach ($vedirect_data_ready as $device) {
 
 	<device id="other">
 		<nom>Divers</nom>
-		<timerefresh><?= time() ?></timerefresh>
+		<timerefresh></timerefresh>
 		<type></type>
 		<modele></modele>
 		<serial></serial>
@@ -110,6 +122,10 @@ foreach ($bin_enabled_data as $bin_script_enabled) {
                 $id=$filenameSplit[1];
                 $cache_file_script=$config['cache']['dir'].'/'.$config['cache']['file_prefix'].$bin_script_enabled;
                 if(!checkCacheTime($cache_file_script)) {
+                        // Ménage
+                        foreach ($array_data as $i => $value) {
+                            unset($array_data[$i]);
+                        }
                         $script_return = (include $config['dir']['bin_enabled'].'/'.$bin_script_enabled);
                         file_put_contents($cache_file_script, json_encode($script_return));
                         chmod($cache_file_script, 0777);
@@ -123,6 +139,7 @@ foreach ($bin_enabled_data as $bin_script_enabled) {
                 echo "\n\t\t<modele></modele>";
                 echo "\n\t\t<serial></serial>";
                 echo "\n\t\t<datas>";
+                sort($script_return_datas);
                 foreach ($script_return_datas as $script_return_data) {
                         if (isset($script_return_data['id'])) {
                                 $id_data=$script_return_data['id'];
