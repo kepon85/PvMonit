@@ -3,14 +3,18 @@ import time
 from smbus2 import SMBus
 import os
 from lxml import etree
+from urllib.request import urlopen
 import wget
+from past.builtins import execfile
+import re
+import time
 
 ## for debug :
 import pprint
 
-with open('/opt/PvMonit/config-default.yaml') as f1:
+with open('../config-default.yaml') as f1:
     config = yaml.load(f1, Loader=yaml.FullLoader)
-with open('/opt/PvMonit/config.yaml') as f2:
+with open('../config.yaml') as f2:
     config_perso = yaml.load(f2, Loader=yaml.FullLoader)
 
 def configGet(key1, key2=None, key3=None, key4=None):
@@ -35,6 +39,13 @@ def configGet(key1, key2=None, key3=None, key4=None):
         except:
             return config[key1]
 
+# Cherche a savoir si le MPPT est en Absorption ou en Float (en fin de charge)
+def MpptAbsOrFlo(cs):
+    patternAbsFlo = re.compile(r"Absorption|Float")
+    if patternAbsFlo.match(cs):
+        return True;
+    else : 
+        return False;
 
 # Function for log
 def logMsg(level, msg):
@@ -47,12 +58,23 @@ def writeNumber(value):
     bus.write_byte(configGet('domo', 'i2c', 'adress'), value)
     return -1
 
+def download_data():
+    # téléchargement des données
+    logMsg(3, 'Download data')
+    with open(configGet('tmpFileDataXml'), 'wb') as tmpxml:
+        tmpxml.write(urlopen(configGet('urlDataXml')).read())
+    return time.time()
+
 logMsg(1, 'Lancement du script domo.py')
 
 heartLastCheck=0
+relayDataLastCheck=0
+scriptExecLast=0
 xmlLastCheck=0
-xmlCheckError=0
+xmlfileCheckError=0
 xmlData = {}
+spoolAction=None
+spoolActionSend=False
 logMsg(5, "Début de la boucle")
 while 1:
     # XML data recup
@@ -60,12 +82,15 @@ while 1:
     if xmlLastCheck+configGet('domo', 'dataCheckTime') < t:
         if not os.path.isfile(configGet('tmpFileDataXml')):
             logMsg(1, "Le fichier XML de donnée " + configGet('tmpFileDataXml') + " n'existe pas.")
-            xmlCheckError=xmlCheckError+1
+            download_data()
+            xmlfileCheckError=xmlfileCheckError+1
         elif os.path.getmtime(configGet('tmpFileDataXml'))+configGet('domo', 'fileExpir') < t :
             logMsg(1, "Le fichier data est périmé !")
-            xmlCheckError=xmlCheckError+1
+            download_data()
+            xmlfileCheckError=xmlfileCheckError+1
         else:
-            xmlCheckError=0
+            logMsg(3, "Récupération des données XML (état de l'installation solaire")
+            xmlfileCheckError=0
             tree = etree.parse(configGet('tmpFileDataXml'))
             datacount=0
             for datas in tree.xpath("/devices/device/datas/data"):
@@ -74,22 +99,79 @@ while 1:
                     for data in datas.getchildren():
                         if data.tag == "value":
                             xmlData[datas.get("id")]=data.text
-            pprint.pprint(xmlData)
+            logMsg(5, pprint.pprint(xmlData))
             xmlLastCheck=t
-            
+
     # S'il y a trop d'erreur : 
-    if xmlCheckError >= configGet('domo', 'checkError'):
+    if xmlfileCheckError >= configGet('domo', 'fileCheckError'):
         logMsg(1, 'Trop d\'erreur, on patiente 10 secondes')
         time.sleep(10)
-        xmlCheckError=0
-    else
+        xmlfileCheckError=0
+    else:
         # Le heartbeat
         if heartLastCheck+configGet('domo', 'heartbeatTime') < t:
-            bus=SMBus(configGet('domo', 'i2c', 'device'));
-            writeNumber(int(ord("H")))
+            #DEVSMBSTOP bus=SMBus(configGet('domo', 'i2c', 'device'));
+            #DEVSMBSTOP writeNumber(int(ord("H")))
             logMsg(5, 'Heardbeat envoyé')
             heartLastCheck=t
+        # Data Relay
+        if relayDataLastCheck+configGet('domo', 'relay', 'dataFreq') < t:
+            logMsg(4, 'On récupère les données des relay (via i2c arduino)')
+            # A FAIRE
+            # Simulation monsieur l'arbitre
+            #// Etat : 
+            #//  - 0 : off force
+            #//  - 1 : off auto
+            #//  - 2 : on auto
+            #//  - 3 : on force
+            #// Mode
+            #//  - 0 : Null
+            #//  - 1 : Off 
+            #//  - 2 : Auto
+            #//  - 3 : On
+            relayEtat = [1, 1, 0, 3, 1]
+            relayMod = [2, 2, 1, 3, 2]
+            #logMsg(5, pprint.pprint(relayEtat))
+            relayDataLastCheck=t
+        # On joue les scripts
+        if scriptExecLast+configGet('domo', 'relay', 'scriptExecInterval') < t:
+            logMsg(4, 'On joue les script des relay en mode auto')
+            relayId=0
+            print(relayEtat[0])
+            for mod in relayMod:
+                # Si la file d'attente des actions est vide on que le relay est en automatique
+                if spoolAction == None and mod == 2:
+                    scriptFile=configGet('dir','domo')  + configGet('domo','relay', 'scriptDir') + "/" + str(relayId) + ".py"
+                    logMsg(4, 'Lecture du script ' + scriptFile)
+                    if not os.path.isfile(scriptFile): 
+                        logMsg(2, 'Erreur, pas de script ' + scriptFile)
+                    else:
+                        returnEtat=None
+                        execfile(scriptFile)
+                        if returnEtat != None and returnEtat != relayEtat[relayId]:
+                            logMsg(2, 'Un changement d\'état vers ' + str(returnEtat) + ' de est demandé pour le relay ' + str(relayId))
+                            spoolAction=[relayId, returnEtat, t]
+                        else:
+                            logMsg(4, 'Pas de changement d\'état demandé pour le relay ' + str(relayId))
+                relayId=relayId+1
+            scriptExecLast=t
         
+        # Traitement de la file d'attente
+        if spoolAction != None and spoolActionSend == False:
+            logMsg(3, 'Traitement du spool, envoi de l\'ordre')
+            logMsg(5, pprint.pprint(spoolAction))
+            spoolActionSend=t
+            # A FAIRE
+            # Lancer l'ordre sur l'aduino 
+        # Vérifier que l'arduino a bien exécuté l'ordre
+        if spoolAction != None and spoolActionSend != False:
+            # Est-ce que le relay est dans l'état attendu par l'ordre
+            if relayEtat[spoolAction[0]] == spoolAction[1]:
+                logMsg(5, 'Le relay ' + spoolAction[0] + ' n\'est pas encore dans l\'état attendu ' + spoolAction[1])
+        #if spoolAction != None and spoolActionSend+configGet('domo', 'spoolTimeout') < t:
+        #    spoolAction=
+        # !! Faut faire un truc vide le spoolAction quand c'est fait... hummmm ... 
+            
     # Pour être gentil avec le système
     time.sleep(0.01)
     

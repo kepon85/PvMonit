@@ -16,10 +16,11 @@ Les fonctionnalités de PvMonit sont dissociable :
 
 Installation de PvMonit via le dépôt git et de ses dépendances :
 ```bash
-aptitude install php-cli php-yaml git python-serial sudo 
+aptitude install php-cli php-yaml git python-serial sudo screen
 cd /opt
 git clone https://github.com/kepon85/PvMonit.git
-cp config-default.yaml config.yaml```
+cd PvMonit
+cp config-default.yaml config.yaml
 ```
 Vous pouvez maintenant éditer le fichier config.yaml à votre guise !
 
@@ -123,8 +124,8 @@ vedirect:
 ```
 
 ```bash
-apt-get install python3 python3-pip
-pip3 install serial yaml
+apt-get install python3 python3-pip python3-yaml
+pip3 install pyserial
 ```
 
 Ajouter dans le fichier /etc/rc.local :(avant le exit 0) 
@@ -210,13 +211,14 @@ Test d'envoi des données :
 ```
 $ su - pvmonit -c /opt/PvMonit/sendToEmoncms.php 
     2016-11-02T10:56:44+01:00 - Données correctements envoyées : 1, données en erreurs : 0
-``
+```
 
 Mettre les scripts en tâche planifiée
 
 ```bash
 crontab -e -u pvmonit
 ```
+
 Ajouter :
 ```diff
 +# Script de récupération des données, toutes les 5 minutes
@@ -397,10 +399,11 @@ La dernière commande (i2cdetect 1) doit afficher quelque chose comme :
 Pour tester le LCD lancer la commande : 
 
 ```bash
-python3 /opt/PvMonit/lcd/ada-lcd.py
+pip3 install adafruit-circuitpython-charlcd lxml
+python3 /opt/PvMonit/lcd/lcd.py
 ```
 
 Pour que le LCD fonctionne au démarrage, ajouter avant "exit 0" dans le fichier /etc/rc.local la ligne suivant
 ```bash
-screen -A -m -d -S lcd python3 /opt/PvMonit/lcd/ada-lcd.py
+screen -A -m -d -S lcd /opt/PvMonit/lcd/lcd-launch.sh
 ```

@@ -23,6 +23,7 @@ dir:
     bin: /opt/PvMonit/bin/
     bin_enabled: /opt/PvMonit/bin-enabled/
     lcd: /opt/PvMonit/lcd/
+    domo: /opt/PvMonit/domo/
 
 cache:
     dir: /tmp/PvMonit_cache                 # in tmpfs
@@ -186,12 +187,11 @@ domo:
         adress: 0x04
         device: 1
     heartbeatTime: 1                       # Fréquence du bâtement de coeur (en seconde)
-    fileExpir: 300                     # Age en seconde après laquel le fichier n'est plus considéré comme ok
-    checkTime: 10                        # Fréquece de la vérificatio du XML (en seconde)
-    checkError: 3                        # nombre d'erreurs sur le xml avant de sortir du mode automatique / stopper le heartbeat
+    fileExpir: 40                     # Age en seconde après laquel le fichier n'est plus considéré comme ok
+    fileCheckTime: 10                        # Fréquece de la vérificatio du XML (en seconde)
+    fileCheckError: 3                        # nombre d'erreurs sur le xml avant de sortir du mode automatique / stopper le heartbeat
                                          # temps avant erreur = $checkTime * $checkError
-    expir: 600                      # Age en seconde après laquel la donnée n'est plus considérer comme viable
-    downloadRetry: 3
+    fileDownloadRetry: 3
     valueUse:
         - SOC
         - P
@@ -199,9 +199,11 @@ domo:
         - CS
         #- CONSO
     relay:
+        dataFreq: 3                           # Délais de récupération des données depuis l'arduino (en secondes)
         nb: 5
         scriptDir: /opt/PvMonit/domo/relay.script.d/
         scriptExecInterval: 5              # Interval d'execution des script de relais
+    spoolTimeout: 10                          # timeout sur un ordre dans la file d'attente 
     relayCorrespondance:                     # A commencer par 0
         0: Pompe de relevage
         1: Box Internet
@@ -211,4 +213,3 @@ domo:
         #5: Chauffe eau
         #6: Batterie de vélo életrique
         #7: Surpresseur
-        #8:
