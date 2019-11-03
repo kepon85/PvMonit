@@ -54,6 +54,24 @@ HSDS:52
 ```
 Pour comprendre chaque valeur, téléchargez la documentation *Victron VE Direct Protocol documentation* : https://www.victronenergy.fr/support-and-downloads/whitepapers ([disponible aussi à cet url](https://david.mercereau.info/wp-content/uploads/2019/10/VE.Direct-Protocol.pdf))
 
+Lancer la commande :
+
+```sh
+visudo
+```
+
+Si vous utilisez l'interface web pvmonit, ajouter :
+
+```diff
++ www-data ALL=(ALL) NOPASSWD:/opt/PvMonit/bin/vedirect.py *
+```
+
+Si vous utilisez l'export vers emoncms, ajouter : 
+
+```diff
++ pvmonit ALL=(ALL) NOPASSWD:/opt/PvMonit/bin/vedirect.py *
+```
+
 ### Ve.direct via Arduino
 
 Avec l'Arduino IDE, uploader le firmware "ArduinoMegaVeDirect.ino" contenu dans le dossier "firmware" 
