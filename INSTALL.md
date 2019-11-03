@@ -238,6 +238,11 @@ Une capture :
 
 #### Sonde température/humidité (DHT) sur GPIO (sur raspberi pi)
 
+Installation des dépendances : 
+```
+pip3 install Adafruit_DHT
+```
+
 Lancer la commande :
 
 ```sh
@@ -364,6 +369,39 @@ Activer le script (et l'éditer au besoin)
 
 ```bash
 ln -s /opt/PvMonit/bin-available/AmpermetreUSB.php /opt/PvMonit/bin-enabled/other-CONSO.php
+```
+
+#### Co² Meter 
+
+Il s'agit le ht2000 co² meter. Je ne l'utilise que pour le co² ayant des sondes ailleur mais il peut aussi donner l'humidité et la température. Si vous voulez aussi ces informations vous pouvez regarder de ce côté : https://github.com/tomvanbraeckel/slab_ht2000
+
+Pour ma part (uniquement pour le co²) il faut compile le script : 
+
+```bash
+cd /opt/PvMonit/bin
+gcc ht2000.c -o ht2000
+```
+
+Tester : 
+
+```bash
+./ht2000 /dev/hidraw0
+```
+
+Doit retourner une valeur numérique
+
+Ensuite (vu qu'il faut le lancer en root) vous devez le mettre dans le sudo : 
+
+Si vous utilisez l'interface web pvmonit, ajouter :
+
+```diff
++ www-data ALL=(ALL) NOPASSWD: /opt/PvMonit/bin/ht2000 *
+```
+
+Si vous utilisez l'export vers emoncms, ajouter : 
+
+```diff
++ pvmonit ALL=(ALL) NOPASSWD:  /opt/PvMonit/bin/ht2000 *
 ```
 
 #### Raspberry Adafruit LCD RGB - 16x2 + Keypad (option)

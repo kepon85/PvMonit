@@ -15,6 +15,8 @@
 
 # Niveau d'affichage des messages
 printMessage: 0                             # 0=0	5=debug
+printMessageLogfile: false                  # path or fase
+
 # URL data
 urlDataXml: http://pvmonit.chezvous/data-xml.php # Utiliser un domaine qui pointe vers l'ip, not localhost or 127.0.0.1
 tmpFileDataXml: /tmp/PvMonit_data-xml.php.tmp
@@ -24,6 +26,10 @@ dir:
     bin_enabled: /opt/PvMonit/bin-enabled/
     lcd: /opt/PvMonit/lcd/
     domo: /opt/PvMonit/domo/
+
+data:
+    ppv_total: false                         # production total des régulateurs (utilisé si vous avez plusieurs régulateur)
+    conso_calc: false                        # Calculé avec : la puissance instantané (P du BMV) - ppv_total     ppv_total at true for use this
 
 cache:
     dir: /tmp/PvMonit_cache                 # in tmpfs
@@ -158,6 +164,7 @@ www:
         - AC_OUT_I
         - WARN
         - PPVT
+        - CONSO
     dataPrimaireSmallScreen:
         - SOC
         - P

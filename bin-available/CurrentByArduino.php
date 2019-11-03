@@ -15,7 +15,7 @@ foreach ($arduino_data as $device_id => $device_data) {
 
 $array_data[0]['screen']=1; 
 $array_data[0]['smallScreen']=1;
-$array_data[0]['desc']='Conso';
+$array_data[0]['desc']='Conso2';
 $array_data[0]['value']=$value;
 //$array_data[0]['value']="?";
 $array_data[0]['units']=$units;

@@ -537,6 +537,15 @@ function trucAdir($niveau, $msg) {
 			echo  date('c') . ' - ' . $msg."\n";
 		}
 	}
+        if ($config['printMessageLogfile'] != false) {
+                if (! is_file($config['printMessageLogfile'])) {
+                        touch($config['printMessageLogfile']);
+                        if (substr(sprintf('%o', fileperms($config['printMessageLogfile'])), -3) != '777')  {
+                                chmod($config['printMessageLogfile'], 0777);
+                        }
+                }
+                file_put_contents($config['printMessageLogfile'], date('c') . ' - ' . $_SERVER['SCRIPT_NAME']. ' - ' . $msg . "\n", FILE_APPEND);
+        }
 }
 
 # Récupérer les informations de la sonde de température

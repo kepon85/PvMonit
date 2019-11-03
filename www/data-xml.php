@@ -27,6 +27,7 @@ function onScreenPrint($name) {
 }
 
 $ppv_total=null;
+$bmv_p=null;
 $nb_ppv_total=0;
 if ($config['vedirect']['by'] == 'usb') {
         $cache_file=$config['cache']['dir'].'/'.$config['cache']['file_prefix'].'vedirect_scan';
@@ -83,6 +84,9 @@ foreach ($vedirect_data_ready as $device) {
                         $ppv_total=$ppv_total+$dataSplit[1];
                         $nb_ppv_total++;
                 }
+                if ($device['type'] == "BMV" && $dataSplit[0] == 'P'){ 
+                        $bmv_p=$dataSplit[1];
+                }
         }
         echo "\n\t\t".'</datas>';
         echo "\n\t".'</device>';
@@ -101,10 +105,21 @@ foreach ($vedirect_data_ready as $device) {
 		<datas>
 			<?php 
 			// Production totale
-			if ($ppv_total !== null) {
+			if ($config['data']['ppv_total'] && $ppv_total !== null) {
 				echo '<data id="PPVT"'.onScreenPrint('PPVT').'>
 				<desc>Production total des panneaux</desc>
 				<value>'.$ppv_total.'</value>
+				<units>W</units>
+				</data>';
+			}
+			?>
+                        <?php 
+			// Calcul consommation foyer
+			if ($config['data']['ppv_total'] && $config['data']['conso_calc'] && $ppv_total !== null && $bmv_p != null) {
+                                $test=$ppv_total-$bmv_p;
+				echo '<data id="CONSO"'.onScreenPrint('CONSO').'>
+				<desc>Consommation du foyer</desc>
+				<value>'.abs($test).'</value>
 				<units>W</units>
 				</data>';
 			}
