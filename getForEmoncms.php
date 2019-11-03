@@ -38,7 +38,9 @@ if ($config['vedirect']['by'] == 'usb') {
         $cache_file=$config['cache']['dir'].'/'.$config['cache']['file_prefix'].'vedirect_scan';
         if(!checkCacheTime($cache_file)) {
                 file_put_contents($cache_file, json_encode(vedirect_scan()));
-                chmod($cache_file, 0777);
+                if (substr(sprintf('%o', fileperms($cache_file)), -3) != '777')  {
+                        chmod($cache_file, 0777);
+                }
         } 
         $timerefresh=filemtime($cache_file);
         $vedirect_data_ready=json_decode(file_get_contents($cache_file), true);

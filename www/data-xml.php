@@ -11,6 +11,9 @@ include('/opt/PvMonit/function.php');
 // Chargement de la config
 $config = getConfigYaml('/opt/PvMonit');
 $config['printMessage']=0;
+
+trucAdir(2, "Appel du data-xml.php");
+
 function onScreenPrint($name) {
         global $config;
         if (in_array($name, $config['www']['dataPrimaire'])) {
@@ -33,7 +36,9 @@ if ($config['vedirect']['by'] == 'usb') {
         $cache_file=$config['cache']['dir'].'/'.$config['cache']['file_prefix'].'vedirect_scan';
         if(!checkCacheTime($cache_file)) {
                 file_put_contents($cache_file, json_encode(vedirect_scan()));
-                chmod($cache_file, 0777);
+                if (substr(sprintf('%o', fileperms($cache_file)), -3) != '777')  {
+                        chmod($cache_file, 0777);
+                }
         } 
         $timerefresh=filemtime($cache_file);
         $vedirect_data_ready = json_decode(file_get_contents($cache_file), true);
@@ -127,6 +132,7 @@ foreach ($vedirect_data_ready as $device) {
 		</datas>		
 	</device>
 <?php 
+trucAdir(3, "Scan du répertoire bin-enable");
 // Scan du répertoire bin-enabled
 $bin_enabled_data = scandir($config['dir']['bin_enabled']);
 foreach ($bin_enabled_data as $bin_script_enabled) { 
@@ -143,10 +149,14 @@ foreach ($bin_enabled_data as $bin_script_enabled) {
                         }
                         $script_return = (include $config['dir']['bin_enabled'].'/'.$bin_script_enabled);
                         file_put_contents($cache_file_script, json_encode($script_return));
-                        chmod($cache_file_script, 0777);
+                        if (substr(sprintf('%o', fileperms($cache_file)), -3) != '777')  {
+                                chmod($cache_file, 0777);
+                        }
                 } 
                 $timerefresh=filemtime($cache_file_script);
+                
                 $script_return_datas = json_decode(file_get_contents($cache_file_script), true) ;
+                trucAdir(4, print_r($script_return_datas));
                 echo "\n\t<device id=\"".strtolower($idParent)."\">";
                 echo "\n\t\t<nom></nom>";
                 echo "\n\t\t<timerefresh>".$timerefresh."</timerefresh>";
@@ -155,6 +165,7 @@ foreach ($bin_enabled_data as $bin_script_enabled) {
                 echo "\n\t\t<serial></serial>";
                 echo "\n\t\t<datas>";
                 sort($script_return_datas);
+                
                 foreach ($script_return_datas as $script_return_data) {
                         if (isset($script_return_data['id'])) {
                                 $id_data=$script_return_data['id'];
@@ -171,5 +182,6 @@ foreach ($bin_enabled_data as $bin_script_enabled) {
                 echo "\n\t</device>";
         } 
 }
+trucAdir(5, "Fin du data-xml.php");
 ?>
 </devices>
