@@ -206,12 +206,12 @@ domo:
         - CS
         #- CONSO
     relay:
-        dataFreq: 3                           # Délais de récupération des données depuis l'arduino (en secondes)
-        nb: 5
+        dataFreq: 30                           # Délais de récupération des données depuis l'arduino (en secondes)
+        nb: 5                                  # 14 max !
         scriptDir: /opt/PvMonit/domo/relay.script.d/
-        scriptExecInterval: 5              # Interval d'execution des script de relais
+        scriptExecInterval: 40                # Interval d'execution des script de relais
     spoolTimeout: 10                          # timeout sur un ordre dans la file d'attente 
-    relayCorrespondance:                     # A commencer par 0
+    relayCorrespondance:                      # A commencer par 0
         0: Pompe de relevage
         1: Box Internet
         2: Téléphone

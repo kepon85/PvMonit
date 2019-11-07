@@ -75,6 +75,9 @@ xmlfileCheckError=0
 xmlData = {}
 spoolAction=None
 spoolActionSend=False
+
+bus=SMBus(configGet('domo', 'i2c', 'device'));
+
 logMsg(5, "Début de la boucle")
 while 1:
     # XML data recup
@@ -108,13 +111,16 @@ while 1:
         time.sleep(10)
         xmlfileCheckError=0
     else:
+        #########################
         # Le heartbeat
+        #########################
         if heartLastCheck+configGet('domo', 'heartbeatTime') < t:
-            #DEVSMBSTOP bus=SMBus(configGet('domo', 'i2c', 'device'));
-            #DEVSMBSTOP writeNumber(int(ord("H")))
+            writeNumber(int(ord("H")))
             logMsg(5, 'Heardbeat envoyé')
             heartLastCheck=t
+        #########################
         # Data Relay
+        #########################
         if relayDataLastCheck+configGet('domo', 'relay', 'dataFreq') < t:
             logMsg(4, 'On récupère les données des relay (via i2c arduino)')
             # A FAIRE
@@ -129,11 +135,36 @@ while 1:
             #//  - 1 : Off 
             #//  - 2 : Auto
             #//  - 3 : On
-            relayEtat = [1, 1, 0, 3, 1]
-            relayMod = [2, 2, 1, 3, 2]
-            #logMsg(5, pprint.pprint(relayEtat))
+            
+            time.sleep(0.3)
+            # Requête i2c pour demande de data (état et mode des relay)
+            i2cResults = bus.read_i2c_block_data(configGet('domo', 'i2c', 'adress'), int(ord('D')), configGet('domo', 'relay', 'nb')*2+1)
+            # Remise à 0
+            relayEtat=[]
+            relayMod=[]
+            x=0
+            dataOrdre=1
+            logEtat=""
+            logMod=""
+            for i2cDatas in i2cResults:
+                # Si les données sont présentes
+                if i2cDatas !=  255:
+                    if i2cDatas == 29:  # C'est le sépartateur : https://fr.wikibooks.org/wiki/Les_ASCII_de_0_%C3%A0_127/La_table_ASCII
+                        dataOrdre=2
+                        x=0
+                    elif dataOrdre == 1:
+                        relayEtat.insert(x,i2cDatas)
+                        logEtat=logEtat+","+str(i2cDatas)
+                    else:
+                        relayMod.insert(x,i2cDatas)
+                        logMod=logMod+","+str(i2cDatas)
+                    x=x+1
+            logMsg(5, "DATA reçu : Etat " + logEtat)
+            logMsg(5, "DATA reçu : Mod " + logMod)
             relayDataLastCheck=t
+        #########################
         # On joue les scripts
+        #########################
         if scriptExecLast+configGet('domo', 'relay', 'scriptExecInterval') < t:
             logMsg(4, 'On joue les script des relay en mode auto')
             relayId=0
