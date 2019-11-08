@@ -74,6 +74,7 @@ xmlLastCheck=0
 xmlfileCheckError=0
 xmlData = {}
 spoolAction=None
+spoolActionData=None
 spoolActionSend=False
 
 bus=SMBus(configGet('domo', 'i2c', 'device'));
@@ -172,7 +173,7 @@ while 1:
             for mod in relayMod:
                 # Si la file d'attente des actions est vide on que le relay est en automatique
                 if spoolAction == None and mod == 2:
-                    scriptFile=configGet('dir','domo')  + configGet('domo','relay', 'scriptDir') + "/" + str(relayId) + ".py"
+                    scriptFile=configGet('domo','relay', 'scriptDir') + "/" + str(relayId) + ".py"
                     logMsg(4, 'Lecture du script ' + scriptFile)
                     if not os.path.isfile(scriptFile): 
                         logMsg(2, 'Erreur, pas de script ' + scriptFile)
@@ -181,24 +182,36 @@ while 1:
                         execfile(scriptFile)
                         if returnEtat != None and returnEtat != relayEtat[relayId]:
                             logMsg(2, 'Un changement d\'état vers ' + str(returnEtat) + ' de est demandé pour le relay ' + str(relayId))
-                            spoolAction=[relayId, returnEtat, t]
+                            spoolActionData=[relayId, returnEtat, t]
+                            spoolAction=True
                         else:
                             logMsg(4, 'Pas de changement d\'état demandé pour le relay ' + str(relayId))
                 relayId=relayId+1
             scriptExecLast=t
         
         # Traitement de la file d'attente
-        if spoolAction != None and spoolActionSend == False:
+        # file d'attente avec vérification :
+        #if spoolAction != None and spoolActionSend == False:
+        if spoolAction == True:
             logMsg(3, 'Traitement du spool, envoi de l\'ordre')
-            logMsg(5, pprint.pprint(spoolAction))
-            spoolActionSend=t
-            # A FAIRE
+            logMsg(5, pprint.pprint(spoolActionData))
+            
             # Lancer l'ordre sur l'aduino 
+                    # Numéro du relay, etat (1 ou 2)
+            data = [spoolActionData[0], spoolActionData[1]]
+            bus.write_i2c_block_data(configGet('domo', 'i2c', 'adress'), int(ord('O')), data)
+            time.sleep(0.2)
+            # file d'attente avec vérification :
+            # ~ spoolActionSend=t
+            # file d'attente avec vérif (supprimer la ligne suivante) :
+            spoolAction = None
+        
+        # file d'attente avec vérification :
         # Vérifier que l'arduino a bien exécuté l'ordre
-        if spoolAction != None and spoolActionSend != False:
-            # Est-ce que le relay est dans l'état attendu par l'ordre
-            if relayEtat[spoolAction[0]] == spoolAction[1]:
-                logMsg(5, 'Le relay ' + spoolAction[0] + ' n\'est pas encore dans l\'état attendu ' + spoolAction[1])
+        # ~ if spoolAction != None and spoolActionSend != False:
+            # ~ # Est-ce que le relay est dans l'état attendu par l'ordre
+            # ~ if relayEtat[spoolAction[0]] == spoolAction[1]:
+                # ~ logMsg(5, 'Le relay ' + str(spoolAction[0]) + ' n\'est pas encore dans l\'état attendu ' + str(spoolAction[1]))
         #if spoolAction != None and spoolActionSend+configGet('domo', 'spoolTimeout') < t:
         #    spoolAction=
         # !! Faut faire un truc vide le spoolAction quand c'est fait... hummmm ... 
