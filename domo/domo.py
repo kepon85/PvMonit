@@ -73,39 +73,56 @@ scriptExecLast=0
 xmlLastCheck=0
 xmlfileCheckError=0
 xmlData = {}
-spoolAction=None
-spoolActionData=None
-spoolActionSend=False
-
+dernierScriptJoue=-1
+sortie=False
 bus=SMBus(configGet('domo', 'i2c', 'device'));
 
-logMsg(5, "Début de la boucle")
+logMsg(3, "Début de la boucle")
 while 1:
     # XML data recup
     t=int(time.time())
     if xmlLastCheck+configGet('domo', 'dataCheckTime') < t:
         if not os.path.isfile(configGet('tmpFileDataXml')):
-            logMsg(1, "Le fichier XML de donnée " + configGet('tmpFileDataXml') + " n'existe pas.")
+            logMsg(2, "Le fichier XML de donnée " + configGet('tmpFileDataXml') + " n'existe pas.")
             download_data()
             xmlfileCheckError=xmlfileCheckError+1
         elif os.path.getmtime(configGet('tmpFileDataXml'))+configGet('domo', 'fileExpir') < t :
-            logMsg(1, "Le fichier data est périmé !")
+            logMsg(2, "Le fichier data est périmé !")
             download_data()
             xmlfileCheckError=xmlfileCheckError+1
         else:
-            logMsg(3, "Récupération des données XML (état de l'installation solaire")
-            xmlfileCheckError=0
-            tree = etree.parse(configGet('tmpFileDataXml'))
-            datacount=0
-            for datas in tree.xpath("/devices/device/datas/data"):
-                if datas.get("id") in configGet('domo', 'valueUse'):
-                    datacount = datacount + 1
-                    for data in datas.getchildren():
-                        if data.tag == "value":
-                            xmlData[datas.get("id")]=data.text
-            logMsg(5, pprint.pprint(xmlData))
-            xmlLastCheck=t
-
+            logMsg(3, "Récupération des données XML (état de l'installation solaire)")
+            try:
+                # Tentative de lecture
+                tree = etree.parse(configGet('tmpFileDataXml'))
+                datacount=0
+                for datas in tree.xpath("/devices/device/datas/data"):
+                    if datas.get("id") in configGet('domo', 'valueUse'):
+                        datacount = datacount + 1
+                        for data in datas.getchildren():
+                                if data.tag == "value":
+                                    xmlData[datas.get("id")]=data.text
+                logMsg(5, pprint.pprint(xmlData))
+                # Test intégrité des données
+                controle=configGet('domo', 'valueUse')
+                xmlDataControle=True
+                for xmlDataVerif in xmlData:
+                    pattern = re.compile(controle[xmlDataVerif])
+                    if not pattern.match(xmlData[xmlDataVerif]):
+                        logMsg(2, "Contrôle données erreur : " + xmlDataVerif + " = " + xmlData[xmlDataVerif])
+                        xmlDataControle=False
+                if xmlDataControle == True:
+                    xmlLastCheck=t
+                    xmlfileCheckError=0
+                else:
+                    xmlfileCheckError=xmlfileCheckError+1
+                    download_data()
+            except:
+                # Si ce n'est pas bon, c'est que les données ne sont pas bonnes ou incomplètes, on télécharge donc de nouveau le fichier XML
+                logMsg(1, "Erreur dans la lecture du XML, on force un re-téléchargement")
+                download_data()
+				
+    print(xmlfileCheckError);
     # S'il y a trop d'erreur : 
     if xmlfileCheckError >= configGet('domo', 'fileCheckError'):
         logMsg(1, 'Trop d\'erreur, on patiente 10 secondes')
@@ -160,8 +177,8 @@ while 1:
                         relayMod.insert(x,i2cDatas)
                         logMod=logMod+","+str(i2cDatas)
                     x=x+1
-            logMsg(5, "DATA reçu : Etat " + logEtat)
-            logMsg(5, "DATA reçu : Mod " + logMod)
+            logMsg(3, "DATA reçu : Etat " + logEtat)
+            logMsg(3, "DATA reçu : Mod " + logMod)
             relayDataLastCheck=t
         #########################
         # On joue les scripts
@@ -169,53 +186,38 @@ while 1:
         if scriptExecLast+configGet('domo', 'relay', 'scriptExecInterval') < t:
             logMsg(4, 'On joue les script des relay en mode auto')
             relayId=0
-            print(relayEtat[0])
             for mod in relayMod:
-                # Si la file d'attente des actions est vide on que le relay est en automatique
-                if spoolAction == None and mod == 2:
-                    scriptFile=configGet('domo','relay', 'scriptDir') + "/" + str(relayId) + ".py"
-                    logMsg(4, 'Lecture du script ' + scriptFile)
-                    if not os.path.isfile(scriptFile): 
-                        logMsg(2, 'Erreur, pas de script ' + scriptFile)
-                    else:
+                scriptFile=configGet('domo','relay', 'scriptDir') + "/" + str(relayId) + ".py"
+                if (relayMod[relayId] != 2):
+                    logMsg(4, 'Le relay ' + str(relayId) + ' n\'est pas en mode automatique, mais en mode ' + str(relayMod[relayId]))
+                elif not os.path.isfile(scriptFile): 
+                    logMsg(4, 'Pas de script ' + scriptFile)
+                else:
+                    # On joue les script 1 par 1, on attend pour jouer le suivant
+                    if (relayId > dernierScriptJoue):
+                        dernierScriptJoue=relayId
+                        logMsg(3, 'Lecture du script ' + scriptFile)
                         returnEtat=None
                         execfile(scriptFile)
                         if returnEtat != None and returnEtat != relayEtat[relayId]:
                             logMsg(2, 'Un changement d\'état vers ' + str(returnEtat) + ' de est demandé pour le relay ' + str(relayId))
-                            spoolActionData=[relayId, returnEtat, t]
-                            spoolAction=True
+                            data=[relayId,returnEtat]
+                            bus.write_i2c_block_data(configGet('domo', 'i2c', 'adress'), int(ord('O')), data)
+                            time.sleep(0.2)
+                            sortie=True
                         else:
                             logMsg(4, 'Pas de changement d\'état demandé pour le relay ' + str(relayId))
+                # Remise à 0 de la position de lecture des scripts
+                if (relayId >= len(relayMod)-1):
+                    dernierScriptJoue=-1
                 relayId=relayId+1
+                # Sortie de la boucle demandé
+                if (sortie == True):
+                    sortie=False
+                    break
             scriptExecLast=t
-        
-        # Traitement de la file d'attente
-        # file d'attente avec vérification :
-        #if spoolAction != None and spoolActionSend == False:
-        if spoolAction == True:
-            logMsg(3, 'Traitement du spool, envoi de l\'ordre')
-            logMsg(5, pprint.pprint(spoolActionData))
             
-            # Lancer l'ordre sur l'aduino 
-                    # Numéro du relay, etat (1 ou 2)
-            data = [spoolActionData[0], spoolActionData[1]]
-            bus.write_i2c_block_data(configGet('domo', 'i2c', 'adress'), int(ord('O')), data)
-            time.sleep(0.2)
-            # file d'attente avec vérification :
-            # ~ spoolActionSend=t
-            # file d'attente avec vérif (supprimer la ligne suivante) :
-            spoolAction = None
         
-        # file d'attente avec vérification :
-        # Vérifier que l'arduino a bien exécuté l'ordre
-        # ~ if spoolAction != None and spoolActionSend != False:
-            # ~ # Est-ce que le relay est dans l'état attendu par l'ordre
-            # ~ if relayEtat[spoolAction[0]] == spoolAction[1]:
-                # ~ logMsg(5, 'Le relay ' + str(spoolAction[0]) + ' n\'est pas encore dans l\'état attendu ' + str(spoolAction[1]))
-        #if spoolAction != None and spoolActionSend+configGet('domo', 'spoolTimeout') < t:
-        #    spoolAction=
-        # !! Faut faire un truc vide le spoolAction quand c'est fait... hummmm ... 
-            
     # Pour être gentil avec le système
     time.sleep(0.01)
     
