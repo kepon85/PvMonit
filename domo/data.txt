@@ -1,0 +1,1 @@
+{"CS": "Bulk (en charge)", "P": "-58", "PPVT": "6", "SOC": "95.6"}

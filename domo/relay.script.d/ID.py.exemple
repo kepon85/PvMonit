@@ -1,0 +1,13 @@
+# Test DD externe par exemple
+
+# Si il est éteind, faut-il l'allumer ?
+if relayEtat[relayId] == 1:
+    # if ...
+    # On l'allume 
+    returnEtat=2
+# Si il est allumé, faut-il l'éteindre ?
+elif relayEtat[relayId] == 2:
+    # if ...
+    # on l'éteind !
+    returnEtat=1
+        

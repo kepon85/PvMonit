@@ -4,7 +4,6 @@
 # Version 1.0	2019
 ###################################
 
-
 include('/opt/PvMonit/function.php');
 
 // Chargement de la config

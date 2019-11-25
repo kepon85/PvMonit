@@ -1,3 +1,6 @@
+<?php
+header("Access-Control-Allow-Origin: *");
+?>
 <?xml version="1.0" encoding="utf-8"?>
 <devices>
 <?php
@@ -156,7 +159,7 @@ foreach ($bin_enabled_data as $bin_script_enabled) {
                 $timerefresh=filemtime($cache_file_script);
                 
                 $script_return_datas = json_decode(file_get_contents($cache_file_script), true) ;
-                trucAdir(4, print_r($script_return_datas));
+                //trucAdir(4, print_r($script_return_datas));
                 echo "\n\t<device id=\"".strtolower($idParent)."\">";
                 echo "\n\t\t<nom></nom>";
                 echo "\n\t\t<timerefresh>".$timerefresh."</timerefresh>";

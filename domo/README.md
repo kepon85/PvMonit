@@ -6,7 +6,7 @@
 
 aptitude install python3-yaml pip3
 
-pip3 install lxml
+pip3 install lxml pysqlite3 json
 
 ### Tâche cron 
 
