@@ -43,7 +43,7 @@ $config = getConfigYaml('/opt/PvMonit');
 				<li><a id="refresh"><img id="refreshImg" src="images/refresh.png" width="20" alt="Refresh" title="Actualiser" /></a></li>
 			  </ul>
 			</nav>
-            <h1>Pv Monit<!-- TRAP TITRE --></h1>
+            <h1>Pv Monit v<?= VERSION ?> <span id="upgrade"></span><!-- TRAP TITRE --></h1>
             <p>Monitoring de l'installation solaire électrique</p>
         </div>
         </div>
@@ -300,6 +300,34 @@ function MoinsPrint(idName) {
 	$('#box_'+idName+' .plusboutton').show();
 	$('#box_'+idName+' .moinsboutton').hide();
 }
+
+<?php if ($config['www']['checkUpdate'] != false) { ?>
+function checkUpdate() {
+	var timeStamp = Math.floor(Date.now() / 1000);
+	if (! localStorage.getItem('checkUpdate') || Math.floor(parseInt(localStorage.getItem('checkUpdate'))+<?= $config['www']['checkUpdate'] ?>) < timeStamp) {
+		localStorage.setItem('checkUpdate', timeStamp);
+		$.ajax({
+			url: "https://www.zici.fr/pvmonit_checkupdate.php",
+			type: "GET",
+			crossDomain: true,
+			dataType: "html",
+			success: function (response) {
+				localStorage.setItem('getVersion', response);
+			},
+			error: function (xhr, status) {
+				trucAdir(3, 'Erreur dans le checkupdate' + status);
+			}
+		});
+	}
+}
+checkUpdate();
+if (localStorage.getItem('getVersion')) {
+	if (localStorage.getItem('getVersion').replace(/\n|\r/g,'') != '<?= VERSION ?>') {
+		$('#upgrade').html('(<a href="http://pvmonit.zici.fr">Upgrade</a>, v' + localStorage.getItem('getVersion').replace(/\n|\r/g,'') + ' is ready)');
+	}
+}
+<?php } ?>
+
 </script>
 </body>
 </html>

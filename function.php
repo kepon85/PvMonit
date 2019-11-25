@@ -1,5 +1,8 @@
 <?php
 
+// Soft version
+define('VERSION', '1.0');
+
 function getConfigYaml($config_dir){
         $config=yaml_parse_file($config_dir.'/config-default.yaml');
         $config_perso=yaml_parse_file($config_dir.'/config.yaml');
@@ -672,6 +675,7 @@ function checkCacheTime($file) {
                 return true;
         }
 }
+
 
 
 ?>

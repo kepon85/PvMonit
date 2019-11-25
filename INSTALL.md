@@ -16,7 +16,7 @@ Les fonctionnalités de PvMonit sont dissociable :
 
 Installation de PvMonit via le dépôt git et de ses dépendances :
 ```bash
-aptitude install php-cli php-yaml git python-serial sudo screen
+apt-get install php-cli php-yaml git python-serial sudo screen
 cd /opt
 git clone https://github.com/kepon85/PvMonit.git
 cd PvMonit

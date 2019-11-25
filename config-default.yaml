@@ -173,6 +173,7 @@ www:
         - <li><a href="http://emoncms.org/dashboard/view?id=VOTREIDs">EmonCMS (historique)</a></li>
         - <li><a href="http://pvmonit.zici.fr">PvMonit projet</a></li>
         - <li><a href="https://david.mercereau.info/soutenir/">Soutenir l'auteur</a></li>
+    checkUpdate: 43200                              # false for disable, or seconds checks
 
 # Ecran LCD (avec script PvMonit/lcd
 lcd:

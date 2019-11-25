@@ -30,10 +30,14 @@ p {
     border: 1px solid #392537;
     margin: 5px;
 }
+#header a {
+	color: #fff;
+}
 #header h1  {
 	font-size: 130%;
-    padding: 10px;
+	padding: 10px;
 }
+
 #header nav{
 	display:block; 
 	float:right; 

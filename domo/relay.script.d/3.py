@@ -1,15 +1,17 @@
 # Script pour la rechage makita
 
-# Temps sans bagotter  (en secondes)
-upMini=600 
+# Par défaut on laisse éteind
+returnEtat=1
 
-# Après la pompe de relevage  (2)
-if relayUpDownToday(2):
+# Temps d'allumage
+timeUp=3600
+
+# Si démarré aujourd'hui et que le temps d'allumage maxium est passé alors on le laisse à down
+if relayUpToday(relayId) and timeUpMax(timeUp):
+    returnLog='DOWN, le temps d allumage est passé'
     returnEtat=1
-    if float(xmlData['SOC']) > 98:
+# Sinon on le lance si la batterie est à 100% & que la pome de relevage c'est lancé aujourd'hui
+elif float(xmlData['SOC']) > 100 and relayUpDownToday(2):
         returnLog='UP La batterie est chargé à 100%'
         returnEtat=2
-    # Minimum de temps sur l'état haut
-    if relayEtat[relayId] == 2 && relayLastUp(relayId) < t+upMini:
-        returnLog='[1] UP La batterie est chargé à 100%'
-        returnEtat=2
+
