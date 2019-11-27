@@ -63,13 +63,13 @@ visudo
 Si vous utilisez l'interface web pvmonit, ajouter :
 
 ```diff
-+ www-data ALL=(ALL) NOPASSWD:/opt/PvMonit/bin/vedirect.py *
++ www-data ALL=(ALL) NOPASSWD:/usr/bin/python /opt/PvMonit/bin/vedirect.py *
 ```
 
 Si vous utilisez l'export vers emoncms, ajouter : 
 
 ```diff
-+ pvmonit ALL=(ALL) NOPASSWD:/opt/PvMonit/bin/vedirect.py *
++ pvmonit ALL=(ALL) NOPASSWD:/usr/bin/python /opt/PvMonit/bin/vedirect.py *
 ```
 
 ### Ve.direct via Arduino
