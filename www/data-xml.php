@@ -1,5 +1,6 @@
 <?php
 header("Access-Control-Allow-Origin: *");
+header("Content-Type:  application/xml");
 ?>
 <?xml version="1.0" encoding="utf-8"?>
 <devices>
