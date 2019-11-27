@@ -7,7 +7,7 @@ returnEtat=1
 timeUp=300
 
 # Si elle a démarré aujourd'hui et que le temps d'allumage maxium est passé alors on le laisse à down
-if relayUpToday(relayId) and timeUpMax(timeUp):
+if relayEtat[relayId] == 2 and relayUpToday(relayId) and timeUpMax(timeUp):
     returnLog='DOWN, le temps d allumage est passé'
     returnEtat=1
 # Sinon on le lance si la batterie est à 100%

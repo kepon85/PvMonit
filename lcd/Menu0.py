@@ -1,27 +1,25 @@
-tree = etree.parse(configGet('tmpFileDataXml'))
 msg_soc='BA:?'
 msg_p='P:?'
 msg_ppvt='PV:?'
 msg_conso='CON:?'
-for datas in tree.xpath("/devices/device/datas/data"):
-    if datas.get("id") in configGet('lcd','dataPrint'):
-        for data in datas.getchildren():
-            if data.tag == "value":
-                if datas.get("id") == 'SOC':
-                    # ~ debugTerm(data.text + '%')
-                    # ~ if float(data.text) > 95:
-                        # ~ debugTerm('vert !!!')
-                    # ~ elif float(data.text) > 90:
-                        # ~ debugTerm('orange !!!')
-                    # ~ elif float(data.text) < 90:
-                        # ~ debugTerm('rouge !!!')
-                    msg_soc='BA:'+data.text + '%'
-                elif datas.get("id") == 'P':
-                    msg_p = 'P:'+data.text + 'W'
-                elif datas.get("id") == 'PPVT':
-                    msg_ppvt = 'PV:'+data.text + 'W'
-                elif datas.get("id") == 'CONSO' and data.text != 'NODATA':
-                    msg_conso = 'CON:'+data.text + 'W'
+
+try:
+    tree = etree.parse(configGet('tmpFileDataXml'))
+    for datas in tree.xpath("/devices/device/datas/data"):
+        if datas.get("id") in configGet('lcd','dataPrint'):
+            for data in datas.getchildren():
+                if data.tag == "value":
+                    if datas.get("id") == 'SOC':
+                        msg_soc='BA:'+data.text + '%'
+                    elif datas.get("id") == 'P':
+                        msg_p = 'P:'+data.text + 'W'
+                    elif datas.get("id") == 'PPVT':
+                        msg_ppvt = 'PV:'+data.text + 'W'
+                    elif datas.get("id") == 'CONSO' and data.text != 'NODATA':
+                        msg_conso = 'CON:'+data.text + 'W'
+except:
+    debugTerm("Erreur dans la lecture du XML la syntax n'est pas bonne ?")
+    
 # Construction de l'affichage
 lcd.clear()
 nb_ligne1_space=lcd_columns-len(msg_soc)-len(msg_p)

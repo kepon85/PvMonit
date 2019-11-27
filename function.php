@@ -67,8 +67,28 @@ function ve_modele($ve_pid) {
 		case '0xA046': $ve_modele_retour='BlueSolar MPPT 150/70'; break;
 		case '0xA04F': $ve_modele_retour='BlueSolar MPPT 150/85'; break;
 		case '0xA047': $ve_modele_retour='BlueSolar MPPT 150/100'; break;
-		case '0xA051': $ve_modele_retour='SmartSolar MPPT 150/100'; break;
 		case '0xA050': $ve_modele_retour='SmartSolar MPPT 250/100'; break;
+		case '0xA051': $ve_modele_retour='SmartSolar MPPT 150/100'; break;
+		case '0xA052': $ve_modele_retour='SmartSolar MPPT 150/85'; break;
+		case '0xA053': $ve_modele_retour='SmartSolar MPPT 75/15'; break;
+		case '0xA054': $ve_modele_retour='SmartSolar MPPT 75/10'; break;
+		case '0xA055': $ve_modele_retour='SmartSolar MPPT 100/15'; break;
+		case '0xA056': $ve_modele_retour='SmartSolar MPPT 100/30'; break;
+		case '0xA057': $ve_modele_retour='SmartSolar MPPT 100/50'; break;
+		case '0xA058': $ve_modele_retour='SmartSolar MPPT 150/35'; break;
+		case '0xA059': $ve_modele_retour='SmartSolar MPPT 150/100 rev2'; break;
+		case '0xA05A': $ve_modele_retour='SmartSolar MPPT 150/85 rev2'; break;
+		case '0xA05B': $ve_modele_retour='SmartSolar MPPT 250/70'; break;
+		case '0xA05C': $ve_modele_retour='SmartSolar MPPT 250/85'; break;
+		case '0xA05D': $ve_modele_retour='SmartSolar MPPT 250/60'; break;
+		case '0xA05E': $ve_modele_retour='SmartSolar MPPT 250/45'; break;
+		case '0xA05F': $ve_modele_retour='SmartSolar MPPT 100/20'; break;
+		case '0xA060': $ve_modele_retour='SmartSolar MPPT 100/20 48V'; break;
+		case '0xA061': $ve_modele_retour='SmartSolar MPPT 150/45'; break;
+		case '0xA062': $ve_modele_retour='SmartSolar MPPT 150/60'; break;
+		case '0xA063': $ve_modele_retour='SmartSolar MPPT 150/70'; break;
+		case '0xA064': $ve_modele_retour='SmartSolar MPPT 250/85 rev2'; break;
+		case '0xA065': $ve_modele_retour='SmartSolar MPPT 250/100 rev2'; break;
 		case '0xA201': $ve_modele_retour='Phoenix Inverter 12V 250VA 230V'; break;
 		case '0xA202': $ve_modele_retour='Phoenix Inverter 24V 250VA 230V'; break;
 		case '0xA204': $ve_modele_retour='Phoenix Inverter 48V 250VA 230V'; break;
@@ -78,6 +98,37 @@ function ve_modele($ve_pid) {
 		case '0xA221': $ve_modele_retour='Phoenix Inverter 12V 500VA 230V'; break;
 		case '0xA222': $ve_modele_retour='Phoenix Inverter 24V 500VA 230V'; break;
 		case '0xA224': $ve_modele_retour='Phoenix Inverter 48V 500VA 230V'; break;
+		case '0xA231': $ve_modele_retour='Phoenix Inverter 12V 250VA 230V'; break;
+		case '0xA232': $ve_modele_retour='Phoenix Inverter 24V 250VA 230V'; break;
+		case '0xA234': $ve_modele_retour='Phoenix Inverter 48V 250VA 230V'; break;
+		case '0xA239': $ve_modele_retour='Phoenix Inverter 12V 250VA 120V'; break;
+		case '0xA23A': $ve_modele_retour='Phoenix Inverter 24V 250VA 120V'; break;
+		case '0xA23C': $ve_modele_retour='Phoenix Inverter 48V 250VA 120V'; break;
+		case '0xA241': $ve_modele_retour='Phoenix Inverter 12V 375VA 230V'; break;
+		case '0xA242': $ve_modele_retour='Phoenix Inverter 24V 375VA 230V'; break;
+		case '0xA244': $ve_modele_retour='Phoenix Inverter 48V 375VA 230V'; break;
+		case '0xA249': $ve_modele_retour='Phoenix Inverter 12V 375VA 120V'; break;
+		case '0xA24A': $ve_modele_retour='Phoenix Inverter 24V 375VA 120V'; break;
+		case '0xA24C': $ve_modele_retour='Phoenix Inverter 48V 375VA 120V'; break;
+		case '0xA251': $ve_modele_retour='Phoenix Inverter 12V 500VA 230V'; break;
+		case '0xA252': $ve_modele_retour='Phoenix Inverter 24V 500VA 230V'; break;
+		case '0xA254': $ve_modele_retour='Phoenix Inverter 48V 500VA 230V'; break;
+		case '0xA259': $ve_modele_retour='Phoenix Inverter 12V 500VA 120V'; break;
+		case '0xA25A': $ve_modele_retour='Phoenix Inverter 24V 500VA 120V'; break;
+		case '0xA25C': $ve_modele_retour='Phoenix Inverter 48V 500VA 120V'; break;
+		case '0xA261': $ve_modele_retour='Phoenix Inverter 12V 800VA 230V'; break;
+		case '0xA262': $ve_modele_retour='Phoenix Inverter 24V 800VA 230V'; break;
+		case '0xA264': $ve_modele_retour='Phoenix Inverter 48V 800VA 230V'; break;
+		case '0xA269': $ve_modele_retour='Phoenix Inverter 12V 800VA 120V'; break;
+		case '0xA26A': $ve_modele_retour='Phoenix Inverter 24V 800VA 120V'; break;
+		case '0xA26C': $ve_modele_retour='Phoenix Inverter 48V 800VA 120V'; break;
+		case '0xA271': $ve_modele_retour='Phoenix Inverter 12V 1200VA 230V'; break;
+		case '0xA272': $ve_modele_retour='Phoenix Inverter 24V 1200VA 230V'; break;
+		case '0xA274': $ve_modele_retour='Phoenix Inverter 48V 1200VA 230V'; break;
+		case '0xA279': $ve_modele_retour='Phoenix Inverter 12V 1200VA 120V'; break;
+		case '0xA27A': $ve_modele_retour='Phoenix Inverter 24V 1200VA 120V'; break;
+		case '0xA27C': $ve_modele_retour='Phoenix Inverter 48V 1200VA 120V'; break;
+		
 		default; $ve_modele_retour = 'Inconnu'; break;
 	}
 	return $ve_modele_retour;
@@ -408,7 +459,7 @@ function vedirect_scan() {
 						case 'MPTT':
 							if (in_array($vedirect_data[0], $config['vedirect']['data_ok']['mppt'])) {
 								# éviter les doublons
-								if (!stristr($vedirect_data_formate, "$key:$value")) {
+								if (!stristr($vedirect_data_formate, $vedirect_data[0].':')) {
 									trucAdir(5, 'Valeur trouvé : '.$vedirect_data[0].':'.$vedirect_data[1]);
 									if ($vedirect_data_formate != '') {	
 										$vedirect_data_formate = $vedirect_data_formate.',';
@@ -421,18 +472,30 @@ function vedirect_scan() {
 						break;
 						case 'BMV':
 							if (in_array($vedirect_data[0], $config['vedirect']['data_ok']['bmv'])) {
-								if ($vedirect_data_formate != '') {
-									$vedirect_data_formate = $vedirect_data_formate.',';
+								# éviter les doublons
+								if (!stristr($vedirect_data_formate, $vedirect_data[0].':')) {
+									trucAdir(5, 'Valeur trouvé : '.$vedirect_data[0].':'.$vedirect_data[1]);
+									if ($vedirect_data_formate != '') {
+										$vedirect_data_formate = $vedirect_data_formate.',';
+									}
+									$vedirect_data_formate = $vedirect_data_formate.$vedirect_data[0].':'.$vedirect_data[1];
+								} else {
+									trucAdir(5, 'Doublon, on passe');
 								}
-								$vedirect_data_formate = $vedirect_data_formate.$vedirect_data[0].':'.$vedirect_data[1];
 							}
 						break;
                                                 case 'PhoenixInverter':
                                                         if (in_array($key, $config['vedirect']['data_ok']['phoenix'])) {
-                                                                if ($vedirect_data_formate != '') {
-                                                                        $vedirect_data_formate = $vedirect_data_formate.',';
-                                                                }
-                                                                $vedirect_data_formate = $vedirect_data_formate.$key.':'.$value;
+								# éviter les doublons
+								if (!stristr($vedirect_data_formate, $vedirect_data[0].':')) {
+									trucAdir(5, 'Valeur trouvé : '.$vedirect_data[0].':'.$vedirect_data[1]);
+									if ($vedirect_data_formate != '') {
+										$vedirect_data_formate = $vedirect_data_formate.',';
+									}
+									$vedirect_data_formate = $vedirect_data_formate.$key.':'.$value;
+								} else {
+									trucAdir(5, 'Doublon, on passe');
+								}
                                                         }
                                                 break;
                                                 default:
