@@ -211,7 +211,7 @@ function ve_label2($label, $valeur) {
 		break;
 		case 'H22':
 			$veData['value']=$valeur*0.01;
-			$veData['desc']='Rendemain hier';
+			$veData['desc']='Rendement hier';
 			$veData['units']='kWh';
 		break;
 		case 'H23':
