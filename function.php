@@ -51,6 +51,7 @@ function ve_modele($ve_pid) {
 		case '0x203': $ve_modele_retour='BMV-700'; break;
 		case '0x204': $ve_modele_retour='BMV-702'; break;
 		case '0x205': $ve_modele_retour='BMV-700H'; break;
+		case '0xA381': $ve_modele_retour='BMV-712 Smart'; break;
 		case '0xA04C': $ve_modele_retour='BlueSolar MPPT 75/10'; break;
 		case '0x300': $ve_modele_retour='BlueSolar MPPT 70/15'; break;
 		case '0xA042': $ve_modele_retour='BlueSolar MPPT 75/15'; break;
@@ -416,7 +417,7 @@ function ve_nom($ve_serial) {
 
 # Fonction vedirect MPTT / BMV
 function vedirect_scan() {
-        global $config;
+	global $config;
 	trucAdir(4, 'Recherche de périphérique vedirect');
 	$idDevice=0;
 	foreach (scandir('/dev') as $unDev) {
@@ -431,9 +432,8 @@ function vedirect_scan() {
 				// Pour gérer le BMV-600
 				$BMV600=false;
 				$ve_nom=null;
-                                $ve_type='Inconnu';
-                                $ve_modele='Inconnu';
-                                $ve_type='Inconnu';
+				$ve_type='Inconnu';
+				$ve_modele='Inconnu';
 				foreach ($vedirect_sortie as $vedirect_ligne) {
 					$vedirect_data = explode(':', $vedirect_ligne);
 					switch ($vedirect_data[0]) {
@@ -447,7 +447,7 @@ function vedirect_scan() {
 						break;
 						case 'BMV':
 							$ve_type='BMV';
-							$ve_nom=$vedirect_data[1];
+							$ve_nom=str_replace(' ', '', $vedirect_data[1]);
 						break;
 					}
 				}

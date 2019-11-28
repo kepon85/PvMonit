@@ -73,7 +73,7 @@ foreach ($vedirect_data_ready as $device) {
         if ($device['serial']  == 'Inconnu' || $device['serial']  == '') {
                 $device['serial'] = $device['nom'];
         }
-        echo "\n\t".'<device id="'.$device['serial'].'">';
+        echo "\n\t".'<device id="'.str_replace(' ', '', $device['serial']).'">';
         echo "\n\t\t".'<nom>'.$device['nom'].'</nom>';
         echo "\n\t\t".'<timerefresh>'.time().'</timerefresh>';
         echo "\n\t\t".'<type>'.$device['type'].'</type>';
