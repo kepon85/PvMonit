@@ -206,15 +206,15 @@ domo:
         CS: ^Off$|Fault$|Bulk|Faible|Abs|Float|On$
     relay:
         nb: 5                                  # 14 max !
-        dataFreq: 180                           # Délais de récupération des données depuis l'arduino (en secondes)
+        dataFreq: 30                           # Délais de récupération des données depuis l'arduino (en secondes)
         scriptDir: /opt/PvMonit/domo/relay.script.d
-        scriptExecInterval: 180                # Interval d'execution des script de relais
-    relayCorrespondance:                      # A commencer par 0
-        0: Pompe de relevage
-        1: Box Internet
-        2: Téléphone
-        3: Disque dur externe
-        4: Chargeur outil électroportatif   # Sonde courant !
-        #5: Chauffe eau
-        #6: Batterie de vélo életrique
-        #7: Surpresseur
+        scriptExecInterval: 120                # Interval d'execution des script de relais
+    #~ relayCorrespondance:                      # A commencer par 0
+        #~ 0: Pompe de relevage
+        #~ 1: Box Internet
+        #~ 2: Téléphone
+        #~ 3: Disque dur externe
+        #~ 4: Chargeur outil électroportatif   # Sonde courant !
+        #~ #5: Chauffe eau
+        #~ #6: Batterie de vélo életrique
+        #~ #7: Surpresseur

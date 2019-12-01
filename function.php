@@ -159,103 +159,10 @@ function ve_label2($label, $valeur) {
 			$veData['desc']='Tension de la batterie';
 			$veData['units']='V';
 		break;
-		case 'I':
+		case 'VS':
+			$veData['desc']='Auxiliary (starter) voltage';
 			$veData['value']=$valeur*0.001;
-			$veData['desc']='Courant de la batterie';
-			$veData['units']='A';
-		break;
-		case 'PPV':
-			$veData['desc']='Production des panneaux';
-			$veData['descShort']='PV';
-			$veData['units']='W';
-		break;
-		case 'ERR':
-			$veData['desc']='Présence d\'erreur';
-			if ($valeur == 0) {
-				$veData['value']='Aucune';
-			} else {
-				switch ($veData['value']) {
-					case 2: $veData['value'] = 'Battery voltage too high'; break;
-					case 17: $veData['value'] = 'Charger temperature too high'; break;
-					case 18: $veData['value'] = 'Charger over current'; break;
-					case 19: $veData['value'] = 'Charger current reversed'; break;
-					case 20: $veData['value'] = 'Bulk time limit exceeded'; break;
-					case 21: $veData['value'] = 'Current sensor issue (sensor bias/sensor broken)'; break;
-					case 26: $veData['value'] = 'Terminals overheated'; break;
-					case 33: $veData['value'] = 'Input voltage too high (solar panel)'; break;
-					case 34: $veData['value'] = 'Input current too high (solar panel)'; break;
-					case 38: $veData['value'] = 'Input shutdown (due to excessive battery voltage)'; break;
-					case 116: $veData['value'] = 'Factory calibration data lost'; break;
-					case 117: $veData['value'] = 'Invalid/incompatible firmware'; break;
-					case 119: $veData['value'] = 'User settings invalid'; break;
-					default: $veData['value'] = $dataSplit[1]; break;
-				}
-			}
-		break;
-		case 'VPV':
-			$veData['desc']='Voltage des panneaux';
-			$veData['units']='mV';
-		break;
-		case 'H19':
-			$veData['value']=$valeur*0.01;
-			$veData['desc']='Le rendement total';
-			$veData['units']='kWh';
-		break;
-		case 'H20':
-			$veData['value']=$valeur*0.01;
-			$veData['desc']='Rendement aujourd\'hui';
-			$veData['units']='kWh';
-		break;
-		case 'H21':
-			$veData['desc']='Puissance maximum ce jour';
-			$veData['units']='W';
-		break;
-		case 'H22':
-			$veData['value']=$valeur*0.01;
-			$veData['desc']='Rendement hier';
-			$veData['units']='kWh';
-		break;
-		case 'H23':
-			$veData['desc']='Puissance maximum hier';
-			$veData['units']='W';
-		break;
-		case 'AR':
-			$veData['desc']='Raison de l\'alarme';
-			switch ($veData['value']) {
-				case 0: $veData['value']= 'Aucune'; break;
-				case 1: $veData['value']= 'Low Voltage'; break;
-				case 2: $veData['value']= 'High Voltage'; break;
-				case 4: $veData['value']= 'Low SOC'; break;
-				case 8: $veData['value']= 'Low Starter Voltage'; break;
-				case 16: $veData['value']= 'High Starter Voltage'; break;
-				case 32: $veData['value']= 'Low Temperature'; break;
-				case 64: $veData['value']= 'High Temperature'; break;
-				case 128: $veData['value']= 'Mid Voltage'; break;
-				case 256: $veData['value']= 'Overload'; break;
-				case 512: $veData['value']= 'DC-ripple'; break;
-				case 1024: $veData['value']= 'Low V AC out'; break;
-				case 2048: $veData['value']= 'High V AC out'; break;
-			}
-		break;
-		case 'CS':
-			$veData['desc']='Status de charge';
-			switch ($veData['value']) {
-				case 0: $veData['value']= 'Off'; break;
-				case 1: $veData['value']= 'Faible puissance'; break;
-				case 2:	$veData['value']= 'Fault'; break;
-				case 3:	$veData['value']= 'Bulk (en charge)'; break;
-				case 4:	$veData['value']= 'Absorption';	break;
-				case 5:	$veData['value']= 'Float (maintient la charge pleine)';	break;
-				case 9:	$veData['value']= 'On';	break;
-			}
-		break;
-		case 'P':
-			$veData['desc']='Puissance instantané';
-			$veData['units']='W';
-		break;
-		case 'T':
-			$veData['desc']='Température de la batterie';
-			$veData['units']='°C';
+			$veData['units']='V';
 		break;
 		case 'VM':
 			$veData['desc']='Mid-point voltage of the battery bank';
@@ -266,26 +173,36 @@ function ve_label2($label, $valeur) {
 			$veData['desc']='Mid-point deviation of the battery bank';
 			$veData['units']='%';
 		break;
-		case 'H17':
-			$veData['desc']='Quantité d\'énergie déchargée';
-			$veData['value']=$valeur*0.01;
-			$veData['units']='kWh';
+		case 'VPV':
+			$veData['desc']='Voltage des panneaux';
+			$veData['units']='mV';
 		break;
-		case 'H18':
-			$veData['desc']='Quantité d\'énergie chargée';
-			$veData['value']=$valeur*0.01;
-			$veData['units']='kWh';
+		case 'PPV':
+			$veData['desc']='Production des panneaux';
+			$veData['descShort']='PV';
+			$veData['units']='W';
 		break;
-		case 'H13':
-			$veData['desc']='Number of low auxiliary voltage alarms';
-		break;
-		case 'H14':
-			$veData['desc']='Number of high auxiliary voltage alarms';
-		break;
-		case 'VS':
-			$veData['desc']='Auxiliary (starter) voltage';
+		case 'I':
 			$veData['value']=$valeur*0.001;
-			$veData['units']='V';
+			$veData['desc']='Courant de la batterie';
+			$veData['units']='A';
+		break;
+		case 'IL':
+			$veData['value']=$valeur*0.001;
+			$veData['desc']='Courant de charge';
+			$veData['units']='A';
+		break;
+		case 'LOAD':
+			$veData['value']=$valeur;
+			$veData['desc']='Charge sortie status';
+		break;
+		case 'T':
+			$veData['desc']='Température de la batterie';
+			$veData['units']='°C';
+		break;
+		case 'P':
+			$veData['desc']='Puissance instantané';
+			$veData['units']='W';
 		break;
 		case 'CE':
 			$veData['desc']='Ampères heures consommées';
@@ -318,6 +235,27 @@ function ve_label2($label, $valeur) {
 		break;
 		case 'Alarm':
 			$veData['desc']='Condition d\'alarme active';
+		break;
+		case 'Relay':
+			$veData['desc']='Etat du relai';
+		break;
+		case 'AR':
+			$veData['desc']='Raison de l\'alarme';
+			switch ($veData['value']) {
+				case 0: $veData['value']= 'Aucune'; break;
+				case 1: $veData['value']= 'Low Voltage'; break;
+				case 2: $veData['value']= 'High Voltage'; break;
+				case 4: $veData['value']= 'Low SOC'; break;
+				case 8: $veData['value']= 'Low Starter Voltage'; break;
+				case 16: $veData['value']= 'High Starter Voltage'; break;
+				case 32: $veData['value']= 'Low Temperature'; break;
+				case 64: $veData['value']= 'High Temperature'; break;
+				case 128: $veData['value']= 'Mid Voltage'; break;
+				case 256: $veData['value']= 'Overload'; break;
+				case 512: $veData['value']= 'DC-ripple'; break;
+				case 1024: $veData['value']= 'Low V AC out'; break;
+				case 2048: $veData['value']= 'High V AC out'; break;
+			}
 		break;
 		case 'H1':
 			$veData['desc']='Profondeur de la décharge la plus profonde';
@@ -369,14 +307,92 @@ function ve_label2($label, $valeur) {
 			$veData['desc']='Nombre d\'alarmes de tension élevée';
 		break;
 		case 'H13':
-			$veData['desc']='Minimum auxiliary (battery) voltage';
+			$veData['desc']='Nombre d\'alarmes de tension faible sur l`auxiliaire';
+		break;
+		case 'H14':
+			$veData['desc']='Nombre d\'alarmes de tension élevée sur l`auxiliaire';
+		break;
+		case 'H15':
+			$veData['desc']='Tension minimale batterie auxiliaire';
 			$veData['value']=$valeur*0.001;
 			$veData['units']='V';
 		break;
-		case 'H13':
-			$veData['desc']='Maximum auxiliary (battery) voltage';
+		case 'H16':
+			$veData['desc']='Tension maximale de la batterie auxiliaire';
 			$veData['value']=$valeur*0.001;
 			$veData['units']='V';
+		break;
+		case 'H17':
+			$veData['desc']='Quantité d\'énergie déchargée';
+			$veData['value']=$valeur*0.01;
+			$veData['units']='kWh';
+		break;
+		case 'H18':
+			$veData['desc']='Quantité d\'énergie chargée';
+			$veData['value']=$valeur*0.01;
+			$veData['units']='kWh';
+		break;
+		case 'H19':
+			$veData['value']=$valeur*0.01;
+			$veData['desc']='Le rendement total';
+			$veData['units']='kWh';
+		break;
+		case 'H20':
+			$veData['value']=$valeur*0.01;
+			$veData['desc']='Rendement aujourd\'hui';
+			$veData['units']='kWh';
+		break;
+		case 'H21':
+			$veData['desc']='Puissance maximum ce jour';
+			$veData['units']='W';
+		break;
+		case 'H22':
+			$veData['value']=$valeur*0.01;
+			$veData['desc']='Rendement hier';
+			$veData['units']='kWh';
+		break;
+		case 'H23':
+			$veData['desc']='Puissance maximum hier';
+			$veData['units']='W';
+		break;
+		
+		case 'ERR':
+			$veData['desc']='Présence d\'erreur';
+			if ($valeur == 0) {
+				$veData['value']='Aucune';
+			} else {
+				switch ($veData['value']) {
+					case 2: $veData['value'] = 'Battery voltage too high'; break;
+					case 17: $veData['value'] = 'Charger temperature too high'; break;
+					case 18: $veData['value'] = 'Charger over current'; break;
+					case 19: $veData['value'] = 'Charger current reversed'; break;
+					case 20: $veData['value'] = 'Bulk time limit exceeded'; break;
+					case 21: $veData['value'] = 'Current sensor issue (sensor bias/sensor broken)'; break;
+					case 26: $veData['value'] = 'Terminals overheated'; break;
+					case 33: $veData['value'] = 'Input voltage too high (solar panel)'; break;
+					case 34: $veData['value'] = 'Input current too high (solar panel)'; break;
+					case 38: $veData['value'] = 'Input shutdown (due to excessive battery voltage)'; break;
+					case 116: $veData['value'] = 'Factory calibration data lost'; break;
+					case 117: $veData['value'] = 'Invalid/incompatible firmware'; break;
+					case 119: $veData['value'] = 'User settings invalid'; break;
+					default: $veData['value'] = $dataSplit[1]; break;
+				}
+			}
+		break;
+		case 'CS':
+			$veData['desc']='Status de charge';
+			switch ($veData['value']) {
+				case 0: $veData['value']= 'Off'; break;
+				case 1: $veData['value']= 'Faible puissance'; break;
+				case 2:	$veData['value']= 'Fault'; break;
+				case 3:	$veData['value']= 'Bulk (en charge)'; break;
+				case 4:	$veData['value']= 'Absorption';	break;
+				case 5:	$veData['value']= 'Float (maintient la charge pleine)';	break;
+				case 9:	$veData['value']= 'On';	break;
+			}
+		break;
+		case 'HSDS':
+			$veData['desc']='Numéro de séquence du jour';
 		break;
 		case 'MODE':
 			$veData['desc']='Device mode';
