@@ -4,8 +4,12 @@
 define('VERSION', '1.0');
 
 function getConfigYaml($config_dir){
-        $config=yaml_parse_file($config_dir.'/config-default.yaml');
-        $config_perso=yaml_parse_file($config_dir.'/config.yaml');
+        if (($config=yaml_parse_file($config_dir.'/config-default.yaml')) == false) {
+			exit('Le fichier config-default.yaml comporte une erreur de syntax, check with : http://www.yamllint.com/');
+		}
+        if (($config_perso=yaml_parse_file($config_dir.'/config.yaml')) == false) {
+			exit('Le fichier config.yaml comporte une erreur de syntax, check with : http://www.yamllint.com/');
+		}
         
         foreach($config_perso as $key1=>$perso1) {
                 if ($key1 == 'deviceCorrespondance') {
