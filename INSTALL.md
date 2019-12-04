@@ -240,7 +240,7 @@ crontab -e -u pvmonit
 Ajouter :
 ```diff
 +# Script de récupération des données, toutes les 5 minutes
-+/5 * * * * /usr/bin/php /opt/PvMonit/getForEmoncms.php >> /tmp/PvMonit.getForEmoncms.log
++*/5 * * * * /usr/bin/php /opt/PvMonit/getForEmoncms.php >> /tmp/PvMonit.getForEmoncms.log
 +# Script d'envoi des données, ici toutes les 1/2 heures
 +3,33 * * * * /usr/bin/php /opt/PvMonit/sendToEmoncms.php >> /tmp/PvMonit.sendToEmoncms.log
 ```
