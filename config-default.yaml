@@ -73,6 +73,7 @@ vedirect:
             - H21
             - H22
             - H23
+            - Relay
         bmv:
             - V
             - VS
@@ -103,6 +104,7 @@ vedirect:
             - H16
             - H17
             - H18
+            - Relay
         phoenix:
             - P
             - CS

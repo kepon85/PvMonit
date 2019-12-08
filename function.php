@@ -142,7 +142,7 @@ function ve_modele($ve_pid) {
 # Victron : détermine plein de trucs en fonction du label
 # Source doc Victron "VE.Direct Protocol"
 function ve_label2($label, $valeur) {
-        global $config;
+	global $config;
 	$veData['label']=$label;
 	$veData['desc']=$label;
 	$veData['value']=$valeur;
@@ -435,6 +435,23 @@ function ve_nom($ve_serial) {
 	return $ve_nom;
 }
 
+# Hack value
+function ve_value($label, $value) {
+	switch ($label) {
+		case 'Relay':
+			if ($value == 'ON') {
+				$retour = 1;
+			} else {
+				$retour = 0;
+			}
+		break;
+		default; 
+			$retour = $value; 
+		break;
+	}
+	return $retour;
+}
+
 # Fonction vedirect MPTT / BMV
 function vedirect_scan() {
 	global $config;
@@ -484,7 +501,7 @@ function vedirect_scan() {
 									if ($vedirect_data_formate != '') {	
 										$vedirect_data_formate = $vedirect_data_formate.',';
 									}
-									$vedirect_data_formate = $vedirect_data_formate.$vedirect_data[0].':'.$vedirect_data[1];
+									$vedirect_data_formate = $vedirect_data_formate.$vedirect_data[0].':'.ve_value($vedirect_data[0], $vedirect_data[1]);
 								} else {
 									trucAdir(5, 'Doublon, on passe');
 								}
@@ -498,31 +515,31 @@ function vedirect_scan() {
 									if ($vedirect_data_formate != '') {
 										$vedirect_data_formate = $vedirect_data_formate.',';
 									}
-									$vedirect_data_formate = $vedirect_data_formate.$vedirect_data[0].':'.$vedirect_data[1];
+									$vedirect_data_formate = $vedirect_data_formate.$vedirect_data[0].':'.ve_value($vedirect_data[0], $vedirect_data[1]);
 								} else {
 									trucAdir(5, 'Doublon, on passe');
 								}
 							}
 						break;
-                                                case 'PhoenixInverter':
-                                                        if (in_array($key, $config['vedirect']['data_ok']['phoenix'])) {
-								# éviter les doublons
-								if (!stristr($vedirect_data_formate, $vedirect_data[0].':')) {
-									trucAdir(5, 'Valeur trouvé : '.$vedirect_data[0].':'.$vedirect_data[1]);
-									if ($vedirect_data_formate != '') {
-										$vedirect_data_formate = $vedirect_data_formate.',';
+						case 'PhoenixInverter':
+								if (in_array($key, $config['vedirect']['data_ok']['phoenix'])) {
+									# éviter les doublons
+									if (!stristr($vedirect_data_formate, $vedirect_data[0].':')) {
+										trucAdir(5, 'Valeur trouvé : '.$vedirect_data[0].':'.$vedirect_data[1]);
+										if ($vedirect_data_formate != '') {
+											$vedirect_data_formate = $vedirect_data_formate.',';
+										}
+										$vedirect_data_formate = $vedirect_data_formate.$key.':'.ve_value($vedirect_data[0], $vedirect_data[1]);
+									} else {
+										trucAdir(5, 'Doublon, on passe');
 									}
-									$vedirect_data_formate = $vedirect_data_formate.$key.':'.$value;
-								} else {
-									trucAdir(5, 'Doublon, on passe');
 								}
-                                                        }
-                                                break;
-                                                default:
-                                                        if ($vedirect_data_formate != '') {
-                                                                $vedirect_data_formate = $vedirect_data_formate.',';
-                                                        }
-                                                        $vedirect_data_formate = $vedirect_data_formate.$key.':'.$value;
+						break;
+						default:
+								if ($vedirect_data_formate != '') {
+										$vedirect_data_formate = $vedirect_data_formate.',';
+								}
+								$vedirect_data_formate = $vedirect_data_formate.$key.':'.ve_value($vedirect_data[0], $vedirect_data[1]);
 					}
 				}
 				trucAdir(3, 'Les données sont formatées comme ceci : '.$vedirect_data_formate );
@@ -575,7 +592,7 @@ function vedirect_parse_arduino($data) {
                                                 if ($vedirect_data_formate != '') {	
                                                         $vedirect_data_formate = $vedirect_data_formate.',';
                                                 }
-                                                $vedirect_data_formate = $vedirect_data_formate.$key.':'.$value;
+                                                $vedirect_data_formate = $vedirect_data_formate.$key.':'.ve_value($key, $value);
                                         } else {
                                                 trucAdir(5, 'Doublon, on passe');
                                         }
@@ -586,7 +603,7 @@ function vedirect_parse_arduino($data) {
                                         if ($vedirect_data_formate != '') {
                                                 $vedirect_data_formate = $vedirect_data_formate.',';
                                         }
-                                        $vedirect_data_formate = $vedirect_data_formate.$key.':'.$value;
+                                        $vedirect_data_formate = $vedirect_data_formate.$key.':'.ve_value($key, $value);
                                 }
                         break;
                         case 'PhoenixInverter':
@@ -594,14 +611,14 @@ function vedirect_parse_arduino($data) {
                                         if ($vedirect_data_formate != '') {
                                                 $vedirect_data_formate = $vedirect_data_formate.',';
                                         }
-                                        $vedirect_data_formate = $vedirect_data_formate.$key.':'.$value;
+                                        $vedirect_data_formate = $vedirect_data_formate.$key.':'.ve_value($key, $value);
                                 }
                         break;
                         default:
                                 if ($vedirect_data_formate != '') {
                                         $vedirect_data_formate = $vedirect_data_formate.',';
                                 }
-                                $vedirect_data_formate = $vedirect_data_formate.$key.':'.$value;
+                                $vedirect_data_formate = $vedirect_data_formate.$key.':'.ve_value($key, $value);
                 }
         }
         trucAdir(3, 'Les données sont formatées comme ceci : '.$vedirect_data_formate );
