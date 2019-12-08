@@ -24,6 +24,10 @@ Matériel :
 
 <img src="https://david.mercereau.info/wp-content/uploads/2019/11/PvMonit-Domo_bb.png" alt="https://david.mercereau.info/wp-content/uploads/2019/11/PvMonit-Domo_bb.png" style="zoom:20%;" />
 
+## Arduino
+
+Avec l'Arduino IDE, uploader le firmware "arduinoDomoRelayi2c.ino" contenu dans le dossier "firmware" 
+
 ## Installation
 
 Dépendance du script : 
@@ -60,4 +64,4 @@ Les interupteur on 3 modes :
 
 L'affichange des 8 segments change quand le PI est présent et que le script domo.py est lancé.
 
-Les leds au dessus des 8 segments sont synchronisé avec l'état des relais
+Les leds au dessus des 8 segments sont synchronisé avec l'état des relaisre
