@@ -113,6 +113,13 @@ def relayLastUp(relay):
     except:
         return 0
 
+def relayLastUpAuto(relay):
+    req=db.execute('SELECT date FROM relay WHERE relay_number = '+str(relay)+' AND info = "E" AND valeur = 2 ORDER BY date DESC LIMIT 1')
+    try:
+        return req.fetchone()[0]
+    except:
+        return 0
+
 def relayLastDown(relay):
     req=db.execute('SELECT date FROM relay WHERE relay_number = '+str(relay)+' AND info = "E" AND (valeur = 0 OR valeur = 1) ORDER BY date DESC LIMIT 1')
     try:
@@ -133,9 +140,11 @@ def relayUpDownToday(relay):
 
 # Est-ce que le relay c'est allumé aujourd'hui ? (dans les 12 heures)
 def relayUpToday(relay):
-    req=db.execute('SELECT count(date) FROM relay WHERE relay_number = '+str(relay)+' AND info = "E" AND (valeur = 2 OR valeur = 3) AND date > ' + str(t-720) + ' ORDER BY date DESC LIMIT 1')
+    #print('SELECT count(date) FROM relay WHERE relay_number = '+str(relay)+' AND info = "E" AND (valeur = 2 OR valeur = 3) AND date > ' + str(t-43200) + ' ORDER BY date DESC LIMIT 1')
+    db.execute('SELECT count(date) FROM relay WHERE relay_number = '+str(relay)+' AND info = "E" AND (valeur = 2 OR valeur = 3) AND date > ' + str(t-43200) + ' ORDER BY date DESC LIMIT 1')
+    resulta=db.fetchone()[0]
     try:
-        if req.fetchone()[0] == 1:
+        if resulta >= 1:
             return True
         else:
             return False
@@ -143,17 +152,16 @@ def relayUpToday(relay):
         return False
 
 
-
 def timeUpMax(timeUp):
     # Si le temps 
-    if relayLastUp(relayId)+timeUp < t:
+    if relayLastUpAuto(relayId)+timeUp < t:
         return True
     else:
         return False
 		
 def timeUpMin(timeUp):
     # Si le temps 
-    if relayLastUp(relayId)+timeUp > t:
+    if relayLastUpAuto(relayId)+timeUp > t:
         return True
     else:
         return False
@@ -300,15 +308,19 @@ while 1:
                         # Détection des changement pour les mettres en BD
                         if firstDataRece == False:
                             if i2cDatas != relayEtatOld[x]:
-                                print('un changement !!!')
-                                print('SELECT count(id) FROM relay WHERE relay_number = ' + str(x) + ' AND info = "E" AND valeur = '+str(i2cDatas))
+                                logMsg(2, 'Un changement est détecté sur le relay ' + str(x) + ', il est passé à '+str(i2cDatas)+' on l\'enregistre en BD !')
                                 testDoublon=db.execute('SELECT count(id) FROM relay WHERE relay_number = ' + str(x) + ' AND info = "E" AND valeur = '+str(i2cDatas)+' AND date > ' + str(t-configGet('domo', 'relay', 'dataFreq')) )
                                 if testDoublon.fetchone()[0]  == 0:
-                                    print('enregistrement en  BD')
                                     logInDb(x, 'E', i2cDatas, '')
+                                else:
+                                    logMsg(2, 'Finalement non, c\'est un doublon')
                         # Premier lancement, on enregistre les init en base
                         if firstDataRece == True:
-                            logInDb(x, 'E', i2cDatas, 'Init')
+                            testDoublon=db.execute('SELECT count(id) FROM relay WHERE relay_number = ' + str(x) + ' AND info = "E" AND valeur = '+str(i2cDatas)+' ORDER BY date ASC') 
+                            if testDoublon.fetchone()[0]  == 0:
+                                logInDb(x, 'E', i2cDatas, 'Init')
+                            else:
+                                logMsg(2, 'Finalement non, on log pas d\'INIT c\'est un doublon')
                     else:
                         relayMod.insert(x,i2cDatas)
                         logMod=logMod+","+str(i2cDatas)

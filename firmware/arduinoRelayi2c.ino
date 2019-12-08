@@ -9,6 +9,7 @@
 // http://wiki.mchobby.be/index.php?title=Module_Relais
 
 #define DEBUG 1
+#define VEROSE 1
 //#define MASTERSIMU 1
 
 //Slave Address for the Communication
@@ -21,7 +22,7 @@
 TM1638 afficheur(3, 2, 4);
 
 // Relay number
-byte relayNb=8;
+byte relayNb=8;    // Coherence avec le config.yaml
 // Relay pin number 
 byte relayPin[] = {5, 6, 7, 8, 9, 10, 11, 12};
 // ####### Relay 
@@ -37,23 +38,34 @@ byte relayEtat[] = {0, 0, 0, 0, 0, 0, 0, 0};
 //  - 2 : Auto
 //  - 3 : On
 byte relayMod[] = {0, 0, 0, 0, 0, 0, 0, 0};
+bool RelayChange[] = {false, false, false, false, false, false, false, false, };
 
 // Police d'afficheur
+const byte MES_FONTS[] = {
+  0b01000000, // 0 null
+  0b00001000, // 1 Down for off force
+  0b00000000, // 2 Middle for on/off auto
+  0b00000001 // 3 UP for on force
+};
+/* Plus pertinant mais l'afficheur fait du bruit alors on limite l'affichage 
 const byte MES_FONTS[] = {
   0b00000000, // 0 null
   0b00001000, // 1 Down for off force
   0b01000000, // 2 Middle for on/off auto
   0b00000001 // 3 UP for on force
 };
+*/
 
 
 String RelayOrderCode = "RO";
 bool MasterPresent = false;
-bool RelayChange = true;
-int HeartbeatCheckFreq=40;
+
+int HeartbeatCheckFreq=500;
 int HeartbeatCheckCount=0;
-int RelayChangeFreq=120;
+int RelayChangeFreq=60;
 int RelayChangeCount=0;
+int AfficheurRefreshFreq=500;
+int AfficheurRefreshCount=0;
 
 int changeEtat(int id) {
   switch (relayMod[id]) {
@@ -82,12 +94,50 @@ int changeEtat(int id) {
       relayEtat[id]=3;
     break;
   }
-  #ifdef DEBUG
+  #ifdef VEROSE
     Serial.println((String)"Etat pass to "+relayEtat[id]+" for "+id+" relay");
   #endif
 }
 
-
+int afficheurRefresh() {
+  #ifdef DEBUG
+    Serial.println((String)"Rafraichissement de l'afficheur");
+  #endif
+  for (int id = 0; id < relayNb; id++) {
+      switch (relayEtat[id]) {
+        // off force
+        case 0:
+          afficheur.setLED(TM1638_COLOR_NONE, id);
+        break;
+        // off auto
+        case 1:
+          afficheur.setLED(TM1638_COLOR_NONE, id);
+        break;
+        // on auto 
+        case 2:
+          afficheur.setLED(TM1638_COLOR_RED, id);
+        break;
+        //  on force
+        case 3:
+          afficheur.setLED(TM1638_COLOR_RED, id);
+        break;
+      }
+      switch (relayMod[id]) {
+        case 0:
+          afficheur.setDisplayDigit(0, id, false, MES_FONTS);
+        break;
+        case 1:
+          afficheur.setDisplayDigit(1, id, false, MES_FONTS);
+        break;
+        case 2:
+          afficheur.setDisplayDigit(2, id, false, MES_FONTS);
+        break;
+        case 3:
+          afficheur.setDisplayDigit(3, id, false, MES_FONTS);
+        break;
+      }
+  }
+}
 
 
 
@@ -106,7 +156,7 @@ int changeMod(int id, int newMod) {
       afficheur.setDisplayDigit(3, id, false, MES_FONTS);
     break;
   }
-  #ifdef DEBUG
+  #ifdef VEROSE
     Serial.println((String)"Mod change to "+newMod+" for "+id+" relay");
   #endif
   relayMod[id]=newMod;
@@ -121,7 +171,9 @@ void receiveData(int byteCount) {
     Serial.print("Donnée Reçu :");
   #endif
   while (Wire.available()) {
-    Serial.print(" ");
+    #ifdef DEBUG
+      Serial.print(" ");
+    #endif
     i2cReceiveData[i] = Wire.read();
     #ifdef DEBUG
       Serial.print(i2cReceiveData[i]);
@@ -140,35 +192,44 @@ void receiveData(int byteCount) {
   // Heartbeat
   if(i2cReceiveData[0]=='H')  {
     #ifdef DEBUG
-      Serial.println("Hearbeat de nouveau reçu !");
+      Serial.println("Hearbeat Reçu !");
     #endif
     HeartbeatCheckCount=0;
     // Si on récupère le master :  On remet les relay en auto off (1) s'il sont à 0
     if (MasterPresent == false) {
       for (int i = 0; i < relayNb; i++) {
         if (relayMod[i] == 0) {
-            changeMod(i, 2);
+           changeMod(i, 2);
+           RelayChange[i] = true;
         }
       }
-      RelayChange = true;
       MasterPresent = true;
     }
   }
   if(i2cReceiveData[0]== 79)  { // Réception d'un O (pour Ordre)
-    #ifdef DEBUG
+    #ifdef VEROSE
       Serial.println("Ordre du Pi de changement d'état pour le relay " + String(i2cReceiveData[1]) + " à " + String(i2cReceiveData[2]));
     #endif
-    relayEtat[i2cReceiveData[1]] = i2cReceiveData[2];
-    // Passer l'état à Auto On
-    if (i2cReceiveData[2] == 2) {
-      afficheur.setLED(TM1638_COLOR_RED, i2cReceiveData[1]);
-      digitalWrite(relayPin[i2cReceiveData[1]],LOW);
-    // Passer l'état à Auto Off
-    } else if (i2cReceiveData[2] == 1) {
-      afficheur.setLED(TM1638_COLOR_NONE, i2cReceiveData[1]);
-      digitalWrite(relayPin[i2cReceiveData[1]],HIGH);
+    // Vérification des données
+    if (i2cReceiveData[1] >= 0 && i2cReceiveData[1] <= relayNb && (i2cReceiveData[2] == 1 || i2cReceiveData[2] == 2)) {
+      relayEtat[int(i2cReceiveData[1])] = i2cReceiveData[2];
+      // Passer l'état à Auto On
+      if (i2cReceiveData[2] == 2) {
+        afficheur.setLED(TM1638_COLOR_RED, i2cReceiveData[1]);
+        digitalWrite(relayPin[i2cReceiveData[1]],LOW);
+      // Passer l'état à Auto Off
+      } else if (i2cReceiveData[2] == 1) {
+        afficheur.setLED(TM1638_COLOR_NONE, i2cReceiveData[1]);
+        digitalWrite(relayPin[i2cReceiveData[1]],HIGH);
+      } else {
+        #ifdef VEROSE
+          Serial.println("Erreur, ordre incorrect 1");
+        #endif
+      }
     } else {
-      Serial.println("Erreur, ordre incorrect");
+      #ifdef VEROSE
+        Serial.println("Erreur, ordre incorrect 2");
+      #endif
     }
   }
 }
@@ -177,20 +238,30 @@ void receiveData(int byteCount) {
 void sendData() {
   //  ------------------ Data Send
   if(i2cReceiveData[0] = "D")  {
-    Serial.println("Data send : ");
+    #ifdef DEBUG
+      Serial.println("Data send : ");
+    #endif
     // Relay etat
     for (byte i = 0; i < relayNb; i = i + 1) {
       Wire.write(relayEtat[i]);
-      Serial.print(relayEtat[i]);
+      #ifdef DEBUG
+        Serial.print(relayEtat[i]);
+      #endif
     }
-    Serial.print(" - "); 
+    #ifdef DEBUG
+      Serial.print(" - "); 
+    #endif
     Wire.write(29); // Séparrateur de groupe : https://fr.wikibooks.org/wiki/Les_ASCII_de_0_%C3%A0_127/La_table_ASCII
     // Relay mode
     for (byte i = 0; i < relayNb; i = i + 1) {
       Wire.write(relayMod[i]);
-      Serial.print(relayMod[i]);
+      #ifdef DEBUG
+        Serial.print(relayMod[i]);
+      #endif
     }
-     Serial.println();
+    #ifdef DEBUG
+      Serial.println();
+    #endif
   }
 }
 
@@ -200,12 +271,18 @@ void setup() {
     // Mise en route du serial
     Serial.begin(9600); 
     Serial.println("Debug Actif sur le serial");
+  #elif VEROSE
+    // Mise en route du serial
+    Serial.begin(9600); 
+    Serial.println("Verbose Actif sur le serial");
   #endif
   // Déclaration des PIN pour les relays
   for (byte i = 0; i < relayNb; i = i + 1) {
     pinMode(relayPin[i], OUTPUT);
     digitalWrite(relayPin[i],HIGH);
   }
+  // Mise à 0 de l'afficheur
+  afficheurRefresh();
   
   Wire.begin(SLAVE_ADDRESS);
   // define callbacks for i2c communication
@@ -225,7 +302,6 @@ void setup() {
   
 }
 
-
 int relayOrdreId;
 int relayOrdreEtat;
 
@@ -240,52 +316,17 @@ void loop() {
         HeartbeatCheckCount=0;
   #endif
   #endif
-  
-  // Lecture / réception données
-  HeartbeatCheckCount=HeartbeatCheckCount+1;
-  if ( Serial.available() ) {
 
-    String lu = Serial.readStringUntil('\n');
-    
-    // Ordre sur les relay
-    if(lu.substring(0,2) == RelayOrderCode)  {
-      if (relayNb <= 10) {
-        relayOrdreId=lu.substring(3,4).toInt();
-        relayOrdreEtat=lu.substring(5,6).toInt();
-      } else {
-        relayOrdreId=lu.substring(3,5).toInt();
-        relayOrdreEtat=lu.substring(6,7).toInt();
-      }
-      #ifdef DEBUG
-        // Exemple d'ordre : RO:2=1   (le relay 2 passe à l'état 1)
-        Serial.print("Reception d'un ordre pour les relay : ");
-        Serial.print(relayOrdreId);
-        Serial.print(" à passer en état ");
-        Serial.print(relayOrdreEtat);
-      #endif
-      switch (relayOrdreEtat) {
-        // Auto Off
-        case 1:
-          afficheur.setLED(TM1638_COLOR_NONE, relayOrdreId);
-          digitalWrite(relayPin[relayOrdreId],HIGH);
-          relayEtat[relayOrdreId]=1;
-        break;
-        // Auto On
-        case 2:
-          afficheur.setLED(TM1638_COLOR_RED, relayOrdreId);
-          digitalWrite(relayPin[relayOrdreId],LOW);
-          relayEtat[relayOrdreId]=2;
-        break;
-      }
-    }
-    
-    
-    
-    
-  } 
+  AfficheurRefreshCount=AfficheurRefreshCount+1; 
+  if (AfficheurRefreshCount > AfficheurRefreshFreq) {
+    afficheurRefresh();
+    AfficheurRefreshCount=0;
+  }
   
+  
+  HeartbeatCheckCount=HeartbeatCheckCount+1; 
   if (HeartbeatCheckCount > HeartbeatCheckFreq && MasterPresent == true) {
-    #ifdef DEBUG
+    #ifdef VEROSE
       Serial.println("Hearbeat non reçu, l'arduino est débranché");
     #endif
     HeartbeatCheckCount=0;
@@ -294,17 +335,25 @@ void loop() {
     for (int i = 0; i < relayNb; i++) {
       if (relayMod[i] == 2) {
           changeMod(i, 0);
+          RelayChange[i] = true;
       }
     }
-    RelayChange = true;
   }
 
   // Bouton Action
   byte etatBoutons;
   etatBoutons = afficheur.getButtons();
+  // Anti bug 
+  int nbActionButton = 0;
+  byte relayModOld[] {9,9,9,9,9,9,9,9};
+  // On sauvegarde le mod des relay
+  for (int i = 0; i < relayNb; i++) {
+    relayModOld[i]=relayMod[i];
+  }
   for (int i = 0; i < relayNb; i++) {
     if (bitRead(etatBoutons, i)) {
-        #ifdef DEBUG
+        nbActionButton = 1 + nbActionButton;
+        #ifdef VEROSE
           Serial.print("Action button : ");
           Serial.println(i);
         #endif
@@ -330,27 +379,40 @@ void loop() {
           }
         break;
       }
-      RelayChange = true;
+      
+      RelayChange[i] = true;
+      
       delay(500); // Evite le rebond des bouttons
+      RelayChangeCount=0;
     }
     
   }
+  // Eviter bug bagotage ?
+  // S'il y a trop d'action, on annule tout 
+  if (nbActionButton >= relayNb) {
+    #ifdef VEROSE
+      Serial.println("BUG, TOUT LES BOUTTONS ONT ETE POUSSE, on annule tout");
+    #endif
+    for (int i = 0; i < relayNb; i++) {
+      // Retour aux ancien mode
+      RelayChange[i] = false;
+      changeMod(i, relayModOld[i]);
+    }
+    #ifdef VEROSE
+      Serial.println("BUG, TOUT LES BOUTTONS ONT ETE POUSSE, fin");
+    #endif
+  }   
 
   // Changement d'etat des relay  
   RelayChangeCount=RelayChangeCount+1;
   if (RelayChangeCount > RelayChangeFreq) {
-    if (RelayChange == true) {
-      RelayChangeCount=0;
-      #ifdef DEBUG
-        Serial.println((String)"Change relay etat");
-      #endif
-      for (int i = 0; i < relayNb; i++) {
-          changeEtat(i);
+    for (int i = 0; i < relayNb; i++) {
+      if (RelayChange[i] == true) {
+        changeEtat(i);
+        RelayChange[i]=false;
       }
-      RelayChange = false;
-    } else {
-      RelayChangeCount=0;
     }
+    RelayChangeCount=0;
   }
   delay(50);
 }

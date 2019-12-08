@@ -223,7 +223,7 @@ $config = getConfigYaml('/opt/PvMonit');
 					$('#content').append('<div style="clear:both"></div>');
 				  }
                                 var uneDate;
-				function reloadData(force = 0) {
+				function reloadData(force) {
 					trucAdir(3, 'Reload');
 					$("#refreshImg").val('1');
                                         var dt = new Date();
@@ -269,10 +269,10 @@ $config = getConfigYaml('/opt/PvMonit');
 				var refreshTime = <?= $config['www']['refreshTime'] ?>;
 				function refreshNow() {
 					trucAdir(5, 'Fonction refresh Now go');
-					reloadData();
+					reloadData(0);
 				}
 				$(document).ready(function() {  
-						reloadData();
+						reloadData(0);
 						intervalId = setInterval(refreshNow, refreshTime) ;
 					}); 
 	
