@@ -27,7 +27,7 @@ if (!is_dir($config['emoncms']['dataCollecte'])) {
 }
 
 function sauvegardeDesDonnes($data) {
-        global $config;
+	global $config;
 	$fichier=$config['emoncms']['dataCollecte'].'/'.$GLOBALS['timestamp'];
 	trucAdir(5, 'Les données ##'.$data.'## sont mise à l\'expédition dans '.$fichier);
 	file_put_contents($fichier, $data, FILE_APPEND);
@@ -56,9 +56,22 @@ if ($config['vedirect']['by'] == 'usb') {
         $vedirect_data_ready = $device_vedirect_data;
 }
 
+$ppv_total=null;
+$bmv_p=null;
+$nb_ppv_total=0;
 foreach ($vedirect_data_ready as $device) {
-        if ($device['nom'] != '') {
+	if ($device['nom'] != '') {
 		sauvegardeDesDonnes("www-browser --dump '".$config['emoncms']['urlInputJsonPost']."?json={".$device['data']."}&node=".$device['nom']."&time=".time()."&apikey=".$config['emoncms']['apiKey']."'\n");
+	}
+	foreach (explode(',', $device['data']) as $data) {
+			$dataSplit = explode(':', $data);
+			if ($dataSplit[0] == 'PPV'){ 
+					$ppv_total=$ppv_total+$dataSplit[1];
+					$nb_ppv_total++;
+			}
+			if ($device['type'] == "BMV" && $dataSplit[0] == 'P'){ 
+					$bmv_p=$dataSplit[1];
+			}
 	}
 }
 
@@ -100,6 +113,12 @@ foreach ($bin_enabled_data as $bin_script_enabled) {
                 
         } 
 }
+
+if ($config['data']['ppv_total'] && $config['data']['conso_calc'] && $ppv_total !== null && $bmv_p != null) {
+	$conso=$ppv_total-$bmv_p;
+	$dataNode1=$dataNode1.','.strtolower('CONSO').':'.abs($conso);
+}
+
 
 if (!is_null($dataNode1)) {
 	sauvegardeDesDonnes("www-browser --dump '".$config['emoncms']['urlInputJsonPost']."?json={".$dataNode1."}&node=1&time=".time()."&apikey=".$config['emoncms']['apiKey']."'\n");

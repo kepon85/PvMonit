@@ -48,6 +48,7 @@ $config = getConfigYaml('/opt/PvMonit');
         </div>
         </div>
         <div id="contentwrap">
+
         <div id="content">
 			<div id="waitFirst" class="boxvaleur waitFirst">Patience...<img src="images/wait2.gif" width="100%" /></div>
 			<?php 
@@ -66,15 +67,44 @@ $config = getConfigYaml('/opt/PvMonit');
 			?>
 
 			<div style="display: none" id="nodata" class="boxvaleur">Rien à afficher, vérifier le fichier config.yaml. <br /><span style="color: red" id="textStatus"></span> : <span id="errorThrown"></span></div>
-	    
-			<script>
-		
+			
+			<?php 
+			if ($config['www']['domo'] == true) { 
+				echo '<div style="display: none" class="box" id="box_domo"><div class="title">Domo</div>';
+				if (!is_file($config['domo']['jsonFile']['etatPath'])) {
+					genDefaultJsonFile('etat');
+				}
+				if (!is_file($config['domo']['jsonFile']['modPath'])) {
+					genDefaultJsonFile('mod');
+				}
+					
+					for ($i = 1; $i <= $config['domo']['relayNb']; $i++) {
+						echo '<div class="boxvaleur">';
+						echo '	<div id="relayEtat'.$i.'" class="etatNull relayEtat">&nbsp;</div>
+								<div id="relayMod'.$i.'" class="modNull relayMod">
+									<span>'.$config['domo']['relayName'][$i].'</span>
+									<span style="display: none;" id="relayMod'.$i.'value">Null</span>
+									<span class="relayModValueHumain" id="relayMod'.$i.'valueHumain">Null</span>
+									<span class="relayModButtons" id="relayMod'.$i.'buttons">
+										<span class="relayChange mod0" id="relayModChange-'.$i.'-off">Off</span>
+										<span class="relayChange mod1" id="relayModChange-'.$i.'-auto">Auto</span>
+										<span class="relayChange mod3" id="relayModChange-'.$i.'-on">On</span>
+								</span>
+								</div>';
+						echo '</div>';
+					}
+					echo '<div class="boxvaleur"><br /><br /></div>';
+				echo '</div>';
+			}
+		?>
+			
+			<script type="text/javascript">
+				
 				function trucAdir(niveau, msg) {
 					if (<?= $config['printMessage'] ?> >= niveau) {
 						console.log(msg)
 					}
 				}
-	
 				function traiteErreur(jqXHR, textStatus, errorThrown) {
 					$("#refreshImg").val('0');
 					$("#waitFirst").hide();
@@ -82,22 +112,89 @@ $config = getConfigYaml('/opt/PvMonit');
 					$("#textStatus").prepend(textStatus);
 					$("#errorThrown").prepend(errorThrown);
 				}
-      
+				<?php  if ($config['www']['domo'] == true) {  ?>
+				function refreshDomo() {
+					trucAdir(3, 'Refresh Domo');
+					$.ajax({
+						url : 'domo.php',
+						type : 'GET',
+						dataType : 'json',
+						data : 'action=printRefresh',
+						success : function(resultat, statut){
+							for (var [cle, valeur] of Object.entries(resultat['etat'])){
+								trucAdir(5, 'Etat :' + cle + ' ' + valeur);
+								$('#relayEtat'+cle).removeClass('etatNull');
+								$('#relayEtat'+cle).removeClass('etat0');
+								$('#relayEtat'+cle).removeClass('etat1');
+								$('#relayEtat'+cle).addClass('etat'+valeur);
+							}
+							for (var [cle, valeur] of Object.entries(resultat['mod'])){
+								trucAdir(5, 'Mod :' + cle + ' ' + valeur);
+								$('#relayMod'+cle).removeClass('modNull');
+								$('#relayMod'+cle).removeClass('mod0');
+								$('#relayMod'+cle).removeClass('mod1');
+								$('#relayMod'+cle).removeClass('mod2');
+								$('#relayMod'+cle).removeClass('mod3');
+								$('#relayMod'+cle).addClass('mod'+valeur);
+								$('#relayMod'+cle+'value').html(valeur);
+								switch (valeur) {
+									case 0:
+										$('#relayMod'+cle+'valueHumain').html('Off');
+										$('#relayModChange-'+cle+'-off').hide();
+										$('#relayModChange-'+cle+'-auto').show();
+										$('#relayModChange-'+cle+'-on').show();
+									break;
+									case 1:
+										$('#relayMod'+cle+'valueHumain').html('Auto (off)');
+										$('#relayModChange-'+cle+'-off').show();
+										$('#relayModChange-'+cle+'-auto').hide();
+										$('#relayModChange-'+cle+'-on').show();
+									break;
+									case 2:
+										$('#relayMod'+cle+'valueHumain').html('Auto (on)');
+										$('#relayModChange-'+cle+'-off').show();
+										$('#relayModChange-'+cle+'-auto').hide();
+										$('#relayModChange-'+cle+'-on').show();
+									break;
+									case 3:
+										$('#relayMod'+cle+'valueHumain').html('On');
+										$('#relayModChange-'+cle+'-off').show();
+										$('#relayModChange-'+cle+'-auto').show();
+										$('#relayModChange-'+cle+'-on').hide();
+									break;
+									default:
+										$('#relayMod'+cle+'valueHumain').html('Null');
+										$('#relayModChange-'+cle+'-off').hide();
+										$('#relayModChange-'+cle+'-auto').hide();
+										$('#relayModChange-'+cle+'-on').hide();
+								}
+							}
+						},
+						error : traiteErreur,
+					});
+				}
+				function preparDomo(){
+					$("#box_domo").show();
+					refreshDomo();
+				}
+				<?php } ?>
+				// /domo
 				function readData(xml) {
 					$("#refreshImg").val('0');
 					$("#waitFirst").hide();
+					$("#clearBoth").remove();
+					$(".boxMonit").remove();
 					trucAdir(5, 'Lecture du XML');
-					$( ".box" ).remove(); // supprime les box pour les ré-écrire avec les nouvelles data
 					$("#refreshImg").attr('src', "images/refresh.png");
 					$(xml).find('device').each(function() {
 						var id = $(this).attr('id');
 						trucAdir(5, 'Récupération de l\'id ' + id);
 						var nom = $(this).find('nom').text();
 						var modele = $(this).find('modele').text();
-                                                if ($('#box_' + id + '').length == 0) {
-                                                        $('#content').append('<div class="box" id="box_' + id + '"></div>');
-                                                        $('#box_' + id + '').prepend('<div class="title">[' + nom + '] ' + modele + '</div>');
-                                                }
+						if ($('#box_' + id + '').length == 0) {
+								$('#content').append('<div class="box boxMonit" id="box_' + id + '"></div>');
+								$('#box_' + id + '').prepend('<div class="title">[' + nom + '] ' + modele + '</div>');
+						}
 						$(this).find('data').each( function() 	{
 								var data_id = $(this).attr('id');
 								var screen = '';
@@ -212,43 +309,64 @@ $config = getConfigYaml('/opt/PvMonit');
 							});
                                                 
 					});
-                                        $(xml).find('device').each(function() {
+					$(xml).find('device').each(function() {
 						var id = $(this).attr('id');
 						trucAdir(5, 'Pour les plus, on re-récupère les id ' + id);
-                                                if ($('#Plus'+id).length == 0) {
-                                                $('#box_' + id + '').append('<div id="Plus'+id+'" class="boxvaleur plusboutton" onclick="PlusPrint(\''+id+'\')">...</div>'+
-                                                                                '<div class="boxvaleur moinsboutton" onclick="MoinsPrint(\''+id+'\')">...</div>');
-                                                }
+						if ($('#Plus'+id).length == 0) {
+							$('#box_' + id + '').append('<div id="Plus'+id+'" class="boxvaleur plusboutton" onclick="PlusPrint(\''+id+'\')">...</div>'+
+														'<div class="boxvaleur moinsboutton" onclick="MoinsPrint(\''+id+'\')">...</div>');
+						}
 					});
-					$('#content').append('<div style="clear:both"></div>');
+					<?php  if ($config['www']['domo'] == true) {  ?>
+						preparDomo();
+					<?php } ?>
+					$('#content').append('<div id="clearBoth" style="clear:both"></div>');
 				  }
-                                var uneDate;
+				var uneDate;
 				function reloadData(force) {
 					trucAdir(3, 'Reload');
 					$("#refreshImg").val('1');
-                                        var dt = new Date();
-                                        var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
-                                        $("#refreshImg").attr('title', 'Actualiser (dernier à '+time+')')
+					var dt = new Date();
+					var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+					$("#refreshImg").attr('title', 'Actualiser (dernier à '+time+')')
 					$("#refreshImg").attr('src', "images/wait.gif");
-                                        if (force == 0) {
-                                                $.ajax( {
-                                                        type: "GET",
-                                                        url: "<?= $config['urlDataXml'] ?>",
-                                                        dataType: "xml",
-                                                        success: readData,
-                                                          error : traiteErreur
-                                                });
-                                        } else {
-                                                $.ajax( {
-                                                        type: "GET",
-                                                        url: "<?= $config['urlDataXml'] ?>?nocache=1",
-                                                        dataType: "xml",
-                                                        success: readData,
-                                                          error : traiteErreur
-                                                });
-                                        }
+					if (force == 0) {
+						$.ajax( {
+								type: "GET",
+								url: "<?= $config['urlDataXml'] ?>",
+								dataType: "xml",
+								success: readData,
+								  error : traiteErreur
+						});
+					} else {
+						$.ajax( {
+								type: "GET",
+								url: "<?= $config['urlDataXml'] ?>?nocache=1",
+								dataType: "xml",
+								success: readData,
+								  error : traiteErreur
+						});
+					}
 				  }
-
+				
+				// Domo
+				$( ".relayChange" ).click(function() {
+					datas=this.id.split('-');
+					trucAdir(3, datas);
+					$.ajax({
+						url : 'domo.php',
+						type : 'GET',
+						dataType : 'json',
+						data : 'action=changeMod&idRelay='+datas[1]+'&changeTo='+datas[2],
+						success : function(resultat, statut){
+							console.log(resultat);
+							// Rafraichissement de l'état
+							refreshDomo();
+						},
+						error : traiteErreur,
+					});
+				});
+				
 				$( "#refresh" ).click(function() {
 					if ($("#refreshImg").val() == 0){
 						reloadData(1);		
@@ -266,18 +384,25 @@ $config = getConfigYaml('/opt/PvMonit');
 					}
 				});
 				var intervalId = null;
-				var refreshTime = <?= $config['www']['refreshTime'] ?>;
+				var refreshTime = <?= $config['www']['refreshTime']*1000 ?>;
 				function refreshNow() {
 					trucAdir(5, 'Fonction refresh Now go');
 					reloadData(0);
 				}
+				<?php  if ($config['www']['domo'] == true) {  ?>
+				var intervalIdDomo = null;
+				var refreshTimeDomo = <?= $config['www']['domoRefreshTime']*1000 ?>;
+				<?php  } ?>
 				$(document).ready(function() {  
 						reloadData(0);
 						intervalId = setInterval(refreshNow, refreshTime) ;
-					}); 
-	
+						<?php  if ($config['www']['domo'] == true) {  ?>
+						intervalIdDomo = setInterval(refreshDomo, refreshTimeDomo) ;
+						<?php  } ?>
+				}); 
 			</script>
-
+			
+								
 			<!-- TRAP BOX -->
         </div>
         </div>

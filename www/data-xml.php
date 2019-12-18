@@ -126,10 +126,10 @@ if(count($bin_enabled_data) > 2 || $config['data']['ppv_total'] || $config['data
                         <?php 
 			// Calcul consommation foyer
 			if ($config['data']['ppv_total'] && $config['data']['conso_calc'] && $ppv_total !== null && $bmv_p != null) {
-                                $test=$ppv_total-$bmv_p;
+                                $conso=$ppv_total-$bmv_p;
 				echo '<data id="CONSO"'.onScreenPrint('CONSO').'>
 				<desc>Consommation du foyer</desc>
-				<value>'.abs($test).'</value>
+				<value>'.abs($conso).'</value>
 				<units>W</units>
 				</data>';
 			}

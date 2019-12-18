@@ -1,5 +1,17 @@
 # PvMonit Domotique - Ou comment utilisé le surplus d'une installation solaire autonome
 
+
+
+Conserver install v1.0
+
+faire fichier upgrade : 1.0 to 2.0
+
+​	changement user pvmonit pour simplifier les cron / et permissions	https://redmine.lighttpd.net/boards/2/topics/6247
+
+domo : relay-action : wiringpi
+
+
+
 Dans le cas d'une installation solaire autonome (non raccordé au réseau EDF), une fois que les batteries sont rechargé (ce qui se produit au alentour de 11h-12h pour moi 80% du temps) il y a de l'énergie potentiel de perdu. Plus précisément si je n'utilise pas cette énergie au moment ou il y a du soleil (de la production) cette énergie n'est pas utilisé.  On peut augmenter le stockage mais c'est infini, coûteux en argent en ressource environnementale. 
 
 Du coup m'a semblé pertinent de réfléchir à un moyen d'automatisé certaine tâche qui me permette d'utilisé ce surplus d'électricité quand il est là. Actuellement je le fait de façon tout à fait manuel : quand les batteries sont pleine et qu'il y a du soleil, je lance une machin à laver, je lance la pompe de relevage de la phyto,  je recharge mes batterie d'outil portatif….  Cette automatisation va aussi me permettre d'aller plus loin & d'envisagé d'installé un petit chauffe eau électrique de camion (~10L) ou autres…
@@ -65,3 +77,7 @@ Les interupteur on 3 modes :
 L'affichange des 8 segments change quand le PI est présent et que le script domo.py est lancé.
 
 Les leds au dessus des 8 segments sont synchronisé avec l'état des relaisre
+
+------------------
+
+Max 16 relay (contrainte 2x tm1638

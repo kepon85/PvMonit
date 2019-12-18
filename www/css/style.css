@@ -219,3 +219,67 @@ progress.jaugeBleu::-moz-progress-bar { background: #8590F7; }
 		display: none;
 	}
 }
+
+#box_domo .boxvaleur{
+    padding-bottom: 20px;
+    border-bottom: none;
+}
+.relayEtat {
+    margin: 5px;
+    padding: 5px;
+    border-radius: 20px;
+    border: 1px solid #AFAFAF;
+    width: 5%;
+    float: left;
+}
+.relayMod {
+    padding: 10px;
+    border-radius: 15px;
+    border: 1px solid #AFAFAF;
+    width: 75%;
+    float: right;
+}
+.relayModButtons {
+    float: right;
+}
+.relayChange {
+    padding: 5px;
+    border-radius: 15px;
+    border: 1px solid #AFAFAF;
+}
+.etatNull {
+	background-color: #C0C0C0;
+}
+.etat0{
+	background-color: #FFFFFF;
+}
+.etat1{
+	background-color: #FF9999;
+}
+.modNull{
+	background-color: #C0C0C0;
+}
+.mod0{
+	background-color: #FF9999;
+}
+.mod1{
+	background-color: #FFC042;
+}
+.mod2{
+	background-color: #FFC042;
+}
+.mod3{
+	background-color: #7BDF7B;
+}
+.relayChange.mod0 {
+    color: #FF9999;
+    background-color: #FFFFFF;
+}
+.relayChange.mod1 {
+    color: #FFC042;
+    background-color: #FFFFFF;
+}
+.relayChange.mod3 {
+    color: #7BDF7B;
+    background-color: #FFFFFF;
+}

@@ -3,6 +3,7 @@
 // Soft version
 define('VERSION', '1.0');
 
+
 function getConfigYaml($config_dir){
         if (($config=yaml_parse_file($config_dir.'/config-default.yaml')) == false) {
 			exit('Le fichier config-default.yaml comporte une erreur de syntax, check with : http://www.yamllint.com/');
@@ -776,6 +777,24 @@ function checkCacheTime($file) {
         }
 }
 
+# Domo gen json file
+function genDefaultJsonFile($type) {
+	global $config;
+	if ($type == 'etat') {
+		$filePath = $config['domo']['jsonFile']['etatPath'];
+	} elseif ($type == 'mod') {
+		$filePath = $config['domo']['jsonFile']['modPath'];
+	}
+	$relay[] = null;
+	for ($i = 1; $i <= $config['domo']['relayNb']; $i++) {
+		if ($type == 'etat') {
+			$relay[$type][$i] = 0;
+		} else {
+			$relay[$type][$i] = 1;
+		}
+	}
+	file_put_contents($filePath, json_encode($relay[$type]));
+}
 
 
 ?>
