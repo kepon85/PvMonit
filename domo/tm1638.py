@@ -126,15 +126,17 @@ def refreshMod(JsonModRelay):
 
 def genDefaultJsonFile():
 	logMsg(1, "Init des fichiers json")
-	data={}
+	dataEtat={}
+	dataMod={}
 	for i in range(configGet('domo', 'relayNb')):
-		data[str(i+1)] = 1
+		dataEtat[str(i+1)] = 0
+		dataMod[str(i+1)] = 1
 	with open(configGet('domo', 'jsonFile', 'etatPath'), 'w') as etatFile:
-		json.dump(data, etatFile)
+		json.dump(dataEtat, etatFile)
 		os.chown(configGet('domo', 'jsonFile', 'etatPath'), getpwnam('pvmonit').pw_uid, grp.getgrnam('pvmonit')[2]) 
 	with open(configGet('domo', 'jsonFile', 'modPath'), 'w') as modFile:
-		json.dump(data, modFile)
-		os.chown(configGet('domo', 'jsonFile', 'etatPath'), getpwnam('pvmonit').pw_uid, grp.getgrnam('pvmonit')[2]) 
+		json.dump(dataMod, modFile)
+		os.chown(configGet('domo', 'jsonFile', 'modPath'), getpwnam('pvmonit').pw_uid, grp.getgrnam('pvmonit')[2]) 
 	waitLcd(2)
 	
 # Init des json si inexistant

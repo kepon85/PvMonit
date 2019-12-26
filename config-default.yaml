@@ -171,6 +171,7 @@ www:
         - SOC
         - P
         - PPVT
+        - PPV
     menu:
         - <li><a href="http://emoncms.org/dashboard/view?id=VOTREIDs">EmonCMS (historique)</a></li>
         - <li><a href="http://pvmonit.zici.fr">PvMonit projet</a></li>
@@ -194,24 +195,24 @@ lcd:
 
 # Domotique (avec script PvMonit/domo)
 domo:
-    dataCheckTime: 30                  # Check du XML
+    dataCheckTime: 60                      # Check du XML
     dbFile: /tmp/PvMonit_domo.sqlite3
     jsonFile:
         modPath: /tmp/PvMonit_domo_mod
         etatPath: /tmp/PvMonit_domo_etat
     binGpio: /usr/bin/sudo /usr/bin/gpio
-    fileExpir: 180                            # Age en seconde après laquel le fichier n'est plus considéré comme ok
-    fileCheckError: 5                        # nombre d'erreurs sur le xml 
+    fileExpir: 500                            # Age en seconde après laquel le fichier n'est plus considéré comme ok
     xmlDataExpir: 500                        # Age en seconde avant expiration des données XML (et donc arrêt du heartbeat)
     valueUse:
-        SOC: ^-?[0-9]+\.?[0-9]+?$|^[0-9]$
-        P: ^-?[0-9]+\.?[0-9]+?$|^[0-9]$
-        PPVT: ^-?[0-9]+\.?[0-9]+?$|^[0-9]$
-        CS: ^Off$|Fault$|Bulk|Faible|Abs|Float|On$
+        SOC: (^[0-9]+\.?[0-9]+?$)|(^[0-9]$)                   # BMV : % SOC
+        P: (^-?[0-9]+\.?[0-9]+?$)|(^-?[0-9]$)                     # BMV : P
+        #PPVT: (^[0-9]+\.?[0-9]+?$)|(^[0-9]$)                  # Total des PPVT (si plusieurs MPPT
+        #PPV: (^[0-9]+\.?[0-9]+?$)|(^[0-9]$)                 # Production des MPPT
+        #CS: ^Off$|Fault$|Bulk|Faible|Abs|Float|On$         # MPPT etat (float, bulk...)
     relay:
-        dataFreq: 30                           # Délais de récupération des données depuis l'arduino (en secondes)
         scriptDir: /opt/PvMonit/domo/relay.script.d
-        scriptExecInterval: 120                # Interval d'execution des script de relais
+        scriptExecInterval: 60                # Interval d'execution des script de relais
+        secuDownNoData: 600                     # Temps (en seconde) après lequel on coupe tout les relay s'il n'y a pas eu de nouvelle données
     relayNb: 8 
     relayName:                      # A commencer par 1
         1: aDefinir

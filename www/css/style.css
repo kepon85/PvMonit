@@ -203,21 +203,33 @@ progress.jaugeBleu::-moz-progress-bar { background: #8590F7; }
 
 
 @media screen and (max-width: 1000px) {
-	#headerwrap {
-		width: 100%;
-	}
-	#wrapper {
-		width: 100%;
-	}
-	#footerwrap {
-		width: 100%;
-	}
+    #headerwrap {
+	    width: 100%;
+    }
+    #wrapper {
+	    width: 100%;
+    }
+    #footerwrap {
+	    width: 100%;
+    }
 }
 
 @media screen and (max-width: 600px) {
-	.box .plusplus {
-		display: none;
-	}
+    .box .plusplus {
+	display: none;
+    }
+    #header {
+	margin: 2px;
+    }
+    #header h1  {
+	text-align: center;
+    }
+    #header p  {
+	display: none;
+    }
+    #header nav{
+	    display:none;
+    }
 }
 
 #box_domo .boxvaleur{

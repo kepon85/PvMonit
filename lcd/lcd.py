@@ -11,6 +11,8 @@ from past.builtins import execfile
 import os
 import re
 import pprint
+from pwd import getpwnam  
+import grp
 
 with open('/opt/PvMonit/config-default.yaml') as f1:
     config = yaml.load(f1, Loader=yaml.FullLoader)
@@ -81,9 +83,13 @@ def print_wait():
 
 def download_data():
     # téléchargement des données
-    debugTerm('Download data')
-    with open(configGet('tmpFileDataXml'), 'wb') as tmpxml:
-        tmpxml.write(urlopen(configGet('urlDataXml')).read())
+    if not os.path.isfile(configGet('tmpFileDataXml')) or os.path.getctime(configGet('tmpFileDataXml'))+configGet('lcd', 'dataUpdate') < time.time():
+        debugTerm('Download data')
+        with open(configGet('tmpFileDataXml'), 'wb') as tmpxml:
+            tmpxml.write(urlopen(configGet('urlDataXml')).read())
+            os.chown(configGet('tmpFileDataXml'), getpwnam('pvmonit').pw_uid, grp.getgrnam('pvmonit')[2]) 
+    else:
+        debugTerm('Pas de download, le fichier temporaire est déjà frais..')
     return time.time()
 
 def update_menu(number):

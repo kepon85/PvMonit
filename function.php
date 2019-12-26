@@ -5,33 +5,35 @@ define('VERSION', '1.0');
 
 
 function getConfigYaml($config_dir){
-        if (($config=yaml_parse_file($config_dir.'/config-default.yaml')) == false) {
-			exit('Le fichier config-default.yaml comporte une erreur de syntax, check with : http://www.yamllint.com/');
+	if (($config=yaml_parse_file($config_dir.'/config-default.yaml')) == false) {
+		exit('Le fichier config-default.yaml comporte une erreur de syntax, check with : http://www.yamllint.com/');
+	}
+	if (($config_perso=yaml_parse_file($config_dir.'/config.yaml')) == false) {
+		exit('Le fichier config.yaml comporte une erreur de syntax, check with : http://www.yamllint.com/');
+	}
+	
+	foreach($config_perso as $key1=>$perso1) {
+		if ($key1 == 'deviceCorrespondance') {
+			$config[$key1]=$perso1;
+		} elseif (is_array($perso1)) {
+			foreach($perso1 as $key2=>$perso2) {
+				if (is_array($perso2)) {
+					foreach($perso2 as $key3=>$perso3) {
+						if (isset($config_perso[$key1][$key2][$key3]))  {
+							$config[$key1][$key2][$key3]=$perso3;
+							}
+					}
+				}elseif (isset($config[$key1][$key2]))  {
+					$config[$key1][$key2]=$perso2;
+				}
+			}
+		} elseif (isset($config[$key1]))  {
+			$config[$key1]=$perso1;
 		}
-        if (($config_perso=yaml_parse_file($config_dir.'/config.yaml')) == false) {
-			exit('Le fichier config.yaml comporte une erreur de syntax, check with : http://www.yamllint.com/');
-		}
-        
-        foreach($config_perso as $key1=>$perso1) {
-                if ($key1 == 'deviceCorrespondance') {
-                        $config[$key1]=$perso1;
-                } elseif (is_array($perso1)) {
-                        foreach($perso1 as $key2=>$perso2) {
-                                if (is_array($perso2)) {
-                                        foreach($perso2 as $key3=>$perso3) {
-                                                if (isset($config[$key1][$key2][$key3]))  {
-                                                        $config[$key1][$key2][$key3]=$perso3;
-                                                }
-                                        }
-                                }elseif (isset($config[$key1][$key2]))  {
-                                        $config[$key1][$key2]=$perso2;
-                                }
-                        }
-                } elseif (isset($config[$key1]))  {
-                        $config[$key1]=$perso1;
-                }
-        }
-        return $config;
+	}
+
+	return $config;
+	
 }
 
 # Victron : détermine le type d'appareil

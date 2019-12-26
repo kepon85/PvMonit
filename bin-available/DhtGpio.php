@@ -1,7 +1,7 @@
 <?php
 
 $dhtModel=22;    // [11|22|2302] 
-$dhtGpio=12;     // GPIO pin number
+$dhtGpio=4;     // GPIO pin number
 $cmd='/usr/bin/sudo /usr/bin/python3 '.  $config['dir']['bin'].'DHT.py '.$dhtModel.' '.$dhtGpio;
 
 exec($cmd, $dht_sortie, $dht_retour);

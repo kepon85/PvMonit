@@ -66,6 +66,17 @@ while (true) {
 		$relay_mods = json_decode(file_get_contents($config['domo']['jsonFile']['modPath']), true);
 		$lastRefreshMod=time();
 
+		if ($premierLancement==true){
+			foreach ($relay_mods as $id_relay => $relay_mod) {
+				trucAdir(1, 'Premier lancement :  '.$id_relay);
+				etatRelayWrite($id_relay, $etatDown);
+				$cmd = $config['domo']['binGpio'].' mode '.$config['domo']['relayWiringPi'][$id_relay].' out';
+				trucAdir(5, 'cmd : '.$cmd);
+				exec($cmd, $output, $return_var);
+			}
+			$premierLancement=false;
+		}
+
 		foreach ($relay_mods as $id_relay => $relay_mod) {
 			if ($relay_mod == 2 || $relay_mod == 3) {
 				if (etatRelayRead($id_relay) == $etatDown) {
@@ -79,15 +90,8 @@ while (true) {
 				} 
 			}
 		}
-		foreach ($relay_mods as $id_relay => $relay_mod) {
-			if ($premierLancement==true){
-				trucAdir(1, 'Premier lancement :  '.$id_relay);
-				$cmd = $config['domo']['binGpio'].' mode '.$config['domo']['relayWiringPi'][$id_relay].' out';
-				trucAdir(5, 'cmd : '.$cmd);
-				exec($cmd, $output, $return_var);
-			}
-		}
-		$premierLancement=false;
+
+		
 		
 		
 	}

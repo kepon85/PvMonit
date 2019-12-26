@@ -108,7 +108,7 @@ if(count($bin_enabled_data) > 2 || $config['data']['ppv_total'] || $config['data
 ?>
 	<device id="other">
 		<nom>Divers</nom>
-		<timerefresh></timerefresh>
+		<timerefresh><?= time() ?></timerefresh>
 		<type></type>
 		<modele></modele>
 		<serial></serial>

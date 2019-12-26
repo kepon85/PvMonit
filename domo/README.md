@@ -8,7 +8,17 @@ faire fichier upgrade : 1.0 to 2.0
 
 ​	changement user pvmonit pour simplifier les cron / et permissions	https://redmine.lighttpd.net/boards/2/topics/6247
 
-domo : relay-action : wiringpi
+​	https://alexanderhoughton.co.uk/blog/lighttpd-changing-default-user-raspberry-pi/
+
+domo : 
+	relay-action dépendance wiringpi + sudo ?
+	aptitude install php-pdo-sqlite
+
+
+Documenté script relay/id.php avec ce qu'il est possible de récupérer comme étét
+Décrire état et mod (qui correspond à quoi)
+Phylosophie : seul les mod son modifié, les état en son déduit...
+
 
 
 

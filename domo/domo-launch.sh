@@ -1,6 +1,5 @@
 #!/bin/bash
-cd /opt/PvMonit/domo
 while (true); do
-    python3 domo.py 
-    sleep 0.5
+    su - pvmonit -c '/usr/bin/php /opt/PvMonit/domo/domo.php'
+    sleep 10
 done

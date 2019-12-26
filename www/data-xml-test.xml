@@ -1,31 +1,224 @@
 <?xml version="1.0" encoding="utf-8"?>
 <devices>
 
+	<device id="HQ1544WMX65">
+		<nom>MpttBlanc</nom>
+		<timerefresh>1577311875</timerefresh>
+		<type>MPTT</type>
+		<modele>BlueSolar MPPT 100/30 rev2</modele>
+		<serial>HQ1544WMX65</serial>
+		<datas>
+			<data id="VPV" screen="0" smallScreen="0">
+				<desc>Voltage des panneaux</desc>
+				<value>40</value>
+				<units>mV</units>
+			</data>
+			<data id="V" screen="1" smallScreen="0">
+				<desc>Tension de la batterie</desc>
+				<value>24.78</value>
+				<units>V</units>
+			</data>
+			<data id="PPV" screen="1" smallScreen="1">
+				<desc>Production des panneaux</desc>
+				<value>0</value>
+				<units>W</units>
+			</data>
+			<data id="I" screen="0" smallScreen="0">
+				<desc>Courant de la batterie</desc>
+				<value>0</value>
+				<units>A</units>
+			</data>
+			<data id="H23" screen="0" smallScreen="0">
+				<desc>Puissance maximum hier</desc>
+				<value>110</value>
+				<units>W</units>
+			</data>
+			<data id="H22" screen="0" smallScreen="0">
+				<desc>Rendement hier</desc>
+				<value>0.19</value>
+				<units>kWh</units>
+			</data>
+			<data id="H21" screen="0" smallScreen="0">
+				<desc>Puissance maximum ce jour</desc>
+				<value>41</value>
+				<units>W</units>
+			</data>
+			<data id="H20" screen="0" smallScreen="0">
+				<desc>Rendement aujourd'hui</desc>
+				<value>0.05</value>
+				<units>kWh</units>
+			</data>
+			<data id="H19" screen="0" smallScreen="0">
+				<desc>Le rendement total</desc>
+				<value>332.94</value>
+				<units>kWh</units>
+			</data>
+			<data id="ERR" screen="1" smallScreen="0">
+				<desc>Présence d'erreur</desc>
+				<value>Aucune</value>
+				<units></units>
+			</data>
+			<data id="CS" screen="1" smallScreen="0">
+				<desc>Status de charge</desc>
+				<value>Off</value>
+				<units></units>
+			</data>
+		</datas>
+	</device>
+	<device id="HQ16129A5J2">
+		<nom>MpttBleu</nom>
+		<timerefresh>1577311875</timerefresh>
+		<type>MPTT</type>
+		<modele>BlueSolar MPPT 100/30 rev2</modele>
+		<serial>HQ16129A5J2</serial>
+		<datas>
+			<data id="VPV" screen="0" smallScreen="0">
+				<desc>Voltage des panneaux</desc>
+				<value>40</value>
+				<units>mV</units>
+			</data>
+			<data id="V" screen="1" smallScreen="0">
+				<desc>Tension de la batterie</desc>
+				<value>24.76</value>
+				<units>V</units>
+			</data>
+			<data id="PPV" screen="1" smallScreen="1">
+				<desc>Production des panneaux</desc>
+				<value>0</value>
+				<units>W</units>
+			</data>
+			<data id="I" screen="0" smallScreen="0">
+				<desc>Courant de la batterie</desc>
+				<value>0</value>
+				<units>A</units>
+			</data>
+			<data id="H23" screen="0" smallScreen="0">
+				<desc>Puissance maximum hier</desc>
+				<value>164</value>
+				<units>W</units>
+			</data>
+			<data id="H22" screen="0" smallScreen="0">
+				<desc>Rendement hier</desc>
+				<value>0.45</value>
+				<units>kWh</units>
+			</data>
+			<data id="H21" screen="0" smallScreen="0">
+				<desc>Puissance maximum ce jour</desc>
+				<value>91</value>
+				<units>W</units>
+			</data>
+			<data id="H20" screen="0" smallScreen="0">
+				<desc>Rendement aujourd'hui</desc>
+				<value>0.39</value>
+				<units>kWh</units>
+			</data>
+			<data id="H19" screen="0" smallScreen="0">
+				<desc>Le rendement total</desc>
+				<value>852.82</value>
+				<units>kWh</units>
+			</data>
+			<data id="ERR" screen="1" smallScreen="0">
+				<desc>Présence d'erreur</desc>
+				<value>Aucune</value>
+				<units></units>
+			</data>
+			<data id="CS" screen="1" smallScreen="0">
+				<desc>Status de charge</desc>
+				<value>Off</value>
+				<units></units>
+			</data>
+		</datas>
+	</device>
 	<device id="700">
 		<nom>700</nom>
-		<timerefresh>1568197205</timerefresh>
+		<timerefresh>1577311875</timerefresh>
 		<type>BMV</type>
 		<modele>BMV-700</modele>
 		<serial>700</serial>
 		<datas>
-			<data id="H7" screen="0" smallScreen="0">
-				<desc>Tension minimale batterie</desc>
-				<value>21.238</value>
+			<data id="V" screen="1" smallScreen="0">
+				<desc>Tension de la batterie</desc>
+				<value>24.72</value>
 				<units>V</units>
+			</data>
+			<data id="TTG" screen="1" smallScreen="0">
+				<desc>Temps restant</desc>
+				<value>2j 5h 22m</value>
+				<units></units>
+			</data>
+			<data id="SOC" screen="1" smallScreen="1">
+				<desc>État de charge</desc>
+				<value>95.9</value>
+				<units>%</units>
+			</data>
+			<data id="Relay" screen="0" smallScreen="0">
+				<desc>Etat du relai</desc>
+				<value>0</value>
+				<units></units>
+			</data>
+			<data id="P" screen="1" smallScreen="1">
+				<desc>Puissance instantané</desc>
+				<value>-67</value>
+				<units>W</units>
+			</data>
+			<data id="I" screen="0" smallScreen="0">
+				<desc>Courant de la batterie</desc>
+				<value>-2.695</value>
+				<units>A</units>
+			</data>
+			<data id="H9" screen="0" smallScreen="0">
+				<desc>Nombre de secondes depuis la dernière charge complète</desc>
+				<value>23269</value>
+				<units>s</units>
 			</data>
 			<data id="H8" screen="0" smallScreen="0">
 				<desc>Tension maximale de la batterie</desc>
 				<value>29.442</value>
 				<units>V</units>
 			</data>
-			<data id="H9" screen="0" smallScreen="0">
-				<desc>Nombre de secondes depuis la dernière charge complète</desc>
-				<value>62047</value>
-				<units>s</units>
+			<data id="H7" screen="0" smallScreen="0">
+				<desc>Tension minimale batterie</desc>
+				<value>21.238</value>
+				<units>V</units>
 			</data>
-			<data id="H10" screen="0" smallScreen="0">
-				<desc>Nombre de synchronisations automatiques</desc>
-				<value>92</value>
+			<data id="H6" screen="0" smallScreen="0">
+				<desc>Cumulative Amp Hours drawn</desc>
+				<value>-23096.02</value>
+				<units>Ah</units>
+			</data>
+			<data id="H5" screen="0" smallScreen="0">
+				<desc>Nombre de cycles de décharge</desc>
+				<value>0</value>
+				<units></units>
+			</data>
+			<data id="H4" screen="0" smallScreen="0">
+				<desc>Nombre de cycles de charge</desc>
+				<value>1</value>
+				<units></units>
+			</data>
+			<data id="H3" screen="0" smallScreen="0">
+				<desc>Profondeur de la décharge moyenne</desc>
+				<value>-102.738</value>
+				<units>Ah</units>
+			</data>
+			<data id="H2" screen="0" smallScreen="0">
+				<desc>Profondeur de la dernière décharge</desc>
+				<value>-12.853</value>
+				<units>Ah</units>
+			</data>
+			<data id="H18" screen="0" smallScreen="0">
+				<desc>Quantité d'énergie chargée</desc>
+				<value>674.55</value>
+				<units>kWh</units>
+			</data>
+			<data id="H17" screen="0" smallScreen="0">
+				<desc>Quantité d'énergie déchargée</desc>
+				<value>572.78</value>
+				<units>kWh</units>
+			</data>
+			<data id="H12" screen="0" smallScreen="0">
+				<desc>Nombre d'alarmes de tension élevée</desc>
+				<value>0</value>
 				<units></units>
 			</data>
 			<data id="H11" screen="0" smallScreen="0">
@@ -33,50 +226,20 @@
 				<value>0</value>
 				<units></units>
 			</data>
-			<data id="H12" screen="0" smallScreen="0">
-				<desc>Nombre d'alarmes de tension élevée</desc>
-				<value>0</value>
+			<data id="H10" screen="0" smallScreen="0">
+				<desc>Nombre de synchronisations automatiques</desc>
+				<value>113</value>
 				<units></units>
 			</data>
-			<data id="H17" screen="0" smallScreen="0">
-				<desc>Quantité d'énergie déchargée</desc>
-				<value>506.88</value>
-				<units>kWh</units>
-			</data>
-			<data id="H18" screen="0" smallScreen="0">
-				<desc>Quantité d'énergie chargée</desc>
-				<value>600.07</value>
-				<units>kWh</units>
-			</data>
-			<data id="V" screen="1" smallScreen="0">
-				<desc>Tension de la batterie</desc>
-				<value>27.74</value>
-				<units>V</units>
-			</data>
-			<data id="I" screen="0" smallScreen="0">
-				<desc>Courant de la batterie</desc>
-				<value>5.806</value>
-				<units>A</units>
-			</data>
-			<data id="P" screen="1" smallScreen="1">
-				<desc>Puissance instantané</desc>
-				<value>161</value>
-				<units>W</units>
+			<data id="H1" screen="0" smallScreen="0">
+				<desc>Profondeur de la décharge la plus profonde</desc>
+				<value>-102.738</value>
+				<units>Ah</units>
 			</data>
 			<data id="CE" screen="0" smallScreen="0">
 				<desc>Ampères heures consommées</desc>
-				<value>-10.772</value>
+				<value>-12.853</value>
 				<units>Ah</units>
-			</data>
-			<data id="SOC" screen="1" smallScreen="1">
-				<desc>État de charge</desc>
-				<value>96.7</value>
-				<units>%</units>
-			</data>
-			<data id="TTG" screen="1" smallScreen="0">
-				<desc>Temps restant</desc>
-				<value>&#8734;</value>
-				<units></units>
 			</data>
 			<data id="AR" screen="1" smallScreen="0">
 				<desc>Raison de l'alarme</desc>
@@ -84,161 +247,102 @@
 				<units></units>
 			</data>
 		</datas>
-	</device>
-	<device id="HQ16129A5J2">
-		<nom>MpttBleu</nom>
-		<timerefresh>1568197205</timerefresh>
-		<type>MPTT</type>
-		<modele>BlueSolar MPPT 100/30 rev2</modele>
-		<serial>HQ16129A5J2</serial>
-		<datas>
-			<data id="V" screen="1" smallScreen="0">
-				<desc>Tension de la batterie</desc>
-				<value>27.82</value>
-				<units>V</units>
-			</data>
-			<data id="I" screen="0" smallScreen="0">
-				<desc>Courant de la batterie</desc>
-				<value>5.7</value>
-				<units>A</units>
-			</data>
-			<data id="VPV" screen="0" smallScreen="0">
-				<desc>Voltage des panneaux</desc>
-				<value>55600</value>
-				<units>mV</units>
-			</data>
-			<data id="PPV" screen="1" smallScreen="0">
-				<desc>Production des panneaux</desc>
-				<value>162</value>
-				<units>W</units>
-			</data>
-			<data id="CS" screen="1" smallScreen="0">
-				<desc>Status de charge</desc>
-				<value>Absorption</value>
-				<units></units>
-			</data>
-			<data id="ERR" screen="1" smallScreen="0">
-				<desc>Présence d'erreur</desc>
-				<value>Aucune</value>
-				<units></units>
-			</data>
-			<data id="H19" screen="0" smallScreen="0">
-				<desc>Le rendement total</desc>
-				<value>782.28</value>
-				<units>kWh</units>
-			</data>
-			<data id="H20" screen="0" smallScreen="0">
-				<desc>Rendement aujourd'hui</desc>
-				<value>0.4</value>
-				<units>kWh</units>
-			</data>
-			<data id="H21" screen="0" smallScreen="0">
-				<desc>Puissance maximum ce jour</desc>
-				<value>335</value>
-				<units>W</units>
-			</data>
-			<data id="H22" screen="0" smallScreen="0">
-				<desc>Rendemain hier</desc>
-				<value>1.52</value>
-				<units>kWh</units>
-			</data>
-			<data id="H23" screen="0" smallScreen="0">
-				<desc>Puissance maximum hier</desc>
-				<value>312</value>
-				<units>W</units>
-			</data>
-		</datas>
-	</device>
-	<device id="HQ1544WMX65">
-		<nom>MpttBlanc</nom>
-		<timerefresh>1568197205</timerefresh>
-		<type>MPTT</type>
-		<modele>BlueSolar MPPT 100/30 rev2</modele>
-		<serial>HQ1544WMX65</serial>
-		<datas>
-			<data id="V" screen="1" smallScreen="0">
-				<desc>Tension de la batterie</desc>
-				<value>27.76</value>
-				<units>V</units>
-			</data>
-			<data id="I" screen="0" smallScreen="0">
-				<desc>Courant de la batterie</desc>
-				<value>3.3</value>
-				<units>A</units>
-			</data>
-			<data id="VPV" screen="0" smallScreen="0">
-				<desc>Voltage des panneaux</desc>
-				<value>63600</value>
-				<units>mV</units>
-			</data>
-			<data id="PPV" screen="1" smallScreen="0">
-				<desc>Production des panneaux</desc>
-				<value>92</value>
-				<units>W</units>
-			</data>
-			<data id="CS" screen="1" smallScreen="0">
-				<desc>Status de charge</desc>
-				<value>Float (maintient la charge pleine)</value>
-				<units></units>
-			</data>
-			<data id="ERR" screen="1" smallScreen="0">
-				<desc>Présence d'erreur</desc>
-				<value>Aucune</value>
-				<units></units>
-			</data>
-			<data id="H19" screen="0" smallScreen="0">
-				<desc>Le rendement total</desc>
-				<value>298.53</value>
-				<units>kWh</units>
-			</data>
-			<data id="H20" screen="0" smallScreen="0">
-				<desc>Rendement aujourd'hui</desc>
-				<value>0.26</value>
-				<units>kWh</units>
-			</data>
-			<data id="H21" screen="0" smallScreen="0">
-				<desc>Puissance maximum ce jour</desc>
-				<value>249</value>
-				<units>W</units>
-			</data>
-			<data id="H22" screen="0" smallScreen="0">
-				<desc>Rendemain hier</desc>
-				<value>0.66</value>
-				<units>kWh</units>
-			</data>
-			<data id="H23" screen="0" smallScreen="0">
-				<desc>Puissance maximum hier</desc>
-				<value>257</value>
-				<units>W</units>
-			</data>
-		</datas>
-	</device>
-	<device id="other">
+	</device>	<device id="other">
 		<nom>Divers</nom>
-		<timerefresh>1568197380</timerefresh>
+		<timerefresh>1577311875</timerefresh>
 		<type></type>
 		<modele></modele>
 		<serial></serial>
 		<datas>
-			<data id="PPVT"  screen="1" smallScreen="1">
+			<data id="PPVT" screen="1" smallScreen="1">
 				<desc>Production total des panneaux</desc>
-				<value>254</value>
+				<value>0</value>
 				<units>W</units>
-				</data>		
-		</datas>		
+				</data>                        <data id="CONSO" screen="1" smallScreen="0">
+				<desc>Consommation du foyer</desc>
+				<value>67</value>
+				<units>W</units>
+				</data>		</datas>		
 	</device>
-
+        
 	<device id="other">
 		<nom></nom>
-		<timerefresh>1568197205</timerefresh>
+		<timerefresh>1577311864</timerefresh>
 		<type></type>
 		<modele></modele>
 		<serial></serial>
 		<datas>
-			<data id='TEMP' screen='1' smallScreen='0'>
-				<desc>Température du local technique</desc>
-				<value>17</value>
+			<data id='TExtH' screen='1' smallScreen='0'>
+				<desc>Humidité TExt</desc>
+				<value>99.90</value>
+				<units>%</units>
+			</data>
+			<data id='TExtT' screen='1' smallScreen='0'>
+				<desc>Température TExt</desc>
+				<value>7.50</value>
 				<units>°C</units>
+			</data>
+			<data id='TExtTR' screen='0' smallScreen='0'>
+				<desc>Température ressentie TExt</desc>
+				<value>6.91</value>
+				<units>°C</units>
+			</data>
+		</datas>
+	</device>
+	<device id="other">
+		<nom></nom>
+		<timerefresh>1577311877</timerefresh>
+		<type></type>
+		<modele></modele>
+		<serial></serial>
+		<datas>
+			<data id='THomeH' screen='1' smallScreen='0'>
+				<desc>Humidité THome</desc>
+				<value>68.8</value>
+				<units>%</units>
+			</data>
+			<data id='THomeT' screen='1' smallScreen='0'>
+				<desc>Température THome</desc>
+				<value>21.2</value>
+				<units>°C</units>
+			</data>
+		</datas>
+	</device>
+	<device id="other">
+		<nom></nom>
+		<timerefresh>1577311866</timerefresh>
+		<type></type>
+		<modele></modele>
+		<serial></serial>
+		<datas>
+			<data id='TSolH' screen='1' smallScreen='0'>
+				<desc>Humidité TSol</desc>
+				<value>73.00</value>
+				<units>%</units>
+			</data>
+			<data id='TSolT' screen='1' smallScreen='0'>
+				<desc>Température TSol</desc>
+				<value>13.80</value>
+				<units>°C</units>
+			</data>
+			<data id='TSolTR' screen='0' smallScreen='0'>
+				<desc>Température ressentie TSol</desc>
+				<value>13.14</value>
+				<units>°C</units>
+			</data>
+		</datas>
+	</device>
+	<device id="other">
+		<nom></nom>
+		<timerefresh>1577311878</timerefresh>
+		<type></type>
+		<modele></modele>
+		<serial></serial>
+		<datas>
+			<data id='Co2Home' screen='1' smallScreen='0'>
+				<desc>Co2 dans la maison</desc>
+				<value>1389</value>
+				<units>ppm</units>
 			</data>
 		</datas>
 	</device></devices>

@@ -10,7 +10,6 @@ import re
 import time
 import sqlite3
 import sys
-import json
 
 
 ## for debug :
@@ -270,15 +269,14 @@ while 1:
             # A FAIRE
             # Simulation monsieur l'arbitre
             #// Etat : 
-            #//  - 0 : off force
-            #//  - 1 : off auto
-            #//  - 2 : on auto
-            #//  - 3 : on force
+            #//  - 0 : off
+            #//  - 1 : on
             #// Mode
             #//  - 0 : Null
-            #//  - 1 : Off 
-            #//  - 2 : Auto
-            #//  - 3 : On
+            #//  - 1 : Off forcé
+            #//  - 2 : Off Auto 
+            #//  - 3 : On Auto
+            #//  - 4 : On forcé
             
             time.sleep(0.3)
             # Requête i2c pour demande de data (état et mode des relay)
