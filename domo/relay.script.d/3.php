@@ -9,7 +9,7 @@ $return['mod'] = 1;
 # Temps d'allumage
 $timeUp=300;
 
-if ($data['SOC'] >= 98 && !relayUpToday($thisId)) {     
+if (MpptAbsOrFlo($data['CS']) && $data['SOC'] > 94 && !relayUpToday($thisId)) {     
     $return['log'] = 'UP La batterie est chargé à 98% et pas lancé aujourd hui';
     $return['mod'] = 2;
 }

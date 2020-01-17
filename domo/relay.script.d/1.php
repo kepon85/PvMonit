@@ -47,18 +47,14 @@ if (is_file('/tmp/domo'.$thisId.'up')) {
     // Si c'est éteind, faut-il l'allumer ?
     if ($thisEtat == 0) {
         // Si les batteries sont pleinnes
-        if ($data['SOC'] == 100 ) {
-            $return['log'] = 'Batteire à 100%';
+        if (date('G') > 11 && date('G') < 17 && $data['SOC'] > 95) {
+            $return['log'] = 'Il est plus de 11 heure et que les batterie sont suppérieur à 95 c\'est qu\'il fait beau...';
             $return['mod'] = 2;
-        }
+        } 
         if (MpptAbsOrFlo($data['CS'])) {
             $return['log'] = 'Régulateur en Abs ou Float';
             $return['mod'] = 2;
         }
-        if (date('G') > 11 && $data['SOC'] > 95) {
-            $return['log'] = 'Il est plus de 11 heure et que les batterie sont suppérieur à 95 c\'est qu\'il fait beau...';
-            $return['mod'] = 2;
-        } 
     // Si c'est allumé, faut-il l'éteindre ?
     } else if ($thisEtat == 1) {
         $checkIfComputerIsUp = checkIfComputerIsUp($pingHost);
@@ -69,10 +65,10 @@ if (is_file('/tmp/domo'.$thisId.'up')) {
         if ($data['SOC'] <= 95 && $checkIfComputerIsUp == 0) {
             $return['log'] = 'Les batteries pass sous les 95% et qu\'il n\'y a pas d\'ordinateur d\'allumé';
             $return['mod'] = 1;
-        } 
-        if (timeUpMin($thisId, $timeUp)) {
+        }         
+        // Si un passage à 1 est décidé mais que le temps minimum n'est pas dépassé :
+        if ($return['mod'] == 1 && timeUpMin($thisId, $timeUp)) {
             $return['log'] = 'Temps minimum non dépassé, on maintient allumé';
-            echo "ici";
             $return['mod'] = 2;
         }
     } 

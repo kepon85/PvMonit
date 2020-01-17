@@ -6,7 +6,7 @@
 $return['log'] = null;
 $return['mod'] = 1;
 
-// @todo: faire timeUpMini (éviter bagotage)
+$timeUp=1200;
 
 // Si la box est allumé
 if ($relayEtat[1] == 1) {
@@ -14,10 +14,17 @@ if ($relayEtat[1] == 1) {
         $return['log'] = 'Régulateur en Abs ou Float';
         $return['mod'] = 2;
     }
-    if (date('G') > 11 && date('G') < 19 && $data['SOC'] > 95) {
+    if (date('G') > 11 && date('G') < 20 && $data['SOC'] > 95) {
         $return['log'] = 'Il est plus de 11 heure et que les batterie sont suppérieur à 95 c\'est qu\'il fait beau...';
         $return['mod'] = 2;
     } 
+}
+
+if ($thisEtat == 1) {
+    if (timeUpMin($thisId, $timeUp)) {
+        $return['log'] = 'Temps minimum non dépassé, on maintient allumé';
+        $return['mod'] = 2;
+    }
 }
 
 return $return;

@@ -9,6 +9,8 @@ include('/opt/PvMonit/function.php');
 // Chargement de la config
 $config = getConfigYaml('/opt/PvMonit');
 
+@include_once('./header.php');  
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -456,3 +458,4 @@ if (localStorage.getItem('getVersion')) {
 </script>
 </body>
 </html>
+<?php @include_once('./footer.php');  ?>

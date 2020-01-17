@@ -11,6 +11,7 @@ Les fonctionnalités de PvMonit sont dissociable :
   * Interface web en temps réel
   * Export vers emoncms
   * Affichage LCD
+  * Domotique (voir domo/README.md) pour déclencher des actions (allumer des appareils par exemple) suivant l'état du système
 
 #### La base / le socle
 
@@ -60,13 +61,7 @@ Lancer la commande :
 visudo
 ```
 
-Si vous utilisez l'interface web pvmonit, ajouter :
-
-```diff
-+ www-data ALL=(ALL) NOPASSWD:/usr/bin/python /opt/PvMonit/bin/vedirect.py *
-```
-
-Si vous utilisez l'export vers emoncms, ajouter : 
+Ajouter : 
 
 ```diff
 + pvmonit ALL=(ALL) NOPASSWD:/usr/bin/python /opt/PvMonit/bin/vedirect.py *
@@ -168,16 +163,44 @@ lighttpd-enable-mod fastcgi
 lighttpd-enable-mod fastcgi-php
 ```
 
-Configuration du serveur http, avec le fichier /etc/lighttpd/lighttpd.conf : 
-```diff
-- server.document-root        = "/var/www/html/"
-+ server.document-root        = "/opt/PvMonit/www/"
-```
-
-On applique la configuration :
+On change la configuration de lighttpd :
 
 ```bash
-service lighttpd restart
+service lighttpd stop
+```
+
+Configuration du serveur http, avec le fichier /etc/lighttpd/lighttpd.conf car il faut modifier le document root et il faut que lighttpd se lance en tant que pvmonit (Pour le changement de user : [ici](https://alexanderhoughton.co.uk/blog/lighttpd-changing-default-user-raspberry-pi/) ou [ici](https://redmine.lighttpd.net/boards/2/topics/6247))
+
+```diff
+- server.document-root        = "/var/www/html/"
+- server.username             = "www-data"
+- server.groupname            = "www-data"
++ server.document-root        = "/opt/PvMonit/www/"
++ server.username             = "pvmonit"
++ server.groupname            = "pvmonit"
+```
+
+Modifier le fichier /etc/init.d/lighttpd et remplacer tout "www-data" par "pvmonit"
+
+```diff
+-     owner=www-data
+-     group=www-data
++     owner=pvmonit
++     group=pvmonit
+```
+
+Changer les utilisateurs : 
+
+```
+chown -R pvmonit:pvmonit /var/log/lighttpd
+chown -R pvmonit:pvmonit /var/cache/lighttpd
+chown pvmonit:pvmonit /var/run/lighttpd
+```
+
+On applique la configuration (si lighttpd ne démarre pas il faut creuser la question, regarder les logs...) :
+
+```bash
+service lighttpd start
 ```
 
 C'est terminé, vous pouvez vous connecter sur votre IP local pour joindre votre serveur web : 
@@ -267,13 +290,7 @@ Lancer la commande :
 visudo
 ```
 
-Si vous utilisez l'interface web pvmonit, ajouter :
-
-```diff
-+ www-data ALL=(ALL) NOPASSWD:/usr/bin/python3 /opt/PvMonit/bin/DHT.py *
-```
-
-Si vous utilisez l'export vers emoncms, ajouter : 
+Ajouter : 
 
 ```diff
 + pvmonit ALL=(ALL) NOPASSWD:  /usr/bin/python3 /opt/PvMonit/bin/DHT.py *
@@ -328,13 +345,7 @@ Lancer la commande :
 visudo
 ```
 
-Si vous utilisez l'interface web pvmonit, ajouter :
-
-```diff
-+ www-data ALL=(ALL) NOPASSWD:  /opt/temperv14/temperv14 -c
-```
-
-Si vous utilisez l'export vers emoncms, ajouter : 
+Ajouter : 
 
 ```diff
 + pvmonit ALL=(ALL) NOPASSWD:  /opt/temperv14/temperv14 -c
@@ -371,11 +382,7 @@ $ /opt/PvMonit/bin-available/ampermetre.pl
 00.1A
 ```
 
-Si vous utilisez l'interface web pvmonit, ajouter :
-
-```diff
-+ www-data ALL=(ALL) NOPASSWD: /opt/PvMonit/bin/*
-```
+Ajouter :
 
 Si vous utilisez l'export vers emoncms, ajouter : 
 
@@ -410,13 +417,7 @@ Doit retourner une valeur numérique
 
 Ensuite (vu qu'il faut le lancer en root) vous devez le mettre dans le sudo : 
 
-Si vous utilisez l'interface web pvmonit, ajouter :
-
-```diff
-+ www-data ALL=(ALL) NOPASSWD: /opt/PvMonit/bin/ht2000 *
-```
-
-Si vous utilisez l'export vers emoncms, ajouter : 
+Ajouter : 
 
 ```diff
 + pvmonit ALL=(ALL) NOPASSWD:  /opt/PvMonit/bin/ht2000 *
