@@ -1,35 +1,9 @@
 # PvMonit Domotique - Ou comment utilisé le surplus d'une installation solaire autonome
 
+Article / vidéo lier à cet module domotique : 
 
-
-
-
-domo : 
-	relay-action dépendance wiringpi + sudo ?
-	aptitude install php-pdo-sqlite
-
-Documenté script relay/id.php avec ce qu'il est possible de récupérer comme étét
-
-+ documenté mes scripts exemple... 
-
-
-
-
-
-
-
-
-Dans le cas d'une installation solaire autonome (non raccordé au réseau EDF), une fois que les batteries sont rechargé (ce qui se produit au alentour de 11h-12h pour moi 80% du temps) il y a de l'énergie potentiel de perdu. Plus précisément si je n'utilise pas cette énergie au moment ou il y a du soleil (de la production) cette énergie n'est pas utilisé.  On peut augmenter le stockage mais c'est infini, coûteux en argent en ressource environnementale. 
-
-Du coup m'a semblé pertinent de réfléchir à un moyen d'automatisé certaine tâche qui me permette d'utilisé ce surplus d'électricité quand il est là. Actuellement je le fait de façon tout à fait manuel : quand les batteries sont pleine et qu'il y a du soleil, je lance une machin à laver, je lance la pompe de relevage de la phyto,  je recharge mes batterie d'outil portatif….  Cette automatisation va aussi me permettre d'aller plus loin & d'envisagé d'installé un petit chauffe eau électrique de camion (~10L) ou autres…
-
-Grâce à [PvMonit](https://david.mercereau.info/pvmonit-v1-0-monitoring-de-mon-installation-photovoltaique-autonome/) j'avais déjà une remonté d'information sur l'état du système solaire, des batteries, de la production qui m'arrivait sur un Raspbery PI. il ne me restait plus qu'a "piloter des prises électrique" en fonction de l'état du système solaire et de conditions que je donne au programme.
-
-Le cahier des charges c'était : 
-
-- De pouvoir piloter ce que je veux, mon choix c'est donc porté vers un système de contrôle de relais (en gros des interrupteur contrôlé de façon électronique) 
-- Que le système consomme très peu. C'est réussi le système consomme ~0,153W (tout les relais d'éteint), 0,4W avec 1 relais d'allumé (hors PvMonit…)
-- Que je puisse passé certain appareil en "marche forcé" ou en "stop forcé" 
+* https://david.mercereau.info/?p=5703
+* https://vimeo.com/385514728
 
 **Prés-requis: programmation PHP sommaire**. En effet pour le moment il n'y a pas d'interface graphique pour programmer des évènement sur les relais, il faut donc coder un peu en PHP pour s'en sortir...
 
@@ -109,7 +83,11 @@ screen -A -m -d -S tm1638 /opt/PvMonit/domo/tm1638-launch.sh
 
 ## Configuration
 
-La configuration ce fait dans le même fichier que pvmonit /opt/PvMonit/config.yaml, vous avez une secion "domo". Ensuite il vous faut faire les scripts qui correspondent à vos usages, c'est en Python que ça ce joue. Les scripts sont contenu dans /opt/PvMonit/domo/relay.script.d/NUMEROduRELAIS.py 
+La configuration ce fait dans le même fichier que pvmonit /opt/PvMonit/config.yaml, vous avez une section "domo". 
+
+Ensuite il vous faut faire les scripts qui correspondent à vos usages, c'est en PHP que ça ce joue. Les scripts sont contenu dans /opt/PvMonit/domo/relay.script.d/NUMEROduRELAIS.php
+
+Un script exemple est présent avec toutes les fonctionnalités possibles : https://framagit.org/kepon/PvMonit/blob/master/domo/relay.script.d/ID.php.exemple
 
 ## Pour interagir avec d'autres scripts maisons
 
