@@ -10,6 +10,8 @@
 //      - 0 : Relai éteind
 //      - 1 : Relai allumé
 
+/*
+
 $thisId : renvoi l'ID du relai
 $thisEtat : renvoi l'état de ce relai
 $thisMod : renvoi le mod de ce relai
@@ -35,5 +37,6 @@ MpptAbsOrFlo($data['CS']) : retourne true si le régulateur est en Float ou en A
 $return['log'] : Indique un log en retour de ce script (null si pas de log)
 $return['mod'] : Indique le nouveau mod qu'impose le script
                         $return['mod'] = $thisMod si pas de changement
+*/
 
 ?>
