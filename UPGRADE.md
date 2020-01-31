@@ -1,5 +1,17 @@
 # Upgrade
 
+Un upgrade se passe simplement en remplaçant les fichiers : 
+
+```bash
+cd /opt
+# sauvegarde fichier de conf
+cp PvMonit/config.yaml ./
+rm -rf ./PvMonit
+git clone https://github.com/kepon85/PvMonit.git
+# restauration fichier de conf
+cp ./config.yaml ./PvMonit/
+```
+
 ## Upgrade V1.0 > V2.0
 
 Le principale changement réside dans le fait que lighttpd (le serveur web) est lancé avec l'utilisateur "pvmonit" et non plus "www-data" par défaut. : 

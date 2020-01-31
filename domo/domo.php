@@ -43,7 +43,7 @@ function xml_data_get($DATA_FILE)  {
 }
 
 function MpptAbsOrFlo($cs) {
-    if (preg_match_all('/Absorption|Float/', $cs)) {
+    if (preg_match_all('/^Absorption|^Float/', $cs)) {
         return true;
     } else {
         return false;

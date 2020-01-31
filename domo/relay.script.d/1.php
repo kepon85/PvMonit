@@ -40,7 +40,7 @@ if (!function_exists('checkIfComputerIsUp')) {
     }
 }
 
-if (is_file('/tmp/domo'.$thisId.'up')) {
+if (is_file('/tmp/domo'.$thisId.'up') && $data['SOC'] > 89) {
     $return['log'] = 'Présence du fichier (/tmp/domo'.$thisId.'up) qui force l\'allumage';
     $return['mod'] = 2;
 } else {
