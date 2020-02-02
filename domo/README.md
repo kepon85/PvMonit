@@ -17,6 +17,40 @@ Matériel :
 
 <img src="https://david.mercereau.info/wp-content/uploads/2020/01/PvMonit-Domo-v2_bb.png" alt="https://david.mercereau.info/wp-content/uploads/2020/01/PvMonit-Domo-v2_bb.png" style="zoom:30%;" />
 
+## Daemon relay action
+
+Un daemon est utilisé pour mettre en actions les relais selon les différents périphérique qui pourrait modifier leur état (les boutons du tm1638, l'interface web, le daemon d'automatisation "domo")
+
+Dépendance du script, la commande "gpio" : 
+
+```bash
+aptitude install gpio-utils
+```
+
+Cette commande doit pouvoir s’exécute avec les droits "root", pour ça on va la lancer en sudo, il faut donc lancer la commande :
+
+```sh
+visudo
+```
+
+Et ajouter : 
+
+```diff
++ pvmonit ALL=(ALL) NOPASSWD:/usr/bin/gpio *
+```
+
+Ensuite on peut lancement du script à la main :
+
+```bash
+/opt/PvMonit/domo/relay-actions-launch.sh
+```
+
+Pour le lancement au démarrage, ajouter avant "exit 0" dans le fichier /etc/rc.local la ligne suivant
+
+```bash
+screen -A -m -d -S relay-actions /opt/PvMonit/domo/relay-actions-launch.sh
+```
+
 ## Daemon "domo"
 
 C'est le daemon qui regard l'état du système (batterie, régulateur) et qui déclenche des actions selon des scripts
