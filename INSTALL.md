@@ -23,6 +23,12 @@ git clone https://github.com/kepon85/PvMonit.git
 cd PvMonit
 cp config-default.yaml config.yaml
 ```
+Création d'un utilisateur dédié avec pouvoir restreint 
+
+```bash
+adduser --shell /bin/bash pvmonit
+```
+
 Vous pouvez maintenant éditer le fichier config.yaml à votre guise !
 
 ### Ve.direct via USB
@@ -220,12 +226,6 @@ Récupérez la valeur "Accès en écriture" et ajoutez-la dans le fichier de con
 emoncms:
     urlInputJsonPost: https://emoncms.org/input/post.json
     apiKey: XXXXXXXXXXXXXXXXXXXXXXXX
-```
-
-Création d'un utilisateur dédié avec pouvoir restreint 
-
-```bash
-adduser --shell /bin/bash pvmonit
 ```
 
 Installation des dépendances :
