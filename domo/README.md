@@ -60,7 +60,7 @@ Pour la configuration, regarder le fichier config.yaml, dans la partie "domo:"
 Dépendance du script : 
 
 ```bash
-aptitude install php-pdo-sqlite
+aptitude install php-pdo-sqlite php-xml
 ```
 
 Lancement du script à la main
