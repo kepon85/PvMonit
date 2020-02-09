@@ -209,6 +209,12 @@ On applique la configuration (si lighttpd ne démarre pas il faut creuser la que
 service lighttpd start
 ```
 
+Note : un bug est présent sur ce changement de droit, pour corriger le problème ajouter dans le fichier /etc/rc.local la ligne suivante juste avant "exit 0" 
+
+```bash
+bash /opt/PvMonit/bin/lighttpd-fix-user.sh
+```
+
 C'est terminé, vous pouvez vous connecter sur votre IP local pour joindre votre serveur web : 
 
 Attention : dans la configuration l'appel du fichier data (urlDataXml) doit contenir un nom de domaine, quand vous joingné l'interface ce nom de domaine doit être identique à celui. Exemple vous ateignez l'interface par pv.chezmoi.fr, dans urlDataXml il doit y avoir urlDataXml: http://pv.chezmoi.fr/data-xml.php (modifier le fichier /etc/hosts au besoin...)
