@@ -121,8 +121,17 @@ if ($config['data']['ppv_total'] && $config['data']['conso_calc'] && $ppv_total 
 
 
 if (!is_null($dataNode1)) {
-	sauvegardeDesDonnes("www-browser --dump '".$config['emoncms']['urlInputJsonPost']."?json={".$dataNode1."}&node=1&time=".time()."&apikey=".$config['emoncms']['apiKey']."'\n");
+    sauvegardeDesDonnes("www-browser --dump '".$config['emoncms']['urlInputJsonPost']."?json={".$dataNode1."}&node=1&time=".time()."&apikey=".$config['emoncms']['apiKey']."'\n");
 }
 
+// Domo
+if ($config['www']['domo'] == true) { 
+    if (is_file($config['domo']['jsonFile']['etatPath'])) {
+	sauvegardeDesDonnes("www-browser --dump '".$config['emoncms']['urlInputJsonPost']."?json=".file_get_contents($config['domo']['jsonFile']['etatPath'])."&node=domoEtat&time=".time()."&apikey=".$config['emoncms']['apiKey']."'\n");
+    }
+    if (is_file($config['domo']['jsonFile']['modPath'])) {
+	sauvegardeDesDonnes("www-browser --dump '".$config['emoncms']['urlInputJsonPost']."?json=".file_get_contents($config['domo']['jsonFile']['modPath'])."&node=domoMod&time=".time()."&apikey=".$config['emoncms']['apiKey']."'\n");
+    }
+}
 
 ?>
