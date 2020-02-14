@@ -209,7 +209,7 @@ domo:
         #PPVT: (^[0-9]+\.?[0-9]+?$)|(^[0-9]$)                  # Total des PPVT (si plusieurs MPPT
         #PPV: (^[0-9]+\.?[0-9]+?$)|(^[0-9]$)                 # Production des MPPT
         #CS: ^Off$|Fault$|Bulk|Faible|Abs|Float|On$         # MPPT etat (float, bulk...)
-        #Relay: ^ON|OFF|on|off|Off|On$                      # SmartSolar MPPT Relay ou BMV
+        #Relay: ^ON|OFF|on|off|Off|On|0|1$                      # SmartSolar MPPT Relay ou BMV
     relay:
         scriptDir: /opt/PvMonit/domo/relay.script.d
         scriptExecInterval: 60                # Interval d'execution des script de relais
