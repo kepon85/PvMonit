@@ -301,9 +301,16 @@ Ajouter :
 ```diff
 + pvmonit ALL=(ALL) NOPASSWD:  /usr/bin/python3 /opt/PvMonit/bin/DHT.py *
 ```
-Puis activer la sonde : 
+Puis activer la sonde (remplacer "NOM" par son petit nom, tout attaché, sans espace... : 
 ```bash
-ln -s /opt/PvMonit/bin-available/DhtGpio.php /opt/PvMonit/bin-enabled/OTHER-THome.php 
+ln -s /opt/PvMonit/bin-available/DhtGpio.php /opt/PvMonit/bin-enabled/OTHER-NOM.php 
+```
+
+Éditer ensuite le fichier /opt/PvMonit/bin-enabled/OTHER-NOM.php , au début : 
+
+```php
+$dhtModel=22;    // DHT modèle : [11|22|2302] 
+$dhtGpio=4;     // GPIO pin number
 ```
 
 #### Sonde température/humidité (DHT) récupéré sur l'arduino
