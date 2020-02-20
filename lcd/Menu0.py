@@ -11,6 +11,7 @@ try:
                 if data.tag == "value":
                     if datas.get("id") == 'SOC':
                         msg_soc='BA:'+data.text + '%'
+                        soc=data.text
                     elif datas.get("id") == 'P':
                         msg_p = 'P:'+data.text + 'W'
                     elif datas.get("id") == 'PPVT':
@@ -36,3 +37,18 @@ ligne2_msg=ligne2_msg+msg_conso
 
 lcd.message = ligne1_msg+'\n'+ligne2_msg
 debugTerm('Affichage\n' + ligne1_msg+'\n'+ligne2_msg)
+
+if etat_lcd == True:
+    if int(soc) >= 94:
+        # Vert
+        lcd.color = [0, 100, 0]
+    elif int(soc) <= 85:
+        # Rouge
+        lcd.color = [100, 0, 0]
+    elif int(soc) > 85:
+        # Jaune
+        lcd.color = [100, 100, 0]
+    else:
+        lcd.color = [100, 100, 100]
+    
+    

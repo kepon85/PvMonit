@@ -51,7 +51,7 @@ i2c = busio.I2C(board.SCL, board.SDA)
 lcd = character_lcd.Character_LCD_RGB_I2C(i2c, lcd_columns, lcd_rows)
 lcd.clear()
 # on allume
-lcd.color = [100, 0, 0]
+lcd.color = [100, 100, 100]
 # on dit bonjour (si si)
 lcd.message = "Bonjour !\nOn boot ..."
 # ~ time.sleep(2)
@@ -98,9 +98,6 @@ def update_menu(number):
     execfile(configGet('dir','lcd') + "Menu" + str(number) + ".py")
     return time.time()
 
-#1er lancement
-download_data_last=download_data()
-update_data_last=update_menu(0)
 
 # Au lancement on allume ou on éteind si c'est la nuit ou pas...
 if est_ce_la_nuit() == True:
@@ -110,6 +107,10 @@ else:
     lcd.color = [100, 0, 0]
     etat_lcd=True
 est_ce_la_nuit_last=time.time()
+
+#1er lancement
+download_data_last=download_data()
+update_data_last=update_menu(0)
 
 # Nombre de menu 
 patternMenu = re.compile(r"Menu[0-9]+.py")
@@ -130,7 +131,7 @@ while True:
         force_lcd_on=False
         # Si c'est éteind on allume
         if etat_lcd == False:
-            lcd.color = [100, 0, 0]
+            lcd.color = [100, 100, 100]
             etat_lcd = True
             debugTerm('LCD à ON')
             # Si c'est la nuit alors on met un timer pour l'extinction
