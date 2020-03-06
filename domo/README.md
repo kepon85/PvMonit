@@ -45,10 +45,17 @@ Ensuite on peut lancement du script à la main :
 /opt/PvMonit/domo/relay-actions-launch.sh
 ```
 
-Pour le lancement au démarrage, ajouter avant "exit 0" dans le fichier /etc/rc.local la ligne suivant
+Pour le lancement au démarrage, assurez vous que dans votre fichier config.yaml la section domo/daemon soit à true
+
+```yaml
+domo:
+    daemon: true
+```
+
+Et relancer le daemon : 
 
 ```bash
-screen -A -m -d -S relay-actions /opt/PvMonit/domo/relay-actions-launch.sh
+systemctl restart pvmonit
 ```
 
 ## Daemon "domo"
@@ -69,10 +76,17 @@ Lancement du script à la main
 /opt/PvMonit/domo/domo-launch.sh
 ```
 
-Pour le lancement au démarrage, ajouter avant "exit 0" dans le fichier /etc/rc.local la ligne suivant
+Pour le lancement au démarrage, assurez vous que dans votre fichier config.yaml la section domo/daemon soit à true
+
+```yaml
+domo:
+    daemon: true
+```
+
+Et relancer le daemon : 
 
 ```bash
-screen -A -m -d -S domo /opt/PvMonit/domo/domo-launch.sh
+systemctl restart pvmonit
 ```
 
 Il vous faut ensuite configurer les scripts pour l'automatisme, il se trouve dans /opt/PvMonit/domo/relay.script.d/ et il faut les nommer X.php (X étant le numéro du relai)
@@ -109,10 +123,18 @@ Lancement du script à la main
 /opt/PvMonit/domo/tm1638-launch.sh
 ```
 
-Pour le lancement au démarrage, ajouter avant "exit 0" dans le fichier /etc/rc.local la ligne suivant
+Pour le lancement au démarrage, assurez vous que dans votre fichier config.yaml la section domo/tm1638/daemon soit à true
+
+```yaml
+domo:
+    tm1638: 
+        daemon: true
+```
+
+Et relancer le daemon : 
 
 ```bash
-screen -A -m -d -S tm1638 /opt/PvMonit/domo/tm1638-launch.sh
+systemctl restart pvmonit
 ```
 
 ## Configuration

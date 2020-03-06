@@ -29,6 +29,7 @@ Vous pouvez aussi vous commandez un raspbery pi avec PvMonit tout prêt à l'emp
 
   * V2.1 (03/2020)
 	* Changement structurelle pour le passage par un daemon
+	* Prise de main à distance possible
   * V2.0 (01/2020)
 	* Domotique pour gérer le surplus d'énergie via des relais
 	    * https://vimeo.com/385514728

@@ -2,6 +2,7 @@ msg_soc='BA:?'
 msg_p='P:?'
 msg_ppvt='PV:?'
 msg_conso='CON:?'
+soc=101
 
 try:
     tree = etree.parse(configGet('tmpFileDataXml'))
@@ -39,13 +40,13 @@ lcd.message = ligne1_msg+'\n'+ligne2_msg
 debugTerm('Affichage\n' + ligne1_msg+'\n'+ligne2_msg)
 
 if etat_lcd == True:
-    if int(soc) >= 94:
+    if float(soc) >= 94 and float(soc) < 100:
         # Vert
         lcd.color = [0, 100, 0]
-    elif int(soc) <= 85:
+    elif float(soc) <= 85:
         # Rouge
         lcd.color = [100, 0, 0]
-    elif int(soc) > 85:
+    elif float(soc) > 85:
         # Jaune
         lcd.color = [100, 100, 0]
     else:

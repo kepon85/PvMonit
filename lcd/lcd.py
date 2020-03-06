@@ -104,7 +104,7 @@ if est_ce_la_nuit() == True:
     lcd.color = [0, 0, 0]
     etat_lcd=False
 else:
-    lcd.color = [100, 0, 0]
+    lcd.color = [100, 100, 100]
     etat_lcd=True
 est_ce_la_nuit_last=time.time()
 
@@ -194,7 +194,7 @@ while True:
                 lcd.color = [0, 0, 0]
                 etat_lcd=False
             else:
-                lcd.color = [100, 0, 0]
+                lcd.color = [100, 100, 100]
                 etat_lcd=True
 
         # Timer d'extinction si c'est la nuit

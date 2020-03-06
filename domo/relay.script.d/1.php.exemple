@@ -58,9 +58,16 @@ if (is_file('/tmp/domo'.$thisId.'up') && $data['SOC'] > 89) {
     // Si c'est allumé, faut-il l'éteindre ?
     } else if ($thisEtat == 1) {
         $checkIfComputerIsUp = checkIfComputerIsUp($pingHost);
-        if (date('G') >= 17 && $checkIfComputerIsUp == 0)  {
-            $return['log'] = 'S\'il est plus de 17h et qu\'il n\'y a pas d\'ordinateur d\'allumé';
-            $return['mod'] = 1;
+        if (date('m') == 1 || date('m') == 2 || date('m') == 12) {
+            if (date('G') >= 17 && $checkIfComputerIsUp == 0)  {
+                $return['log'] = 'S\'il est plus de 17h et qu\'il n\'y a pas d\'ordinateur d\'allumé';
+                $return['mod'] = 1;
+            }
+        } else {
+            if (date('G') >= 19 && $checkIfComputerIsUp == 0)  {
+                $return['log'] = 'S\'il est plus de 19h et qu\'il n\'y a pas d\'ordinateur d\'allumé';
+                $return['mod'] = 1;
+            }
         }
         if ($data['SOC'] <= 95 && $checkIfComputerIsUp == 0) {
             $return['log'] = 'Les batteries pass sous les 95% et qu\'il n\'y a pas d\'ordinateur d\'allumé';

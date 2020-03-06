@@ -125,6 +125,11 @@ tensionNorme: 230
 
 ### Export vers Emoncms
 emoncms:
+    daemon: false
+    # Interval entre 2 récupération de donnée (en minute)
+    getInterval: 5
+    # Interval entre 2 envoi à emoncms
+    sendInterval: 30
     # Test la connexion internet
     testInternetHost: emoncms.org
     testInternetPort: 80
@@ -179,9 +184,11 @@ www:
     checkUpdate: 43200                              # false for disable, or seconds checks
     domo: false                                      # Enable domo on web interface ?
     domoRefreshTime: 5                              # Refresh time domo in second
+    help: false                                      # Active l'assistance
 
 # Ecran LCD (avec script PvMonit/lcd
 lcd:
+    daemon: false
     rafraichissement: 0.1                           # en seconde pour les boutons
     dataUpdate: 45                                  # en seconde pour le rafraichissement des données
     onTimer: 60                                     # en seconde le temps que l'écran reste allumé si par défaut éteind
@@ -195,6 +202,7 @@ lcd:
 
 # Domotique (avec script PvMonit/domo)
 domo:
+    daemon: false
     dataCheckTime: 60                      # Check du XML
     dbFile: /tmp/PvMonit_domo.sqlite3
     jsonFile:
@@ -235,5 +243,7 @@ domo:
         8: 29
     relayActionRefresh: 2   # delay (in second) to refresh etat relay (script relay-action.php)
     tm1638: 
+        daemon: false
         refresh: 0.3
         actionButtonDelay: 2        # délais (en seconde) avant que les actions boutton n'est un effet
+

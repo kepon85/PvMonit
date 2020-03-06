@@ -1,0 +1,25 @@
+<?php
+
+# Desumidificateur
+
+// Par défaut à off (auto)
+$return['log'] = null;
+$return['mod'] = 1;
+
+# Temps d'allumage
+$timeUp=900;
+
+
+if ($data['SOC'] > 98) {     
+    $return['log'] = 'UP la batterie est au dessus des 98%';
+    $return['mod'] = 2;
+}
+
+if ($thisEtat == 1 && timeUpMin($thisId, $timeUp)) {
+    $return['log'] = 'UP maintient allume, le temps n est pas passé';
+    $return['mod'] = 2; 
+}
+
+return $return;
+
+?>

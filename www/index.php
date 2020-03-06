@@ -1,3 +1,4 @@
+
 <?php
 ###################################
 # Script sous licence BEERWARE
@@ -37,9 +38,15 @@ $config = getConfigYaml('/opt/PvMonit');
 			  <ul>
 				  <!-- TRAP MENU -->
 				<?php
-                                foreach ($config['www']['menu'] as $menu) {
-                                        echo $menu;
-                                } ?>
+				foreach ($config['www']['menu'] as $menu) {
+					echo $menu;
+				} 
+				
+				if ($config['www']['help'] == true) {
+					echo '<li><a href="help.php" onclick="open(\'help.php\', \'Popup\', \'scrollbars=1,resizable=1,height=80,width=350\'); return false;">?</a></li>';
+				}
+				?>
+				
 				<li><input type="checkbox" id="autoRefresh" title="Actualisation automatique tout les <?= $config['www']['refreshTime']/1000 ?> secondes" checked='checked' />
 				<input type="hidden" name="refreshBusy" id="refreshBusy" /></li>
 				<li><a id="refresh"><img id="refreshImg" src="images/refresh.png" width="20" alt="Refresh" title="Actualiser" /></a></li>
