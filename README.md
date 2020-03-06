@@ -27,6 +27,11 @@ Vous pouvez aussi vous commandez un raspbery pi avec PvMonit tout prêt à l'emp
 
 ### Changelog
 
+  * V2.1 (03/2020)
+	* Changement structurelle pour le passage par un daemon
+  * V2.0 (01/2020)
+	* Domotique pour gérer le surplus d'énergie via des relais
+	    * https://vimeo.com/385514728
   * V1.0 (08/2019)
 	* Collecte des informations via un XML tout les scripts (page web & getForEmoncms le récupère)
 	* Chargement de la page en ajax, récupération des infos via le XML

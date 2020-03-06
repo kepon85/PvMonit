@@ -17,7 +17,7 @@ Les fonctionnalités de PvMonit sont dissociable :
 
 Installation de PvMonit via le dépôt git et de ses dépendances :
 ```bash
-apt-get install php-cli php-yaml git python-serial sudo screen
+apt-get install php-cli php-yaml git python-serial sudo screen sshpass
 cd /opt
 git clone https://github.com/kepon85/PvMonit.git
 cd PvMonit
@@ -30,6 +30,30 @@ adduser --shell /bin/bash pvmonit
 ```
 
 Vous pouvez maintenant éditer le fichier config.yaml à votre guise !
+
+Créer le daemon PvMonitD en créant le fichier /etc/systemd/system/pvmonit.service  avec le contenu : 
+
+```
+[Unit]
+Description=PvMonitD
+After=network.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/opt/PvMonit/bin/pvmonitd.php start
+ExecStop=/opt/PvMonit/bin/pvmonitd.php stop
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Ensuite lancer les commandes : 
+
+```bash
+systemctl start pvmonit # lancer le daemon
+systemctl enable pvmonit # Activer au démarage
+```
 
 ### Ve.direct via USB
 
@@ -147,16 +171,18 @@ apt-get install python3 python3-pip python3-yaml
 pip3 install pyserial
 ```
 
-Ajouter dans le fichier /etc/rc.local :(avant le exit 0) 
-```bash
-screen -A -m -d -S arduino /opt/PvMonit/bin/getSerialArduino-launch.sh
-```
-
 Vous pouvez le lancer "à la main" avec la commande :
+
 ```bash
 python3 /opt/PvMonit/bin/getSerialArduino.py
 ```
 Et vous assurez que le fichier /tmp/PvMonit_getSerialArduino.data.yaml existe bien et que les données sont justes. 
+
+Pour le lancement en tâche de fond/au démarrage : 
+
+```bash
+systemctl restart pvmonit
+```
 
 
 #### Interface web en temps réel
@@ -260,18 +286,17 @@ $ su - pvmonit -c /opt/PvMonit/sendToEmoncms.php
     2016-11-02T10:56:44+01:00 - Données correctements envoyées : 1, données en erreurs : 0
 ```
 
-Mettre les scripts en tâche planifiée
+Pour le lancement au démarrage, assurez vous que dans votre fichier config.yaml la section emoncms/daemon soit à true
 
-```bash
-crontab -e -u pvmonit
+```yaml
+emoncms:
+    daemon: true
 ```
 
-Ajouter :
-```diff
-+# Script de récupération des données, toutes les 5 minutes
-+*/5 * * * * /usr/bin/php /opt/PvMonit/getForEmoncms.php >> /tmp/PvMonit.getForEmoncms.log
-+# Script d'envoi des données, ici toutes les 1/2 heures
-+3,33 * * * * /usr/bin/php /opt/PvMonit/sendToEmoncms.php >> /tmp/PvMonit.sendToEmoncms.log
+Et relancer le daemon : 
+
+```bash
+systemctl restart pvmonit
 ```
 
 Je n'explique pas ici comment configurer emoncms, les flux pour obtenir de beaux dashboard, je vous laisse lire la documentation...
@@ -473,7 +498,15 @@ pip3 install adafruit-circuitpython-charlcd lxml
 python3 /opt/PvMonit/lcd/lcd.py
 ```
 
-Pour que le LCD fonctionne au démarrage, ajouter avant "exit 0" dans le fichier /etc/rc.local la ligne suivant
-```bash
-screen -A -m -d -S lcd /opt/PvMonit/lcd/lcd-launch.sh
+Assurez vous que dans votre fichier config.yaml la section lcd/daemon soit à true
+```yaml
+lcd:
+    daemon: true
 ```
+
+Et relancer le daemon : 
+
+```bash
+systemctl restart pvmonit
+```
+

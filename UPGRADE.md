@@ -56,3 +56,21 @@ service lighttpd start
 
 Plus de doc sur le changement de user : [ici](https://alexanderhoughton.co.uk/blog/lighttpd-changing-default-user-raspberry-pi/) ou [ici](https://redmine.lighttpd.net/boards/2/topics/6247)
 
+## Upgrade V2.0 > V2.1
+
+* Retirer les crontab getForEmoncms et getForEmoncms de l'utilisateur pvmonit (crontab -u pvmonit -e)
+* Retirer le contenu commenançant par la commande "screen" du fichier /etc/rc.local
+
+Ajouter dans votre fichier de config.yaml tout les daemons que vous souhaitez lancer en ajoutant "daemon: true" (voir le fichier config-default.yaml pour comprendre
+
+```
+emoncms:
+    daemon: true
+```
+
++ systemd
+/etc/systemd/system/pvmonit.service
+
+systemctl enable pvmonit
+systemctl start pvmonit
+

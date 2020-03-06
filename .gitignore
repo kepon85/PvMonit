@@ -4,3 +4,4 @@ demo.sh
 gitPush.sh
 www/data-xml.php-test.html
 bin-enabled/*.php
+domo/relay.script.d/*.php
