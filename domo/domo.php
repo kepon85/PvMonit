@@ -50,6 +50,14 @@ function MpptAbsOrFlo($cs) {
     }
 }
 
+function MpptFlo($cs) {
+    if (preg_match_all('/^Float/', $cs)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 
 
 trucAdir(4, 'Lancement du script');

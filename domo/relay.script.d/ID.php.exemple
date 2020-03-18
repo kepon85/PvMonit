@@ -33,6 +33,7 @@ timeUpMin($thisId, '200') : retourne true si le temps minimum (en seconde) n'est
 timeUpMax($thisId, '200') : inverse de timeUpMin
 
 MpptAbsOrFlo($data['CS']) : retourne true si le régulateur est en Float ou en Absorption
+MpptFlo($data['CS']) : retourne true si le régulateur est en Float
 
 $return['log'] : Indique un log en retour de ce script (null si pas de log)
 $return['mod'] : Indique le nouveau mod qu'impose le script
