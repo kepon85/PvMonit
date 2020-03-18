@@ -392,9 +392,9 @@ function ve_label2($label, $valeur) {
 				case 0: $veData['value']= 'Off'; break;
 				case 1: $veData['value']= 'Faible puissance'; break;
 				case 2:	$veData['value']= 'Fault'; break;
-				case 3:	$veData['value']= 'Bulk (en charge)'; break;
+				case 3:	$veData['value']= 'Bulk'; break;
 				case 4:	$veData['value']= 'Absorption';	break;
-				case 5:	$veData['value']= 'Float (maintient la charge pleine)';	break;
+				case 5:	$veData['value']= 'Float';	break;
 				case 9:	$veData['value']= 'On';	break;
 			}
 		break;
