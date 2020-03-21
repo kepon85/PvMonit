@@ -33,7 +33,11 @@ function xml_data_get($DATA_FILE)  {
                 trucAdir(2, 'Les données sont périmées');
             }
         }
-        
+        // On vérifie si toutes les données sont là
+        if (count($xmlData) != count($config['domo']['valueUse'])) {
+            $xmlData = false;
+            trucAdir(2, 'Toutes les données requisent ne sont pas présentes dans le XML donc on passe notre chemin (vérifier domo/valueUse dans le fichier config.yaml)');
+        }
     } catch (Exception $e ) {
         $xmlData = false;
         trucAdir(2, 'Impossible de lire l\'XML : '.$e);
