@@ -35,8 +35,9 @@ function xml_data_get($DATA_FILE)  {
         }
         // On vérifie si toutes les données sont là
         if (count($xmlData) != count($config['domo']['valueUse'])) {
-            $xmlData = false;
+            trucAdir(5, count($xmlData).' éléments sont trouvés alors que '.count($config['domo']['valueUse']).' éléments sont attendu dans la configuration');
             trucAdir(2, 'Toutes les données requisent ne sont pas présentes dans le XML donc on passe notre chemin (vérifier domo/valueUse dans le fichier config.yaml)');
+            $xmlData = false;
         }
     } catch (Exception $e ) {
         $xmlData = false;
@@ -46,10 +47,18 @@ function xml_data_get($DATA_FILE)  {
     return $xmlData;
 }
 
-function MpptAbsOrFlo($cs) {
+function MpptAbsOrFlo($cs, $timeUpNoBago = 0) {
+    $fileTimerNoBago='/tmp/PvMonit_domo_MpptAbsOrFlo_NoBago';
     if (preg_match_all('/^Absorption|^Float/', $cs)) {
         return true;
     } else {
+        if (is_file($fileTimerNoBago)) {
+            $timer=file_get_contents($fileTimerNoBago);
+        } else {
+            $timer=time();
+            file_put_contents($fileTimerNoBago, $timer)
+        }
+        
         return false;
     }
 }
