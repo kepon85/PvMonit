@@ -47,19 +47,46 @@ function xml_data_get($DATA_FILE)  {
     return $xmlData;
 }
 
-function MpptAbsOrFlo($cs, $timeUpNoBago = 0) {
-    $fileTimerNoBago='/tmp/PvMonit_domo_MpptAbsOrFlo_NoBago';
-    if (preg_match_all('/^Absorption|^Float/', $cs)) {
-        return true;
-    } else {
-        if (is_file($fileTimerNoBago)) {
-            $timer=file_get_contents($fileTimerNoBago);
+function MpptAbsOrFlo($cs, $timeUpNoBago = 10) {
+    if ($timeUpNoBago == 0) {
+        if (preg_match_all('/^Absorption|^Float/', $cs)) {
+            return true;
         } else {
-            $timer=time();
-            file_put_contents($fileTimerNoBago, $timer)
+            return false;
         }
-        
-        return false;
+    } else {
+        $fileCS='/tmp/PvMonit_domo_MpptAbsOrFlo_NoBago'.'_CS_AoF';
+        $fileTimerNoBago='/tmp/PvMonit_domo_MpptAbsOrFlo_NoBago'.'_timer';
+        if (preg_match_all('/^Absorption|^Float/', $cs)) {
+            touch($fileCS);
+            //~ echo "abs ou float";
+            return true;
+        } else {
+            // Si j'étais en abs ou float j'allume le timer
+            if (is_file($fileCS)) {
+                $timer=time();
+                file_put_contents($fileTimerNoBago, $timer);
+                unlink($fileCS);
+                //~ echo "création du timer/suppression du float abs";
+                return true;
+            // Si le timer est déjà en route on récupère l'info
+            } else if (is_file($fileTimerNoBago)) {
+                $timer=file_get_contents($fileTimerNoBago);
+                // Le timer à été dépassé
+                if (time() > $timer+$timeUpNoBago) {
+                    //~ echo "timer dépassé";
+                    unlink($fileTimerNoBago);
+                    return false;
+                } else {
+                    //~ echo "timer NON dépassé";
+                    return true;
+                }
+            // Sinon c'est que le régulateur n'est pas encore passé en abs/float
+            } else {
+                //~ echo "régulateur pas encore été en float abs";
+                return false;
+            }   
+        }
     }
 }
 
