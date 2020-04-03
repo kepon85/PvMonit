@@ -55,6 +55,12 @@ systemctl start pvmonit # lancer le daemon
 systemctl enable pvmonit # Activer au démarage
 ```
 
+Option, pour lancer le daemon par alias : 
+
+```bash
+echo 'alias pvmonitd="/opt/PvMonit/bin/pvmonitd.php"' >> /etc/bash.bashrc
+```
+
 ### Ve.direct via USB
 
 Dans le fichier config.yaml mentionner : 
@@ -181,7 +187,8 @@ Et vous assurez que le fichier /tmp/PvMonit_getSerialArduino.data.yaml existe bi
 Pour le lancement en tâche de fond/au démarrage : 
 
 ```bash
-systemctl restart pvmonit
+systemctl stop pvmonit
+systemctl start pvmonit
 ```
 
 
@@ -296,7 +303,8 @@ emoncms:
 Et relancer le daemon : 
 
 ```bash
-systemctl restart pvmonit
+systemctl stop pvmonit
+systemctl start pvmonit
 ```
 
 Je n'explique pas ici comment configurer emoncms, les flux pour obtenir de beaux dashboard, je vous laisse lire la documentation...
@@ -400,6 +408,45 @@ Autres documentations à propos de cette sonde :
   - http://www.generation-linux.fr/index.php?post/2014/06/21/Relever-et-grapher-la-temp%C3%A9rature-de-sa-maison-sur-Debian
   - http://dev-random.net/temperature-measuring-using-linux-and-raspberry-pi/
 
+#### Capteur de courant / tension / watt / conso PZEM-004T V3.0
+
+Contributeur @akoirium merci à lui !
+
+Le capteur utilise la communication RS232 (sériel) 
+
+Les dépendances :
+
+```bash
+pip3 install -U pymodbu
+```
+
+Modifier le script /opt/PvMonit/bin/pzem_004t.py en y modifiant la ligne le dev qui vous correspond : ttyUSB0, ttyUSB1 ou ttyUSBx...
+
+Test de le capteur : 
+
+```
+$ python3 /opt/PvMonit/bin/pzem_004t.py
+{"V": 229.5, "A": 0.041, "P": 0.8"E": 2, "F": 50.0, "f": 0.09, "a": 0} 
+```
+
+Lancer la commande :
+
+```sh
+visudo
+```
+
+Et ajouter : 
+
+```diff
++ pvmonit ALL=(ALL) NOPASSWD: /usr/bin/python3 /opt/PvMonit/bin/pzem_004t.py
+```
+
+Puis activer le script :
+
+```bash
+ln -s /opt/PvMonit/bin-available/Pzem.php /opt/PvMonit/bin-enabled/OTHER-conso.php
+```
+
 #### Pince ampèremétrique USB  (option)
 
 /!\ Uniquement si vous n'avez pas d'Arduino
@@ -420,7 +467,11 @@ $ /opt/PvMonit/bin-available/ampermetre.pl
 00.1A
 ```
 
-Ajouter :
+Lancer la commande :
+
+```sh
+visudo
+```
 
 Si vous utilisez l'export vers emoncms, ajouter : 
 
@@ -455,7 +506,7 @@ Doit retourner une valeur numérique
 
 Ensuite (vu qu'il faut le lancer en root) vous devez le mettre dans le sudo : 
 
-Ajouter : 
+Commande "visudo" et ajouter : 
 
 ```diff
 + pvmonit ALL=(ALL) NOPASSWD:  /opt/PvMonit/bin/ht2000 *
@@ -507,6 +558,7 @@ lcd:
 Et relancer le daemon : 
 
 ```bash
-systemctl restart pvmonit
+systemctl stop pvmonit
+systemctl start pvmonit
 ```
 
