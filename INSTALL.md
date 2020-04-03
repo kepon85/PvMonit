@@ -417,7 +417,7 @@ Le capteur utilise la communication RS232 (sériel)
 Les dépendances :
 
 ```bash
-pip3 install -U pymodbu
+pip3 install -U pymodbus
 ```
 
 Modifier le script /opt/PvMonit/bin/pzem_004t.py en y modifiant la ligne le dev qui vous correspond : ttyUSB0, ttyUSB1 ou ttyUSBx...
