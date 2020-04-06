@@ -1,7 +1,7 @@
 <?php
 
 // Soft version
-define('VERSION', '2.1');
+define('VERSION', '3.0');
 
 
 function getConfigYaml($config_dir){
