@@ -188,7 +188,7 @@ www:
     domo: false                                      # Enable domo on web interface ?
     domoRefreshTime: 5                              # Refresh time domo in second
     domoPassword: false                             # Domo password in MD5 - http://www.passwordtool.hu/md5-password-hash-generator
-    domoEdit: false                                  # Script edit on web /domo-edit-script.php page
+    domoEdit: true                                  # Script edit on web /domo-edit-script.php page
     domoEditPassword: false                         # DomoEdit password in MD5 - http://www.passwordtool.hu/md5-password-hash-generator
     help: false                                      # Active l'assistance
     domoEditExampleDir: /opt/PvMonit/domo/relay.script.d/example

@@ -1,46 +1,7 @@
 <?php
 
-// Mod : 
-//      - 0 : Off forcé (action de l'utilisateur, ne peut être changé par les scripts)
-//      - 1 : Off automatique (paramètre de base)
-//      - 2 : On automatique (allumé par les scripts
-//      - 3 : On forcé (action de l'utilisateur, ne sera ne peut être changé par les scripts)
-
-// Etat : 
-//      - 0 : Relai éteint
-//      - 1 : Relai allumé
-
 /*
-
-$thisId : renvoi l'ID du relai
-$thisEtat : renvoi l'état de ce relai
-$thisMod : renvoi le mod de ce relai
-
-relayEtat[x] : x = id d'un relai, renvoi l'état de ce relai
-relayMod[x] : x = id d'un relai, renvoi le mod de ce relai
-
-$data[nom] : A configurer dans le config.yaml (domo / valueUse)
-    $data['SOC'] : % de batterie 
-    $data['P'] : puissance instantané (négatif ou positif)
-    $data['PPV'] : production solaire
-    $data['CS'] : mode du régulateur (float, abs...)
-    
-relayLastUp($idRelai) : retourne la date (timestamp) du dernier allumage de l'ID passé en paramètre
-relayLastUpAuto($idRelai) : retourne la date (timestamp)  du dernier allumage automatique de l'ID passé en paramètre
-relayLastDown($idRelai) : retourne la date (timestamp)  de la dernière extinction de l'ID passé en paramètre
-
-relayUpToday($thisId) : retourne true si le relai à déjà été allumé ce jour 
-relayUpDownToday($thisId) : retourne true si le relai à déjà été allumé puis éteind ce jour
-
-timeUpMin($thisId, '200') : retourne true si le temps minimum (en seconde) n'est pas encore écoulé depuis l'allumage
-timeUpMax($thisId, '200') : inverse de timeUpMin
-
-MpptAbsOrFlo($data['CS']) : retourne true si le régulateur est en Float ou en Absorption
-MpptFlo($data['CS']) : retourne true si le régulateur est en Float
-
-$return['log'] : Indique un log en retour de ce script (null si pas de log)
-$return['mod'] : Indique le nouveau mod qu'impose le script
-                        $return['mod'] = $thisMod si pas de changement
+ Déplacé dans le README.md du même répertoire
 */
 
 ?>

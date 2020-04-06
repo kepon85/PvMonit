@@ -1,11 +1,11 @@
 # PvMonit Domotique - Ou comment utilisé le surplus d'une installation solaire autonome
 
-Article / vidéo lier à cet module domotique : 
+Article / vidéo lier à ce module domotique : 
 
 * https://david.mercereau.info/?p=5703
 * https://vimeo.com/385514728
 
-**Prés-requis: programmation PHP sommaire**. En effet pour le moment il n'y a pas d'interface graphique pour programmer des évènement sur les relais, il faut donc coder un peu en PHP pour s'en sortir...
+**Prés-requis: être un peu matheux sinon avoir des bases en programmation sommaire**. En effet pour programmer des évènement sur les relais, il faut soit coder en PHP, soit utiliser l'interface simplifié blockly (démonstration ici : http://demo.zici.fr/PvMonit/domo-edit-script.php) Des scripts d'exemples à votre disposition vous pouvez vous en inspiré.
 
 ## Câblage / Matériel 
 
@@ -150,9 +150,12 @@ systemctl start pvmonit
 
 La configuration ce fait dans le même fichier que pvmonit /opt/PvMonit/config.yaml, vous avez une section "domo". 
 
-Ensuite il vous faut faire les scripts qui correspondent à vos usages, c'est en PHP que ça ce joue. Les scripts sont contenu dans /opt/PvMonit/domo/relay.script.d/NUMEROduRELAIS.php
+## Créer vos scripts / ordres pour déclencher les relai
 
-Un script exemple est présent avec toutes les fonctionnalités possibles : https://framagit.org/kepon/PvMonit/blob/master/domo/relay.script.d/ID.php.exemple
+Ensuite il vous faut faire les scripts qui correspondent à vos usages. 2 possibilités pour ça : 
+
+* Ecrire du code PHP. Les scripts sont contenu dans /opt/PvMonit/domo/relay.script.d/NUMEROduRELAIS.php vous pouvez lire /opt/PvMonit/domo/relay.script.d/README.md
+* Utiliser l'interface simplifié blockly (démonstration ici : http://demo.zici.fr/PvMonit/domo-edit-script.php) Des scripts d'exemples à votre disposition vous pouvez vous en inspiré. Vous pouvez l'attendre avec l'adresse http://votreraspbery/domo-edit-script.php
 
 ## Pour interagir avec d'autres scripts maisons
 
