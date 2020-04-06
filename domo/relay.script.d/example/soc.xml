@@ -1,0 +1,107 @@
+<xml xmlns="https://developers.google.com/blockly/xml">
+  <variables>
+    <variable id="%T:aQsW_09Pq7OFw5^2R">retour_mod</variable>
+    <variable id="O*:+KwYE$esPIH8f?9M`">retour_log</variable>
+  </variables>
+  <block type="variables_set" id="{e?epK5K_ij=dm|lF]n}" x="13" y="-17">
+    <field name="VAR" id="%T:aQsW_09Pq7OFw5^2R">retour_mod</field>
+    <comment pinned="false" h="80" w="160">Retour :&#10;1 allume le relai&#10;2 éteint le relai&#10;</comment>
+    <value name="VALUE">
+      <block type="math_number" id="!KJp:1-VAp_|vKl~_Hv|">
+        <field name="NUM">1</field>
+      </block>
+    </value>
+    <next>
+      <block type="variables_set" id="Q)sJ(K7rt5d0a=avn.xy">
+        <field name="VAR" id="O*:+KwYE$esPIH8f?9M`">retour_log</field>
+        <comment pinned="false" h="80" w="160">Pour laffichage dans le log</comment>
+        <value name="VALUE">
+          <block type="logic_null" id="e^p|sHvEOA4bTWw--v?)"/>
+        </value>
+        <next>
+          <block type="controls_if" id="^Z@`1llaRe%j{Q*2l1z2">
+            <value name="IF0">
+              <block type="logic_compare" id="Tfjl{Wtl1;83Z-J(]7EQ">
+                <field name="OP">GT</field>
+                <value name="A">
+                  <block type="data_SOC" id="1uHR/#01Ar8YIl2WM};T">
+                    <field name="simu_return">90</field>
+                  </block>
+                </value>
+                <value name="B">
+                  <block type="math_number" id="87T,:FM#*h_xaozo7:E/">
+                    <field name="NUM">89</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <statement name="DO0">
+              <block type="variables_set" id="]O[R^:wV|B80q0#jl^Gg">
+                <field name="VAR" id="%T:aQsW_09Pq7OFw5^2R">retour_mod</field>
+                <value name="VALUE">
+                  <block type="math_number" id="ex*fc8n2:i`28o(E`CDz">
+                    <field name="NUM">2</field>
+                  </block>
+                </value>
+                <next>
+                  <block type="variables_set" id=")5qvD45^+$+Hwt~Zij%x">
+                    <field name="VAR" id="O*:+KwYE$esPIH8f?9M`">retour_log</field>
+                    <value name="VALUE">
+                      <block type="text" id="[:SS7hjo.oKTpL_DTt*z">
+                        <field name="TEXT">On est à plus de 89% de batterie, on allume !</field>
+                      </block>
+                    </value>
+                  </block>
+                </next>
+              </block>
+            </statement>
+            <next>
+              <block type="text_print" id="T#jI?T]p[WP`4J3C6r}]">
+                <value name="TEXT">
+                  <shadow type="text" id="!ft[rdbCAIrN4*9}({7;">
+                    <field name="TEXT">abc</field>
+                  </shadow>
+                  <block type="text_join" id="Kb!Cc|=)1]OLd2MXfTp;">
+                    <mutation items="2"/>
+                    <value name="ADD0">
+                      <block type="text" id="XrB6!+?S#y`9=h];2)?#">
+                        <field name="TEXT">Le MODE est décidé à : </field>
+                      </block>
+                    </value>
+                    <value name="ADD1">
+                      <block type="variables_get" id="3(pU3`qnKU8pJL;df)#A">
+                        <field name="VAR" id="%T:aQsW_09Pq7OFw5^2R">retour_mod</field>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+                <next>
+                  <block type="text_print" id="A!d_KA]Waa3W`n2GUS9i">
+                    <value name="TEXT">
+                      <shadow type="text" id="T1-[]_d8Ht4EG^?*Z`g4">
+                        <field name="TEXT">abc</field>
+                      </shadow>
+                      <block type="text_join" id="+kWA)-%mLk*icR`!z*o(">
+                        <mutation items="2"/>
+                        <value name="ADD0">
+                          <block type="text" id="a|,tm=]k.bSU*:R1.E-3">
+                            <field name="TEXT">Retour de log : </field>
+                          </block>
+                        </value>
+                        <value name="ADD1">
+                          <block type="variables_get" id="b?3[d[7AzbaB(`LU?gl9">
+                            <field name="VAR" id="O*:+KwYE$esPIH8f?9M`">retour_log</field>
+                          </block>
+                        </value>
+                      </block>
+                    </value>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </next>
+  </block>
+</xml>

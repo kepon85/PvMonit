@@ -1,0 +1,6 @@
+{
+  "title": "Après l'allumage et l'extinction d'un autre relai",
+  "desc": "Si le relai X c'est allumé puis éteint, c'est qu'il a fini son cycle, c'est à nous !",
+  "data": {
+  }
+}

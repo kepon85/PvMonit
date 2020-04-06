@@ -1,0 +1,7 @@
+{
+  "title": "Allumage selon le régulateur est en abs/float",
+  "desc": "Si le régulateur est en Absorption ou en Float, on allume ce relai",
+  "data": {
+    "CS": "CS"
+  }
+}

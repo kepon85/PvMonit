@@ -1,0 +1,7 @@
+{
+  "title": "5 minutes par jour quand en abs/float",
+  "desc": "On allume ce relai uniquement 5 minutes par jour quand le régulateur passe en mode absorption ou float",
+  "data": {
+      "CS": "CS"
+  }
+}

@@ -55,7 +55,8 @@ domo:
 Et relancer le daemon : 
 
 ```bash
-systemctl restart pvmonit
+systemctl stop pvmonit
+systemctl start pvmonit
 ```
 
 ## Daemon "domo"
@@ -86,7 +87,8 @@ domo:
 Et relancer le daemon : 
 
 ```bash
-systemctl restart pvmonit
+systemctl stop pvmonit
+systemctl start pvmonit
 ```
 
 Il vous faut ensuite configurer les scripts pour l'automatisme, il se trouve dans /opt/PvMonit/domo/relay.script.d/ et il faut les nommer X.php (X étant le numéro du relai)
@@ -100,6 +102,12 @@ Dans le ficheir config.yaml activer "domo" :
 ```yaml
 www:
     domo: true
+```
+
+Mettre les bon droits : 
+
+```bash
+chown pvmonit:pvmonit /opt/PvMonit/domo -R
 ```
 
 Ceci vous permet d’interagir avec les relais via l'interface web :
@@ -134,7 +142,8 @@ domo:
 Et relancer le daemon : 
 
 ```bash
-systemctl restart pvmonit
+systemctl stop pvmonit
+systemctl start pvmonit
 ```
 
 ## Configuration
@@ -148,5 +157,3 @@ Un script exemple est présent avec toutes les fonctionnalités possibles : http
 ## Pour interagir avec d'autres scripts maisons
 
 Seul les mod son modifiés, les état en son déduit par le script domo/relay-actions si vous voulez interagir avec d'autres applications il vous suffit de modifier le fichier json "/tmp/PvMonit_domo_mod"  (par défaut, modifiable dans le config.yaml : domo / jsonFile / modPath: /tmp/PvMonit_domo_mod)
-
-

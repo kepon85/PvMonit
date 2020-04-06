@@ -1,25 +1,26 @@
 <?php
-
-# Desumidificateur
-
-// Par défaut à off (auto)
-$return['log'] = null;
-$return['mod'] = 1;
-
-# Temps d'allumage
-$timeUp=900;
+$retour['mod'];
+$retour['log'];
 
 
-if ($data['SOC'] > 98) {     
-    $return['log'] = 'UP la batterie est au dessus des 98%';
-    $return['mod'] = 2;
+// Retour par défaut
+// 1 relai éteint
+// 2 relai allumé
+
+$retour['mod'] = 1;
+// Pour l'affichage dans le log
+$retour['log'] = null;
+if (($data['SOC']) > 98) {
+  $retour['log'] = 'La batterie est à plus de 98%, on allume !';
+  $retour['mod'] = 2;
 }
-
-if ($thisEtat == 1 && timeUpMin($thisId, $timeUp)) {
-    $return['log'] = 'UP maintient allume, le temps n est pas passé';
-    $return['mod'] = 2; 
+// Si ce relai est allumé
+if (($thisEtat) == 1 && (timeUpMin(($thisId), 300))) {
+  $retour['log'] = 'Le temps minimum (ici de 300s) d\'allumage n\'est pas dépassé';
+  $retour['mod'] = 2;
 }
+#print\('Le MOD est décidé à : ' . $retour['mod']);
+#print\('Retour de log : ' . $retour['log']);
 
-return $return;
-
+return $retour;
 ?>

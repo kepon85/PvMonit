@@ -7,7 +7,7 @@
 //      - 3 : On forcé (action de l'utilisateur, ne sera ne peut être changé par les scripts)
 
 // Etat : 
-//      - 0 : Relai éteind
+//      - 0 : Relai éteint
 //      - 1 : Relai allumé
 
 /*
@@ -16,17 +16,20 @@ $thisId : renvoi l'ID du relai
 $thisEtat : renvoi l'état de ce relai
 $thisMod : renvoi le mod de ce relai
 
+relayEtat[x] : x = id d'un relai, renvoi l'état de ce relai
+relayMod[x] : x = id d'un relai, renvoi le mod de ce relai
+
 $data[nom] : A configurer dans le config.yaml (domo / valueUse)
     $data['SOC'] : % de batterie 
     $data['P'] : puissance instantané (négatif ou positif)
     $data['PPV'] : production solaire
     $data['CS'] : mode du régulateur (float, abs...)
     
-relayLastUp($idRelai) : retourne la date du dernier allumage de l'ID passé en paramètre
-relayLastUpAuto($idRelai) : retourne la date du dernier allumage automatique de l'ID passé en paramètre
-relayLastDown($idRelai) : retourne la date de la dernière extinction de l'ID passé en paramètre
+relayLastUp($idRelai) : retourne la date (timestamp) du dernier allumage de l'ID passé en paramètre
+relayLastUpAuto($idRelai) : retourne la date (timestamp)  du dernier allumage automatique de l'ID passé en paramètre
+relayLastDown($idRelai) : retourne la date (timestamp)  de la dernière extinction de l'ID passé en paramètre
 
-relayUpToday($thisId) : retourne true si le relai à déjà été allumé ce jour
+relayUpToday($thisId) : retourne true si le relai à déjà été allumé ce jour 
 relayUpDownToday($thisId) : retourne true si le relai à déjà été allumé puis éteind ce jour
 
 timeUpMin($thisId, '200') : retourne true si le temps minimum (en seconde) n'est pas encore écoulé depuis l'allumage

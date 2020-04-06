@@ -68,9 +68,35 @@ emoncms:
     daemon: true
 ```
 
-+ systemd
-/etc/systemd/system/pvmonit.service
+Créer le daemon PvMonitD en créant le fichier /etc/systemd/system/pvmonit.service  avec le contenu : 
 
-systemctl enable pvmonit
-systemctl start pvmonit
+```
+[Unit]
+Description=PvMonitD
+After=network.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/opt/PvMonit/bin/pvmonitd.php start
+ExecStop=/opt/PvMonit/bin/pvmonitd.php stop
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Ensuite lancer les commandes : 
+
+```bash
+systemctl start pvmonit # lancer le daemon
+systemctl enable pvmonit # Activer au démarage
+```
+
+## Upgrade V2.1 > V3.0
+
+Si vous utilisé la domotique
+
+```bash
+chown pvmonit:pvmonit /opt/PvMonit/domo -R
+```
 

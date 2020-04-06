@@ -1,25 +1,70 @@
-
 <?php
+
 ###################################
 # Script sous licence BEERWARE
-# Version 1.0	2019
 ###################################
 
-include('/opt/PvMonit/function.php');
-
-// Chargement de la config
-$config = getConfigYaml('/opt/PvMonit');
+// Si c'est sur le cloud : 
+if (isset($cloud) && isset($id)) {
+	include_once('./function.php');
+	// Chargement / merge de la config
+	$config = getConfigYaml($configCloud['users'][$id], $configCloud['configDataDir'].$id.'.yaml');
+	$config_dir=$configCloud['configDataDir'];
+	$config_file=$id.'.yaml';
+	$config['www']['checkUpdate'] = false;
+	$config['urlDataXml'] = './data-xml/'.$id.'.xml';
+} else {
+	include('/opt/PvMonit/function.php');
+	// Chargement de la config
+	$config_dir='/opt/PvMonit/';
+	$config_file='config.yaml';
+	$config = getConfigYaml($config_dir);
+}
 
 @include_once('./header.php');  
+
+if (isset($_POST['www-password'])) {
+	setcookie('www-password', md5($_POST['www-password']), time()+$config['www']['passwordLife']);
+	header('Location: '.$_SERVER['REQUEST_URI']);
+}
+$printWww=false;
+if ($config['www']['password'] == false) {
+	$printWww=true;
+} else {
+	if (isset($_COOKIE['www-password']) && $_COOKIE['www-password'] == $config['www']['password']) {
+		$printWww=true;
+	} 
+}
+if (isset($_POST['domo-password'])) {
+	setcookie('domo-password', md5($_POST['domo-password']), time()+$config['www']['passwordLife']);
+	header('Location: '.$_SERVER['REQUEST_URI']);
+}
+$printDomo=false;
+if ($config['www']['domoPassword'] == false) {
+	$printDomo=true;
+} else {
+	if (isset($_COOKIE['domo-password']) && $_COOKIE['domo-password'] == $config['www']['domoPassword']) {
+		$printDomo=true;
+	} 
+}
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
-<title>Pv Monit</title>
+<?php 
+if (isset($cloud)) {  
+	$title=$configCloud['title'];
+	if (isset($configCloud['users'][$id]['title'])) {
+		$title=$configCloud['users'][$id]['title'];
+	}
+	echo '<title>'.$title.'</title>';
+} else {  ?>
+	<title>Pv Monit  v<?= VERSION ?></title>
+<?php }  ?>
 <!--[if IE]><script src="http://html5shiv.googlecode.comdevice_id/svn/trunk/html5.js"></script><![endif]-->
-<link rel="stylesheet" type="text/css" href="./css/style.css" />
+<link rel="stylesheet" type="text/css" href="assets/css/style.css" />
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
 <meta http-equiv="cache-control" content="max-age=0" />
 <meta http-equiv="cache-control" content="no-cache" />
@@ -27,11 +72,13 @@ $config = getConfigYaml('/opt/PvMonit');
 <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
 <meta http-equiv="pragma" content="no-cache" />
 <meta name="robots" content="non" /> 
-	<script
-			  src="jquery.min.js" /></script>
+<script src="assets/jquery.min.js" /></script>
 </head>
 <body>
     <div id="wrapper">
+		<?php 
+		if ($printWww == true) {
+		?>
         <div id="headerwrap">
         <div id="header">
             <nav>
@@ -45,21 +92,79 @@ $config = getConfigYaml('/opt/PvMonit');
 				if ($config['www']['help'] == true) {
 					echo '<li><a href="help.php" onclick="open(\'help.php\', \'Popup\', \'scrollbars=1,resizable=1,height=80,width=350\'); return false;">?</a></li>';
 				}
+				
+				if (isset($config['user'])){
+					echo '<li><a href="#" onclick="$(\'#userData\').toggle(); return false;">
+					<img src="assets/images/setting.png" width="20" alt="Config" title="Editer la configuration" /></a></li>';
+				}
 				?>
 				
 				<li><input type="checkbox" id="autoRefresh" title="Actualisation automatique tout les <?= $config['www']['refreshTime']/1000 ?> secondes" checked='checked' />
 				<input type="hidden" name="refreshBusy" id="refreshBusy" /></li>
-				<li><a id="refresh"><img id="refreshImg" src="images/refresh.png" width="20" alt="Refresh" title="Actualiser" /></a></li>
+				<li><a id="refresh"><img id="refreshImg" src="assets/images/refresh.png" width="20" alt="Refresh" title="Actualiser" /></a></li>
 			  </ul>
 			</nav>
-            <h1>Pv Monit v<?= VERSION ?> <span id="upgrade"></span><!-- TRAP TITRE --></h1>
-            <p>Monitoring de l'installation solaire électrique</p>
+			<?php 
+			if (isset($cloud)) {  
+				$title=$configCloud['title'];
+				if (isset($configCloud['users'][$id]['title'])) {
+					$title=$configCloud['users'][$id]['title'];
+				}
+				echo '<h1>'.$title.'</h1>';
+				$subTitle=$configCloud['subTitle'];
+				if (isset($configCloud['users'][$id]['subTitle'])) {
+					$subTitle=$configCloud['users'][$id]['subTitle'];
+				}
+				echo '<p>'.$subTitle.'</p>';
+            } else {  ?>
+				<h1>Pv Monit v<?= VERSION ?> <span id="upgrade"></span><!-- TRAP TITRE --></h1>
+				<p>Monitoring de l'installation solaire électrique</p>
+            <?php }  ?>
         </div>
         </div>
         <div id="contentwrap">
 
         <div id="content">
-			<div id="waitFirst" class="boxvaleur waitFirst">Patience...<img src="images/wait2.gif" width="100%" /></div>
+			<?php 
+			if (isset($config['user'])){
+				if (isset($_POST['submit'])) {
+					$config_a_modifier = yaml_parse_file($config_dir.$config_file);
+					foreach ($_POST as $name=>$value)  {
+						if ($name != 'submit') {
+							$config_a_modifier['user'][$name]['value'] = $value;
+							// Pour valider le nouvel affichage
+							$config['user'][$name]['value'] = $value;
+						}
+					}
+					if (isset($cloud)) {
+						touch($config_dir.$config_file.'.change');
+					} else {
+						@copy($config_dir.$config_file, $config_dir.$config_file.'.'.time());
+					}
+					if (!yaml_emit_file($config_dir.$config_file, $config_a_modifier)) {
+						echo 'Erreur à l\'enregistrement de la configuration';
+					}
+				}
+				echo '<div id="userData" style="display: none;" class="boxvaleur">';
+				echo '<p>Configuration modifiable : </p>';
+				echo '<form action="#" method="post"><p>';
+				foreach ($config['user'] as $name=>$userForm)  {
+					echo '<label for="'.$name.'">'.$userForm['label'].'</label><br />';
+					echo '<input name="'.$name.'" ';
+					foreach ($userForm as $param=>$value)  {
+						if ($param != 'label') {
+							echo $param.'='.$value.' ';
+						}
+					}
+					echo '/><br />';
+				}
+				echo '<input type="submit" name="submit" value="Enregistré" /></p>';
+				echo '</form>';
+				echo '</div>';
+			} 
+			?> 
+			
+			<div id="waitFirst" class="boxvaleur waitFirst">Patience...<img src="assets/images/wait2.gif" width="100%" /></div>
 			<?php 
 			
 			// Check heure système
@@ -79,13 +184,28 @@ $config = getConfigYaml('/opt/PvMonit');
 			
 			<?php 
 			if ($config['www']['domo'] == true) { 
-				echo '<div style="display: none" class="box" id="box_domo"><div class="title">Domo</div>';
-				if (!is_file($config['domo']['jsonFile']['etatPath'])) {
-					genDefaultJsonFile('etat');
+				echo '<div style="display: none" class="box" id="box_domo"><div class="title">Domo';
+				if ($config['www']['domoEdit'] == true) { 
+					echo ' - <a href="./domo-edit-script.php"><img src="./assets/images/setting.png" width="13" alt="Edit" /></a>';
 				}
-				if (!is_file($config['domo']['jsonFile']['modPath'])) {
-					genDefaultJsonFile('mod');
-				}
+				echo '</div>';
+				if ($printDomo == true) {
+					if (empty($cloud)) {
+						if (!is_file($config['domo']['jsonFile']['etatPath'])) {
+							genDefaultJsonFile('etat');
+						}
+						if (!is_file($config['domo']['jsonFile']['modPath'])) {
+							genDefaultJsonFile('mod');
+						}
+						echo '<div class="boxvaleur requestWait">';
+							echo '<div>Requête en attente : </div>';
+							for ($i = 1; $i <= $config['domo']['relayNb']; $i++) {
+								echo '<div class="requestWaitList" id="relay'.$i.'-changeTo0">- '.$config['domo']['relayName'][$i].' : Off</div>';
+								echo '<div class="requestWaitList" id="relay'.$i.'-changeTo1">- '.$config['domo']['relayName'][$i].' : Auto</div>';
+								echo '<div class="requestWaitList" id="relay'.$i.'-changeTo3">- '.$config['domo']['relayName'][$i].' : On</div>';
+							}
+						echo '</div>';
+					}
 					
 					for ($i = 1; $i <= $config['domo']['relayNb']; $i++) {
 						echo '<div class="boxvaleur">';
@@ -103,7 +223,17 @@ $config = getConfigYaml('/opt/PvMonit');
 						echo '</div>';
 					}
 					echo '<div class="boxvaleur"><br /><br /></div>';
+				} else {
+					echo '<form action="#" method="post" class="formPassword">
+					<label for="domo-password">Mot de passe : </label>
+					<input type="password" name="domo-password" />
+					<input type="submit" />
+					</form>';
+				}
+				
 				echo '</div>';
+				
+					
 			}
 		?>
 			
@@ -126,7 +256,13 @@ $config = getConfigYaml('/opt/PvMonit');
 					trucAdir(3, 'Refresh Domo');
 					$.ajax({
 						url : 'domo.php',
-						type : 'GET',
+						<?php
+						if (isset($cloud)) {
+							echo "type : 'POST',"; 
+						} else {
+							echo "type : 'GET',"; 
+						}
+						?>
 						dataType : 'json',
 						data : 'action=printRefresh',
 						success : function(resultat, statut){
@@ -178,6 +314,28 @@ $config = getConfigYaml('/opt/PvMonit');
 										$('#relayModChange-'+cle+'-on').hide();
 								}
 							}
+							<?php
+							if (isset($cloud)) {
+							?>
+							$.ajax({
+								url : 'domo.php',
+								type : 'POST',
+								dataType : 'json',
+								data : 'action=diffMod',
+								success : function(resultat, statut){
+									console.log(resultat);
+									$('.requestWait').hide();
+									$('.requestWaitList').hide();
+									for (const property in resultat) {
+										$('.requestWait').show();
+										$('#relay' + property + '-changeTo' + resultat[property] ).show();
+										console.log('relay: ' + property + ' changeTo:' + resultat[property]);
+									}
+								}
+							});
+							<?php
+							}
+							?>
 						},
 						error : traiteErreur,
 					});
@@ -194,7 +352,7 @@ $config = getConfigYaml('/opt/PvMonit');
 					$("#clearBoth").remove();
 					$(".boxMonit").remove();
 					trucAdir(5, 'Lecture du XML');
-					$("#refreshImg").attr('src', "images/refresh.png");
+					$("#refreshImg").attr('src', "assets/images/refresh.png");
 					$(xml).find('device').each(function() {
 						var id = $(this).attr('id');
 						trucAdir(5, 'Récupération de l\'id ' + id);
@@ -329,8 +487,70 @@ $config = getConfigYaml('/opt/PvMonit');
 					<?php  if ($config['www']['domo'] == true) {  ?>
 						preparDomo();
 					<?php } ?>
+					<?php  if (empty($cloud)) {  ?>
+					$('#content').append('<div id="clearBoth" style="clear:both"></div>');
+					<?php } ?>
+					<?php 
+					if (isset($cloud)) {
+						echo '$.ajax( {
+							type: "GET",
+							url: "data-cloud-xml.php",
+							dataType: "xml",
+							success: readDataCloud
+						});';
+					}
+					?>
+				  }
+				function readDataCloud(xml) {
+					$(".boxMonitCloud").remove();
+					trucAdir(5, 'Lecture du XML Cloud');
+					$(xml).find('device').each(function() {
+						var id = $(this).attr('id');
+						trucAdir(5, 'Récupération de l\'id ' + id);
+						var nom = $(this).find('nom').text();
+						var modele = $(this).find('modele').text();
+						if ($('#box_' + id + '').length == 0) {
+								$('#content').append('<div class="box boxMonitCloud" id="box_' + id + '"></div>');
+								$('#box_' + id + '').prepend('<div class="title">[' + nom + '] ' + modele + '</div>');
+						}
+						$(this).find('data').each( function() 	{
+								var data_id = $(this).attr('id');
+								var screen = '';
+								if ($(this).attr('screen') != 1) {
+									screen = 'plus';
+								}
+								var smallScreen = '';
+								if ($(this).attr('smallScreen') != 1) {
+									smallScreen = 'plusplus';
+								}
+								var desc = $(this).find('desc').text();
+								var value = $(this).find('value').text();
+								var units = $(this).find('units').text();
+								switch (data_id) {
+									case 'ERR':
+										souligner='';
+										if (value != 'Aucune') {
+											souligner='souligner';
+										}
+										$('#box_' + id + '').append('<div class="boxvaleur err '+screen+' '+smallScreen+'"><h3>'+desc+'</h3><span class="'+souligner+'">' + value +'</span></div>')
+									break;
+									default:
+										$('#box_' + id + '').append('<div class="boxvaleur '+screen+' '+smallScreen+'">'+desc+' : '+value+units+'</div>');
+								}
+								
+							});
+					});
+					$(xml).find('device').each(function() {
+						var id = $(this).attr('id');
+						trucAdir(5, 'Pour les plus, on re-récupère les id ' + id);
+						if ($('#Plus'+id).length == 0) {
+							$('#box_' + id + '').append('<div id="Plus'+id+'" class="boxvaleur plusboutton" onclick="PlusPrint(\''+id+'\')">...</div>'+
+														'<div class="boxvaleur moinsboutton" onclick="MoinsPrint(\''+id+'\')">...</div>');
+						}
+					});
 					$('#content').append('<div id="clearBoth" style="clear:both"></div>');
 				  }
+				
 				var uneDate;
 				function reloadData(force) {
 					trucAdir(3, 'Reload');
@@ -338,7 +558,7 @@ $config = getConfigYaml('/opt/PvMonit');
 					var dt = new Date();
 					var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
 					$("#refreshImg").attr('title', 'Actualiser (dernier à '+time+')')
-					$("#refreshImg").attr('src', "images/wait.gif");
+					$("#refreshImg").attr('src', "assets/images/wait.gif");
 					if (force == 0) {
 						$.ajax( {
 								type: "GET",
@@ -364,11 +584,29 @@ $config = getConfigYaml('/opt/PvMonit');
 					trucAdir(3, datas);
 					$.ajax({
 						url : 'domo.php',
-						type : 'GET',
+						<?php
+						if (isset($cloud)) {
+							echo "type : 'POST',"; 
+						} else {
+							echo "type : 'GET',"; 
+						}
+						?>
 						dataType : 'json',
 						data : 'action=changeMod&idRelay='+datas[1]+'&changeTo='+datas[2],
 						success : function(resultat, statut){
-							console.log(resultat);
+							<?php
+							if (isset($cloud)) {
+							?>
+								$('.requestWait').hide();
+								$('.requestWaitList').hide();
+								for (const property in resultat) {
+									$('.requestWait').show();
+									$('#relay' + property + '-changeTo' + resultat[property] ).show();
+									console.log('relay: ' + property + ' changeTo:' + resultat[property]);
+								}
+							<?php
+							}
+							?>
 							// Rafraichissement de l'état
 							refreshDomo();
 						},
@@ -414,6 +652,18 @@ $config = getConfigYaml('/opt/PvMonit');
 								
 			<!-- TRAP BOX -->
         </div>
+			<?php
+			if ($config['printMessageLogfile'] != false && isset($_GET['debug'])) {
+				echo '<textarea style="width: 100%; height: 400px">';
+				echo "Affichage du log ".$config['printMessageLogfile']."\n";
+				echo "===================================================\n";
+				$tab = file($config['printMessageLogfile']);
+				for ($i=count($tab); $i >= count($tab)-400; $i=$i-1) {
+					echo $tab[$i];
+				}
+				echo '</textarea>';
+			}
+            ?>
         </div>
         <div id="footerwrap">
         <div id="footer">
@@ -421,6 +671,15 @@ $config = getConfigYaml('/opt/PvMonit');
             <p class="footer_left">Copyleft - <a href="https://fr.wikipedia.org/wiki/Beerware">Licence Beerware</a></p>
         </div>
         </div>
+        <?php
+		} else {
+			echo '<form action="#" method="post" class="formPassword">
+			<label for="www-password">Mot de passe : </label>
+			<input type="password" name="www-password" />
+			<input type="submit" />
+			</form>';
+		}
+		?>
     </div>
 <script> 
 <!-- Afficher plus d'information -->

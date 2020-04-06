@@ -25,7 +25,8 @@ $listCheckDaemon= array('arduino',
                         'domo',
                         'help',
                         'sendToEmoncms',
-                        'getForEmoncms');
+                        'getForEmoncms',
+                        'cloudService');
 
 function startCmd($daemonSelect) {
     global $config;
@@ -53,6 +54,9 @@ function startCmd($daemonSelect) {
         break;
         case 'getForEmoncms':
             $return = 'screen -A -m -d -S getForEmoncms /opt/PvMonit/bin/getForEmoncms-launch.sh '.$config['emoncms']['getInterval'].'';
+        break;
+        case 'cloudService':
+            $return = 'screen -A -m -d -S cloudService /opt/PvMonit/bin/cloudService.sh';
         break;
         //~ default:
             //~ return '/dev/null';
@@ -94,6 +98,11 @@ function startEnable($daemonSelect) {
         case 'sendToEmoncms':
         case 'getForEmoncms':
             if ($config['emoncms']['daemon'] == true) {
+                $return = true;
+            }
+        break;
+        case 'cloudService':
+            if ($config['cloud']['daemon'] == true) {
                 $return = true;
             }
         break;
@@ -195,6 +204,8 @@ if (isset($argv[1])) {
         case 'restar':
         case 'estart':
             stop();
+            sleep(1);
+            $screenList = scandir($screenRunDir);
             start();
         break;
         case 'status':
@@ -220,7 +231,10 @@ if (isset($argv[1])) {
 }
 
 if ($printHelp == true) {
-    echo $argv[0]." start|stop|restart|status [arduino|lcd|relay-action|tm1638|domo|help|sendToEmoncms|getForEmoncms]\n";
+    echo $argv[0]." start|stop|status [arduino|lcd|relay-action|tm1638|domo|help|sendToEmoncms|getForEmoncms|cloudService]\n";
 }
+
+chown('/opt/PvMonit', 'pvmonit');
+chown('/opt/PvMonit/config.yaml', 'pvmonit');
 
 exit($sortie);

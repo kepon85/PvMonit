@@ -1,0 +1,1227 @@
+<xml xmlns="https://developers.google.com/blockly/xml"><block type="factory_base" id="|bN9[+JXxqnVF%/SCpZY" deletable="false" movable="false" x="10" y="10">
+    <mutation connections="LEFT"/>
+    <field name="NAME">Date Now</field>
+    <field name="INLINE">AUTO</field>
+    <field name="CONNECTIONS">LEFT</field>
+    <statement name="INPUTS">
+      <block type="input_dummy" id="(0F%X.aCH_FGmi;Wy^Q/">
+        <field name="ALIGN">RIGHT</field>
+        <statement name="FIELDS">
+          <block type="field_static" id="8P)M3RV*$0N_C5sXpU?z">
+            <field name="TEXT">Date actuelle</field>
+            <next>
+              <block type="field_dropdown" id="1Pk:ydqb7Bk5G#Dh^1Ek">
+                <mutation options="[&quot;text&quot;,&quot;text&quot;,&quot;text&quot;,&quot;text&quot;,&quot;text&quot;]"/>
+                <field name="FIELDNAME">format</field>
+                <field name="USER0">Jour du mois (1 à 31)</field>
+                <field name="CPU0">j</field>
+                <field name="USER1">Jour de la semaine (1 (pour Lundi) à 7 (pour Dimanche)</field>
+                <field name="CPU1">n</field>
+                <field name="USER2">Jour de l'année (Jour de l'année 0 à 365)</field>
+                <field name="CPU2">z</field>
+                <field name="USER3">Mois (1 à 12)</field>
+                <field name="CPU3">n</field>
+                <field name="USER4">Année sur 4 chiffres (1999 ou 2003...)</field>
+                <field name="CPU4">Y</field>
+              </block>
+            </next>
+          </block>
+        </statement>
+      </block>
+    </statement>
+    <value name="TOOLTIP">
+      <block type="text" id="kE@Na!iqM@8-2R=lK^?h" deletable="false" movable="false">
+        <field name="TEXT">La date du moment sous différent format</field>
+      </block>
+    </value>
+    <value name="HELPURL">
+      <block type="text" id="+#MzI%I.w}Jk[Un*wI5Z" deletable="false" movable="false">
+        <field name="TEXT">https://www.php.net/manual/fr/function.date.php</field>
+      </block>
+    </value>
+    <value name="OUTPUTTYPE">
+      <shadow type="type_null" id="?*@PU41c+5[*r*%4IDR6"/>
+      <block type="type_number" id="pGXLTqh[iggKNPM`!_?J"/>
+    </value>
+    <value name="COLOUR">
+      <block type="colour_hue" id="wo`iOIjCpqfD$?]$(PmJ">
+        <mutation colour="#a5935b"/>
+        <field name="HUE">45</field>
+      </block>
+    </value>
+  </block><block type="factory_base" id="9IpndB_El@|xY?D2aC@X" deletable="false" movable="false" x="10" y="10">
+    <mutation connections="LEFT"/>
+    <field name="NAME">time_now</field>
+    <field name="INLINE">AUTO</field>
+    <field name="CONNECTIONS">LEFT</field>
+    <statement name="INPUTS">
+      <block type="input_dummy" id="?1qn=ENr55P1G|[;,/#3">
+        <field name="ALIGN">LEFT</field>
+        <statement name="FIELDS">
+          <block type="field_static" id="]9AVKxh+4|IB0|Cy+tRM">
+            <field name="TEXT">Heure actuelle</field>
+            <next>
+              <block type="field_dropdown" id="8g~^Nc:D=@F$Kf::.M38">
+                <mutation options="[&quot;text&quot;,&quot;text&quot;,&quot;text&quot;,&quot;text&quot;]"/>
+                <field name="FIELDNAME">format</field>
+                <field name="USER0">Heure, au format 12h (1 à 12)</field>
+                <field name="CPU0">g</field>
+                <field name="USER1">Heure, au format 24h (1 à 23)</field>
+                <field name="CPU1">G</field>
+                <field name="USER2">Minutes (00 à 59)</field>
+                <field name="CPU2">i</field>
+                <field name="USER3">Secondes depuis l'époque Unix (1er Janvier 1970)</field>
+                <field name="CPU3">U</field>
+              </block>
+            </next>
+          </block>
+        </statement>
+      </block>
+    </statement>
+    <value name="TOOLTIP">
+      <block type="text" id="V.v.hh?#yc,yClpTwMgq" deletable="false" movable="false">
+        <field name="TEXT">L'heure du moment sous différent format</field>
+      </block>
+    </value>
+    <value name="HELPURL">
+      <block type="text" id="hAPto0QC-]k#Jox7kp(U" deletable="false" movable="false">
+        <field name="TEXT">https://www.php.net/manual/fr/function.date.php</field>
+      </block>
+    </value>
+    <value name="OUTPUTTYPE">
+      <shadow type="type_null" id="o-jrSo=Qw)XyHDV2tgfS"/>
+      <block type="type_number" id="ib~d[wHWH=SJLa,i|Dap"/>
+    </value>
+    <value name="COLOUR">
+      <block type="colour_hue" id=";4Wrn_sLkEMQ1SR*~(xx">
+        <mutation colour="#a5a55b"/>
+        <field name="HUE">60</field>
+      </block>
+    </value>
+  </block><block type="factory_base" id="GE3w)aQ~+yI$%X%j@nB(" deletable="false" movable="false" x="10" y="10">
+    <mutation connections="LEFT"/>
+    <field name="NAME">thisId</field>
+    <field name="INLINE">AUTO</field>
+    <field name="CONNECTIONS">LEFT</field>
+    <statement name="INPUTS">
+      <block type="input_dummy" id="t:Zx#2A!P9y+MK=I*1PQ">
+        <field name="ALIGN">LEFT</field>
+        <statement name="FIELDS">
+          <block type="field_static" id="1*:Y4YkumYD60:Z=z|Ap">
+            <field name="TEXT">thisId</field>
+          </block>
+        </statement>
+      </block>
+    </statement>
+    <value name="TOOLTIP">
+      <block type="text" id="RauSU]SQaodnu@zU@#$3" deletable="false" movable="false">
+        <field name="TEXT">Renvoi l'ID/le numéro du relai</field>
+      </block>
+    </value>
+    <value name="HELPURL">
+      <block type="text" id="B,~seXE!kv]R|MRaR@`^" deletable="false" movable="false">
+        <field name="TEXT">https://framagit.org/kepon/PvMonit/-/blob/master/domo/relay.script.d/ID.php.exemple</field>
+      </block>
+    </value>
+    <value name="OUTPUTTYPE">
+      <shadow type="type_null" id="OAN;)6ZHdr2?x*gGK66%"/>
+      <block type="type_number" id="M+gYlB})r6`yMl9tTEd^"/>
+    </value>
+    <value name="COLOUR">
+      <block type="colour_hue" id="zbt7OjGHPai~KlH1%)mH">
+        <mutation colour="#a5a55b"/>
+        <field name="HUE">60</field>
+      </block>
+    </value>
+  </block><block type="factory_base" id="~msRH+Es-mrn!,*1u8D!" deletable="false" movable="false" x="10" y="10">
+    <mutation connections="LEFT"/>
+    <field name="NAME">data</field>
+    <field name="INLINE">AUTO</field>
+    <field name="CONNECTIONS">LEFT</field>
+    <statement name="INPUTS">
+      <block type="input_dummy" id="=@Edovch8Y:Fg%vSxjEc">
+        <field name="ALIGN">LEFT</field>
+        <statement name="FIELDS">
+          <block type="field_static" id=".6d)1OV+-j,Jv3rn4,YK">
+            <field name="TEXT">data</field>
+            <next>
+              <block type="field_static" id="Gq%iNHweu/p/wcLj9SO}">
+                <field name="TEXT">SOC</field>
+                <next>
+                  <block type="field_static" id="b3B#]7ul=rkjA0_lHcou">
+                    <field name="TEXT">| Pour la simulation</field>
+                    <next>
+                      <block type="field_number" id="c1[__~jyh;q6lQx_jFUW">
+                        <field name="VALUE">0</field>
+                        <field name="FIELDNAME">simu_return</field>
+                        <field name="MIN">0</field>
+                        <field name="MAX">100</field>
+                        <field name="PRECISION">1</field>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </statement>
+      </block>
+    </statement>
+    <value name="TOOLTIP">
+      <block type="text" id="_wTrx-/2SZggfaxA;t*i" deletable="false" movable="false">
+        <field name="TEXT">Données configuré dans le config.yaml (domo / valueUse)</field>
+      </block>
+    </value>
+    <value name="HELPURL">
+      <block type="text" id="#Nq%-c$ekkN`0dAg:|vu" deletable="false" movable="false">
+        <field name="TEXT">https://framagit.org/kepon/PvMonit/-/blob/master/domo/relay.script.d/ID.php.exemple#L19</field>
+      </block>
+    </value>
+    <value name="OUTPUTTYPE">
+      <shadow type="type_null" id="z)JmjOQOY?/tDa7nzO6p"/>
+      <block type="type_group" id="J[6|?J60.k=IK*+G-T~.">
+        <mutation types="2"/>
+        <value name="TYPE0">
+          <block type="type_number" id="ZbaPFI4,IN8k4^5HQvfs"/>
+        </value>
+        <value name="TYPE1">
+          <block type="type_string" id="xgEf=Ad[xO|L_uFtrH-c"/>
+        </value>
+      </block>
+    </value>
+    <value name="COLOUR">
+      <block type="colour_hue" id="]ODK2$)dmBLpS#7J^YEd">
+        <mutation colour="#a55b5b"/>
+        <field name="HUE">0</field>
+      </block>
+    </value>
+  </block><block type="factory_base" id="i_Q0HKlk|!*K/=~SazeI" deletable="false" movable="false" x="10" y="10">
+    <mutation connections="LEFT"/>
+    <field name="NAME">timeUpMin</field>
+    <field name="INLINE">EXT</field>
+    <field name="CONNECTIONS">LEFT</field>
+    <statement name="INPUTS">
+      <block type="input_value" id="I-)RBlt^xeD2{?HVC8hv">
+        <field name="INPUTNAME">id</field>
+        <field name="ALIGN">LEFT</field>
+        <statement name="FIELDS">
+          <block type="field_static" id="J$OOvL#JG}_/qS/qzM%6">
+            <field name="TEXT">timeUpMin</field>
+            <next>
+              <block type="field_number" id="$fRO?BN)52my|z@Y@A,_">
+                <field name="VALUE">200</field>
+                <field name="FIELDNAME">delai</field>
+                <field name="MIN">0</field>
+                <field name="MAX">86400</field>
+                <field name="PRECISION">1</field>
+                <next>
+                  <block type="field_static" id="F1Okx6m5:A)ua?*Ly;%y">
+                    <field name="TEXT">s</field>
+                    <next>
+                      <block type="field_static" id="(]*Bl`T_K+?Z0sFti~@k">
+                        <field name="TEXT">, id:</field>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </statement>
+        <value name="TYPE">
+          <shadow type="type_null" id="H)P^($1TI:xQ6IID02gV"/>
+          <block type="type_number" id="iuv7B$SRdR3,HJ.{;56}"/>
+        </value>
+        <next>
+          <block type="input_dummy" id="WcaEtKwH(V008}^)NVZr">
+            <field name="ALIGN">LEFT</field>
+            <statement name="FIELDS">
+              <block type="field_static" id="erVG4bka~LPXpsQP~aC.">
+                <field name="TEXT">Pour la simulation </field>
+                <next>
+                  <block type="field_dropdown" id="ipAwYY!lJ1_+)P~I`%t-">
+                    <mutation options="[&quot;text&quot;,&quot;text&quot;]"/>
+                    <field name="FIELDNAME">simu_return</field>
+                    <field name="USER0">Le temps d'allumage minimum n'est pas dépassé</field>
+                    <field name="CPU0">true</field>
+                    <field name="USER1">Le temps d'allumage minimum est pas dépassé</field>
+                    <field name="CPU1">false</field>
+                  </block>
+                </next>
+              </block>
+            </statement>
+          </block>
+        </next>
+      </block>
+    </statement>
+    <value name="TOOLTIP">
+      <block type="text" id="xvDr#EZTy4-qb{nHgeX=" deletable="false" movable="false">
+        <field name="TEXT">retourne true si le temps minimum (en seconde) n'est pas encore écoulé depuis l'allumage</field>
+      </block>
+    </value>
+    <value name="HELPURL">
+      <block type="text" id="K`Pu0?qT(d*PMAZ4TX7P" deletable="false" movable="false">
+        <field name="TEXT">https://framagit.org/kepon/PvMonit/-/blob/master/domo/relay.script.d/ID.php.exemple#L32</field>
+      </block>
+    </value>
+    <value name="OUTPUTTYPE">
+      <shadow type="type_null" id="Y][N$G]5%;]r0ms;Eoh3"/>
+      <block type="type_boolean" id="8=K,]/(1zw[D(J!+srA%"/>
+    </value>
+    <value name="COLOUR">
+      <block type="colour_hue" id="3h/7kU=@.X^}-q`I.tOH">
+        <mutation colour="#a5a55b"/>
+        <field name="HUE">60</field>
+      </block>
+    </value>
+  </block><block type="factory_base" id="~msRH+Es-mrn!,*1u8D!" deletable="false" movable="false" x="10" y="10">
+    <mutation connections="LEFT"/>
+    <field name="NAME">data_SOC</field>
+    <field name="INLINE">AUTO</field>
+    <field name="CONNECTIONS">LEFT</field>
+    <statement name="INPUTS">
+      <block type="input_dummy" id="=@Edovch8Y:Fg%vSxjEc">
+        <field name="ALIGN">LEFT</field>
+        <statement name="FIELDS">
+          <block type="field_static" id=".6d)1OV+-j,Jv3rn4,YK">
+            <field name="TEXT">data</field>
+            <next>
+              <block type="field_static" id="Gq%iNHweu/p/wcLj9SO}">
+                <field name="TEXT">SOC</field>
+              </block>
+            </next>
+          </block>
+        </statement>
+        <next>
+          <block type="input_dummy" id="6_xZ4c_*$Cfr.IR3R^zl">
+            <field name="ALIGN">LEFT</field>
+            <statement name="FIELDS">
+              <block type="field_static" id="b3B#]7ul=rkjA0_lHcou">
+                <field name="TEXT">Pour la simulation</field>
+                <next>
+                  <block type="field_number" id="c1[__~jyh;q6lQx_jFUW">
+                    <field name="VALUE">0</field>
+                    <field name="FIELDNAME">simu_return</field>
+                    <field name="MIN">0</field>
+                    <field name="MAX">100</field>
+                    <field name="PRECISION">1</field>
+                  </block>
+                </next>
+              </block>
+            </statement>
+          </block>
+        </next>
+      </block>
+    </statement>
+    <value name="TOOLTIP">
+      <block type="text" id="_wTrx-/2SZggfaxA;t*i" deletable="false" movable="false">
+        <field name="TEXT">Données configuré dans le config.yaml (domo / valueUse)</field>
+      </block>
+    </value>
+    <value name="HELPURL">
+      <block type="text" id="#Nq%-c$ekkN`0dAg:|vu" deletable="false" movable="false">
+        <field name="TEXT">https://framagit.org/kepon/PvMonit/-/blob/master/domo/relay.script.d/ID.php.exemple#L19</field>
+      </block>
+    </value>
+    <value name="OUTPUTTYPE">
+      <shadow type="type_null" id="rJADyu{39S_11fg59_2Y"/>
+      <block type="type_number" id=":^YMYbhu+ABZc]_Dakr0"/>
+    </value>
+    <value name="COLOUR">
+      <block type="colour_hue" id="]ODK2$)dmBLpS#7J^YEd">
+        <mutation colour="#a55b5b"/>
+        <field name="HUE">0</field>
+      </block>
+    </value>
+  </block><block type="factory_base" id="~msRH+Es-mrn!,*1u8D!" deletable="false" movable="false" x="10" y="10">
+    <mutation connections="LEFT"/>
+    <field name="NAME">data_CS</field>
+    <field name="INLINE">EXT</field>
+    <field name="CONNECTIONS">LEFT</field>
+    <statement name="INPUTS">
+      <block type="input_dummy" id="=@Edovch8Y:Fg%vSxjEc">
+        <field name="ALIGN">LEFT</field>
+        <statement name="FIELDS">
+          <block type="field_static" id=".6d)1OV+-j,Jv3rn4,YK">
+            <field name="TEXT">data</field>
+            <next>
+              <block type="field_static" id="Gq%iNHweu/p/wcLj9SO}">
+                <field name="TEXT">CS</field>
+              </block>
+            </next>
+          </block>
+        </statement>
+        <next>
+          <block type="input_dummy" id="P_62-+U?6q/]9shV-7GD">
+            <field name="ALIGN">LEFT</field>
+            <statement name="FIELDS">
+              <block type="field_static" id="b3B#]7ul=rkjA0_lHcou">
+                <field name="TEXT">Pour la simulation</field>
+                <next>
+                  <block type="field_dropdown" id="7q|?2taEH+168SGwjL-=">
+                    <mutation options="[&quot;text&quot;,&quot;text&quot;,&quot;text&quot;,&quot;text&quot;,&quot;text&quot;]"/>
+                    <field name="FIELDNAME">simu_return</field>
+                    <field name="USER0">Float</field>
+                    <field name="CPU0">Float</field>
+                    <field name="USER1">Absorption</field>
+                    <field name="CPU1">Absorption</field>
+                    <field name="USER2">Bulk</field>
+                    <field name="CPU2">Bulk</field>
+                    <field name="USER3">Off</field>
+                    <field name="CPU3">Off</field>
+                    <field name="USER4">Fault</field>
+                    <field name="CPU4">Fault</field>
+                  </block>
+                </next>
+              </block>
+            </statement>
+          </block>
+        </next>
+      </block>
+    </statement>
+    <value name="TOOLTIP">
+      <block type="text" id="_wTrx-/2SZggfaxA;t*i" deletable="false" movable="false">
+        <field name="TEXT">Etat régulateur</field>
+      </block>
+    </value>
+    <value name="HELPURL">
+      <block type="text" id="#Nq%-c$ekkN`0dAg:|vu" deletable="false" movable="false">
+        <field name="TEXT"/>
+      </block>
+    </value>
+    <value name="OUTPUTTYPE">
+      <shadow type="type_null" id="{s}4i@,cJSH;]CS?lsU-"/>
+      <block type="type_string" id=",!R.GKy%oD+E^)?Bv0,1"/>
+    </value>
+    <value name="COLOUR">
+      <block type="colour_hue" id="]ODK2$)dmBLpS#7J^YEd">
+        <mutation colour="#a5a55b"/>
+        <field name="HUE">60</field>
+      </block>
+    </value>
+  </block><block type="factory_base" id="~msRH+Es-mrn!,*1u8D!" deletable="false" movable="false" x="10" y="10">
+    <mutation connections="LEFT"/>
+    <field name="NAME">data_unknown</field>
+    <field name="INLINE">AUTO</field>
+    <field name="CONNECTIONS">LEFT</field>
+    <statement name="INPUTS">
+      <block type="input_dummy" id="=@Edovch8Y:Fg%vSxjEc">
+        <field name="ALIGN">LEFT</field>
+        <statement name="FIELDS">
+          <block type="field_static" id=".6d)1OV+-j,Jv3rn4,YK">
+            <field name="TEXT">data</field>
+            <next>
+              <block type="field_static" id="Gq%iNHweu/p/wcLj9SO}">
+                <field name="TEXT">unknown</field>
+              </block>
+            </next>
+          </block>
+        </statement>
+        <next>
+          <block type="input_dummy" id="*7iGK`9d(C~8ABnur(=l">
+            <field name="ALIGN">LEFT</field>
+            <statement name="FIELDS">
+              <block type="field_static" id="b3B#]7ul=rkjA0_lHcou">
+                <field name="TEXT">Pour la simulation</field>
+                <next>
+                  <block type="field_input" id="9*U_^`wvQ6%CKgY,%:[5">
+                    <field name="TEXT">0</field>
+                    <field name="FIELDNAME">simu_return</field>
+                  </block>
+                </next>
+              </block>
+            </statement>
+          </block>
+        </next>
+      </block>
+    </statement>
+    <value name="TOOLTIP">
+      <block type="text" id="_wTrx-/2SZggfaxA;t*i" deletable="false" movable="false">
+        <field name="TEXT">Add domo/valueSimu in your config.yaml (check config-default.yaml)</field>
+      </block>
+    </value>
+    <value name="HELPURL">
+      <block type="text" id="#Nq%-c$ekkN`0dAg:|vu" deletable="false" movable="false">
+        <field name="TEXT"/>
+      </block>
+    </value>
+    <value name="OUTPUTTYPE">
+      <shadow type="type_null" id="CWM5D{Cc1=nLm.xsVU5g"/>
+      <block type="type_null" id="d3vyHDSH@]NQ6%Fy}u0?"/>
+    </value>
+    <value name="COLOUR">
+      <block type="colour_hue" id="]ODK2$)dmBLpS#7J^YEd">
+        <mutation colour="#a55b5b"/>
+        <field name="HUE">0</field>
+      </block>
+    </value>
+  </block><block type="factory_base" id="GE3w)aQ~+yI$%X%j@nB(" deletable="false" movable="false" x="10" y="10">
+    <mutation connections="LEFT"/>
+    <field name="NAME">thisEtat</field>
+    <field name="INLINE">AUTO</field>
+    <field name="CONNECTIONS">LEFT</field>
+    <statement name="INPUTS">
+      <block type="input_dummy" id="t:Zx#2A!P9y+MK=I*1PQ">
+        <field name="ALIGN">LEFT</field>
+        <statement name="FIELDS">
+          <block type="field_static" id="1*:Y4YkumYD60:Z=z|Ap">
+            <field name="TEXT">thisEtat</field>
+          </block>
+        </statement>
+        <next>
+          <block type="input_dummy" id="7W/0x~eWyNW]VfR#N`qF">
+            <field name="ALIGN">LEFT</field>
+            <statement name="FIELDS">
+              <block type="field_static" id="ky.u%my#y||US~rXmzkc">
+                <field name="TEXT">Pour la simulation</field>
+                <next>
+                  <block type="field_dropdown" id="sEg_qYFxIO{u@47[|Jl=">
+                    <mutation options="[&quot;text&quot;,&quot;text&quot;]"/>
+                    <field name="FIELDNAME">simu_return</field>
+                    <field name="USER0">Ce relai est éteint</field>
+                    <field name="CPU0">0</field>
+                    <field name="USER1">Ce relai est allumé</field>
+                    <field name="CPU1">1</field>
+                  </block>
+                </next>
+              </block>
+            </statement>
+          </block>
+        </next>
+      </block>
+    </statement>
+    <value name="TOOLTIP">
+      <block type="text" id="RauSU]SQaodnu@zU@#$3" deletable="false" movable="false">
+        <field name="TEXT">Renvoi l'état de ce relai</field>
+      </block>
+    </value>
+    <value name="HELPURL">
+      <block type="text" id="B,~seXE!kv]R|MRaR@`^" deletable="false" movable="false">
+        <field name="TEXT">https://framagit.org/kepon/PvMonit/-/blob/master/domo/relay.script.d/ID.php.exemple</field>
+      </block>
+    </value>
+    <value name="OUTPUTTYPE">
+      <shadow type="type_null" id="RmJ;GDeH9y(azQ;.cs=l"/>
+      <block type="type_number" id="JrdeJ2_rMM$kI={(jv;`"/>
+    </value>
+    <value name="COLOUR">
+      <block type="colour_hue" id="zbt7OjGHPai~KlH1%)mH">
+        <mutation colour="#a5a55b"/>
+        <field name="HUE">60</field>
+      </block>
+    </value>
+  </block><block type="factory_base" id="GE3w)aQ~+yI$%X%j@nB(" deletable="false" movable="false" x="10" y="10">
+    <mutation connections="LEFT"/>
+    <field name="NAME">thisMod</field>
+    <field name="INLINE">AUTO</field>
+    <field name="CONNECTIONS">LEFT</field>
+    <statement name="INPUTS">
+      <block type="input_dummy" id="t:Zx#2A!P9y+MK=I*1PQ">
+        <field name="ALIGN">LEFT</field>
+        <statement name="FIELDS">
+          <block type="field_static" id="1*:Y4YkumYD60:Z=z|Ap">
+            <field name="TEXT">thisMod</field>
+          </block>
+        </statement>
+        <next>
+          <block type="input_dummy" id="7W/0x~eWyNW]VfR#N`qF">
+            <field name="ALIGN">LEFT</field>
+            <statement name="FIELDS">
+              <block type="field_static" id="ky.u%my#y||US~rXmzkc">
+                <field name="TEXT">Pour la simulation</field>
+                <next>
+                  <block type="field_dropdown" id="sEg_qYFxIO{u@47[|Jl=">
+                    <mutation options="[&quot;text&quot;,&quot;text&quot;,&quot;text&quot;,&quot;text&quot;]"/>
+                    <field name="FIELDNAME">simu_return</field>
+                    <field name="USER0">Off forcé (action de l'utilisateur)</field>
+                    <field name="CPU0">0</field>
+                    <field name="USER1">Off automatique (par défaut)</field>
+                    <field name="CPU1">1</field>
+                    <field name="USER2">On automatique (allumé par les scripts)</field>
+                    <field name="CPU2">2</field>
+                    <field name="USER3">On forcé (action de l'utilisateur)</field>
+                    <field name="CPU3">3</field>
+                  </block>
+                </next>
+              </block>
+            </statement>
+          </block>
+        </next>
+      </block>
+    </statement>
+    <value name="TOOLTIP">
+      <block type="text" id="RauSU]SQaodnu@zU@#$3" deletable="false" movable="false">
+        <field name="TEXT">Renvoi le mod de ce relai</field>
+      </block>
+    </value>
+    <value name="HELPURL">
+      <block type="text" id="B,~seXE!kv]R|MRaR@`^" deletable="false" movable="false">
+        <field name="TEXT">https://framagit.org/kepon/PvMonit/-/blob/master/domo/relay.script.d/ID.php.exemple</field>
+      </block>
+    </value>
+    <value name="OUTPUTTYPE">
+      <shadow type="type_null" id="$Cc3.hB,N6#`B^n;gJQH"/>
+      <block type="type_number" id="JrdeJ2_rMM$kI={(jv;`"/>
+    </value>
+    <value name="COLOUR">
+      <block type="colour_hue" id="zbt7OjGHPai~KlH1%)mH">
+        <mutation colour="#a5a55b"/>
+        <field name="HUE">60</field>
+      </block>
+    </value>
+  </block><block type="factory_base" id="i_Q0HKlk|!*K/=~SazeI" deletable="false" movable="false" x="10" y="10">
+    <mutation connections="LEFT"/>
+    <field name="NAME">relayUpToday</field>
+    <field name="INLINE">EXT</field>
+    <field name="CONNECTIONS">LEFT</field>
+    <statement name="INPUTS">
+      <block type="input_value" id="I-)RBlt^xeD2{?HVC8hv">
+        <field name="INPUTNAME">id</field>
+        <field name="ALIGN">LEFT</field>
+        <statement name="FIELDS">
+          <block type="field_static" id="J$OOvL#JG}_/qS/qzM%6">
+            <field name="TEXT">relayUpToday</field>
+            <next>
+              <block type="field_static" id="(]*Bl`T_K+?Z0sFti~@k">
+                <field name="TEXT">id:</field>
+              </block>
+            </next>
+          </block>
+        </statement>
+        <value name="TYPE">
+          <shadow type="type_null" id="H)P^($1TI:xQ6IID02gV"/>
+          <block type="type_number" id="iuv7B$SRdR3,HJ.{;56}"/>
+        </value>
+        <next>
+          <block type="input_dummy" id="WcaEtKwH(V008}^)NVZr">
+            <field name="ALIGN">LEFT</field>
+            <statement name="FIELDS">
+              <block type="field_static" id="erVG4bka~LPXpsQP~aC.">
+                <field name="TEXT">Pour la simulation </field>
+                <next>
+                  <block type="field_dropdown" id="ipAwYY!lJ1_+)P~I`%t-">
+                    <mutation options="[&quot;text&quot;,&quot;text&quot;]"/>
+                    <field name="FIELDNAME">simu_return</field>
+                    <field name="USER0">Oui ce relai a déjà été allumé ce jour</field>
+                    <field name="CPU0">true</field>
+                    <field name="USER1">Non ce relai n'a pas déjà été allumé ce jour</field>
+                    <field name="CPU1">false</field>
+                  </block>
+                </next>
+              </block>
+            </statement>
+          </block>
+        </next>
+      </block>
+    </statement>
+    <value name="TOOLTIP">
+      <block type="text" id="xvDr#EZTy4-qb{nHgeX=" deletable="false" movable="false">
+        <field name="TEXT">retourne true si le relai à déjà été allumé ce jour</field>
+      </block>
+    </value>
+    <value name="HELPURL">
+      <block type="text" id="K`Pu0?qT(d*PMAZ4TX7P" deletable="false" movable="false">
+        <field name="TEXT">https://framagit.org/kepon/PvMonit/-/blob/master/domo/relay.script.d/ID.php.exemple#L32</field>
+      </block>
+    </value>
+    <value name="OUTPUTTYPE">
+      <shadow type="type_null" id="cE}lDI`3q89*bAI?y9;e"/>
+      <block type="type_boolean" id="8=K,]/(1zw[D(J!+srA%"/>
+    </value>
+    <value name="COLOUR">
+      <block type="colour_hue" id="3h/7kU=@.X^}-q`I.tOH">
+        <mutation colour="#a5a55b"/>
+        <field name="HUE">60</field>
+      </block>
+    </value>
+  </block><block type="factory_base" id="i_Q0HKlk|!*K/=~SazeI" deletable="false" movable="false" x="10" y="10">
+    <mutation connections="LEFT"/>
+    <field name="NAME">MpptAbsOrFlo</field>
+    <field name="INLINE">EXT</field>
+    <field name="CONNECTIONS">LEFT</field>
+    <statement name="INPUTS">
+      <block type="input_dummy" id="WeU#fyzOz|T$Kq{]N|75">
+        <field name="ALIGN">LEFT</field>
+        <statement name="FIELDS">
+          <block type="field_static" id="J$OOvL#JG}_/qS/qzM%6">
+            <field name="TEXT">MpptAbsOrFlo</field>
+            <next>
+              <block type="field_static" id="(]*Bl`T_K+?Z0sFti~@k">
+                <field name="TEXT">data CS</field>
+              </block>
+            </next>
+          </block>
+        </statement>
+        <next>
+          <block type="input_dummy" id="WcaEtKwH(V008}^)NVZr">
+            <field name="ALIGN">LEFT</field>
+            <statement name="FIELDS">
+              <block type="field_static" id="erVG4bka~LPXpsQP~aC.">
+                <field name="TEXT">Pour la simulation </field>
+                <next>
+                  <block type="field_dropdown" id="ipAwYY!lJ1_+)P~I`%t-">
+                    <mutation options="[&quot;text&quot;,&quot;text&quot;]"/>
+                    <field name="FIELDNAME">simu_return</field>
+                    <field name="USER0">Le régulateur est en Absorption ou Float</field>
+                    <field name="CPU0">true</field>
+                    <field name="USER1">Le régulateur n'est pas en Absorption ou Float</field>
+                    <field name="CPU1">false</field>
+                  </block>
+                </next>
+              </block>
+            </statement>
+          </block>
+        </next>
+      </block>
+    </statement>
+    <value name="TOOLTIP">
+      <block type="text" id="xvDr#EZTy4-qb{nHgeX=" deletable="false" movable="false">
+        <field name="TEXT">retourne true si le régulateur est en Float ou en Absorption</field>
+      </block>
+    </value>
+    <value name="HELPURL">
+      <block type="text" id="K`Pu0?qT(d*PMAZ4TX7P" deletable="false" movable="false">
+        <field name="TEXT">https://framagit.org/kepon/PvMonit/-/blob/master/domo/relay.script.d/ID.php.exemple#L32</field>
+      </block>
+    </value>
+    <value name="OUTPUTTYPE">
+      <shadow type="type_null" id="e0rfRNwV]ZLU+Qf#T_80"/>
+      <block type="type_boolean" id="8=K,]/(1zw[D(J!+srA%"/>
+    </value>
+    <value name="COLOUR">
+      <block type="colour_hue" id="3h/7kU=@.X^}-q`I.tOH">
+        <mutation colour="#a5a55b"/>
+        <field name="HUE">60</field>
+      </block>
+    </value>
+  </block><block type="factory_base" id="i_Q0HKlk|!*K/=~SazeI" deletable="false" movable="false" x="10" y="10">
+    <mutation connections="LEFT"/>
+    <field name="NAME">MpptFlo</field>
+    <field name="INLINE">EXT</field>
+    <field name="CONNECTIONS">LEFT</field>
+    <statement name="INPUTS">
+      <block type="input_dummy" id="WeU#fyzOz|T$Kq{]N|75">
+        <field name="ALIGN">LEFT</field>
+        <statement name="FIELDS">
+          <block type="field_static" id="J$OOvL#JG}_/qS/qzM%6">
+            <field name="TEXT">MpptFlo</field>
+            <next>
+              <block type="field_static" id="(]*Bl`T_K+?Z0sFti~@k">
+                <field name="TEXT">data CS</field>
+              </block>
+            </next>
+          </block>
+        </statement>
+        <next>
+          <block type="input_dummy" id="WcaEtKwH(V008}^)NVZr">
+            <field name="ALIGN">LEFT</field>
+            <statement name="FIELDS">
+              <block type="field_static" id="erVG4bka~LPXpsQP~aC.">
+                <field name="TEXT">Pour la simulation </field>
+                <next>
+                  <block type="field_dropdown" id="ipAwYY!lJ1_+)P~I`%t-">
+                    <mutation options="[&quot;text&quot;,&quot;text&quot;]"/>
+                    <field name="FIELDNAME">simu_return</field>
+                    <field name="USER0">Le régulateur est en Float</field>
+                    <field name="CPU0">true</field>
+                    <field name="USER1">Le régulateur n'est pas en Float</field>
+                    <field name="CPU1">false</field>
+                  </block>
+                </next>
+              </block>
+            </statement>
+          </block>
+        </next>
+      </block>
+    </statement>
+    <value name="TOOLTIP">
+      <block type="text" id="xvDr#EZTy4-qb{nHgeX=" deletable="false" movable="false">
+        <field name="TEXT">retourne true si le régulateur est en Float</field>
+      </block>
+    </value>
+    <value name="HELPURL">
+      <block type="text" id="K`Pu0?qT(d*PMAZ4TX7P" deletable="false" movable="false">
+        <field name="TEXT">https://framagit.org/kepon/PvMonit/-/blob/master/domo/relay.script.d/ID.php.exemple#L32</field>
+      </block>
+    </value>
+    <value name="OUTPUTTYPE">
+      <shadow type="type_null" id="j`9xLQ04{Vzghz{,}p`@"/>
+      <block type="type_boolean" id="8=K,]/(1zw[D(J!+srA%"/>
+    </value>
+    <value name="COLOUR">
+      <block type="colour_hue" id="3h/7kU=@.X^}-q`I.tOH">
+        <mutation colour="#a5a55b"/>
+        <field name="HUE">60</field>
+      </block>
+    </value>
+  </block><block type="factory_base" id="i_Q0HKlk|!*K/=~SazeI" deletable="false" movable="false" x="10" y="10">
+    <mutation connections="LEFT"/>
+    <field name="NAME">relayUpDownToday</field>
+    <field name="INLINE">EXT</field>
+    <field name="CONNECTIONS">LEFT</field>
+    <statement name="INPUTS">
+      <block type="input_value" id="I-)RBlt^xeD2{?HVC8hv">
+        <field name="INPUTNAME">id</field>
+        <field name="ALIGN">LEFT</field>
+        <statement name="FIELDS">
+          <block type="field_static" id="J$OOvL#JG}_/qS/qzM%6">
+            <field name="TEXT">relayUpDownToday</field>
+            <next>
+              <block type="field_static" id="(]*Bl`T_K+?Z0sFti~@k">
+                <field name="TEXT">id:</field>
+              </block>
+            </next>
+          </block>
+        </statement>
+        <value name="TYPE">
+          <shadow type="type_null" id="H)P^($1TI:xQ6IID02gV"/>
+          <block type="type_number" id="iuv7B$SRdR3,HJ.{;56}"/>
+        </value>
+        <next>
+          <block type="input_dummy" id="WcaEtKwH(V008}^)NVZr">
+            <field name="ALIGN">LEFT</field>
+            <statement name="FIELDS">
+              <block type="field_static" id="erVG4bka~LPXpsQP~aC.">
+                <field name="TEXT">Pour la simulation </field>
+                <next>
+                  <block type="field_dropdown" id="ipAwYY!lJ1_+)P~I`%t-">
+                    <mutation options="[&quot;text&quot;,&quot;text&quot;]"/>
+                    <field name="FIELDNAME">simu_return</field>
+                    <field name="USER0">Oui il a été allumé puis éteint ce jour</field>
+                    <field name="CPU0">true</field>
+                    <field name="USER1">Non il n'a pas été allumé puis éteint ce jour</field>
+                    <field name="CPU1">false</field>
+                  </block>
+                </next>
+              </block>
+            </statement>
+          </block>
+        </next>
+      </block>
+    </statement>
+    <value name="TOOLTIP">
+      <block type="text" id="xvDr#EZTy4-qb{nHgeX=" deletable="false" movable="false">
+        <field name="TEXT"> retourne true si le relai à déjà été allumé puis éteind ce jour</field>
+      </block>
+    </value>
+    <value name="HELPURL">
+      <block type="text" id="K`Pu0?qT(d*PMAZ4TX7P" deletable="false" movable="false">
+        <field name="TEXT">https://framagit.org/kepon/PvMonit/-/blob/master/domo/relay.script.d/ID.php.exemple#L32</field>
+      </block>
+    </value>
+    <value name="OUTPUTTYPE">
+      <shadow type="type_null" id="#875~ztsT2Ay8`#_pxO@"/>
+      <block type="type_boolean" id="8=K,]/(1zw[D(J!+srA%"/>
+    </value>
+    <value name="COLOUR">
+      <block type="colour_hue" id="3h/7kU=@.X^}-q`I.tOH">
+        <mutation colour="#a5a55b"/>
+        <field name="HUE">60</field>
+      </block>
+    </value>
+  </block><block type="factory_base" id="i_Q0HKlk|!*K/=~SazeI" deletable="false" movable="false" x="10" y="10">
+    <mutation connections="LEFT"/>
+    <field name="NAME">timeUpMax</field>
+    <field name="INLINE">EXT</field>
+    <field name="CONNECTIONS">LEFT</field>
+    <statement name="INPUTS">
+      <block type="input_value" id="I-)RBlt^xeD2{?HVC8hv">
+        <field name="INPUTNAME">id</field>
+        <field name="ALIGN">LEFT</field>
+        <statement name="FIELDS">
+          <block type="field_static" id="J$OOvL#JG}_/qS/qzM%6">
+            <field name="TEXT">timeUpMax</field>
+            <next>
+              <block type="field_number" id="$fRO?BN)52my|z@Y@A,_">
+                <field name="VALUE">200</field>
+                <field name="FIELDNAME">delai</field>
+                <field name="MIN">0</field>
+                <field name="MAX">86400</field>
+                <field name="PRECISION">1</field>
+                <next>
+                  <block type="field_static" id="F1Okx6m5:A)ua?*Ly;%y">
+                    <field name="TEXT">s</field>
+                    <next>
+                      <block type="field_static" id="(]*Bl`T_K+?Z0sFti~@k">
+                        <field name="TEXT">, id:</field>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </statement>
+        <value name="TYPE">
+          <shadow type="type_null" id="H)P^($1TI:xQ6IID02gV"/>
+          <block type="type_number" id="iuv7B$SRdR3,HJ.{;56}"/>
+        </value>
+        <next>
+          <block type="input_dummy" id="WcaEtKwH(V008}^)NVZr">
+            <field name="ALIGN">LEFT</field>
+            <statement name="FIELDS">
+              <block type="field_static" id="erVG4bka~LPXpsQP~aC.">
+                <field name="TEXT">Pour la simulation </field>
+                <next>
+                  <block type="field_dropdown" id="ipAwYY!lJ1_+)P~I`%t-">
+                    <mutation options="[&quot;text&quot;,&quot;text&quot;]"/>
+                    <field name="FIELDNAME">simu_return</field>
+                    <field name="USER0">Le temps d'allumage maximum est pas dépassé</field>
+                    <field name="CPU0">true</field>
+                    <field name="USER1">Le temps d'allumage maximum n'est pas dépassé</field>
+                    <field name="CPU1">false</field>
+                  </block>
+                </next>
+              </block>
+            </statement>
+          </block>
+        </next>
+      </block>
+    </statement>
+    <value name="TOOLTIP">
+      <block type="text" id="xvDr#EZTy4-qb{nHgeX=" deletable="false" movable="false">
+        <field name="TEXT">retourne true si le temps maximum (en seconde) n'est pas encore écoulé depuis l'allumage</field>
+      </block>
+    </value>
+    <value name="HELPURL">
+      <block type="text" id="K`Pu0?qT(d*PMAZ4TX7P" deletable="false" movable="false">
+        <field name="TEXT">https://framagit.org/kepon/PvMonit/-/blob/master/domo/relay.script.d/ID.php.exemple#L32</field>
+      </block>
+    </value>
+    <value name="OUTPUTTYPE">
+      <shadow type="type_null" id="nW0:;^N?:AYci.p*h8:4"/>
+      <block type="type_boolean" id="8=K,]/(1zw[D(J!+srA%"/>
+    </value>
+    <value name="COLOUR">
+      <block type="colour_hue" id="3h/7kU=@.X^}-q`I.tOH">
+        <mutation colour="#a5a55b"/>
+        <field name="HUE">60</field>
+      </block>
+    </value>
+  </block><block type="factory_base" id="i_Q0HKlk|!*K/=~SazeI" deletable="false" movable="false" x="10" y="10">
+    <mutation connections="LEFT"/>
+    <field name="NAME">relayLastUp</field>
+    <field name="INLINE">EXT</field>
+    <field name="CONNECTIONS">LEFT</field>
+    <statement name="INPUTS">
+      <block type="input_value" id="I-)RBlt^xeD2{?HVC8hv">
+        <field name="INPUTNAME">id</field>
+        <field name="ALIGN">LEFT</field>
+        <statement name="FIELDS">
+          <block type="field_static" id="J$OOvL#JG}_/qS/qzM%6">
+            <field name="TEXT">relayLastUp</field>
+            <next>
+              <block type="field_static" id="(]*Bl`T_K+?Z0sFti~@k">
+                <field name="TEXT">id:</field>
+              </block>
+            </next>
+          </block>
+        </statement>
+        <value name="TYPE">
+          <shadow type="type_null" id="H)P^($1TI:xQ6IID02gV"/>
+          <block type="type_number" id="iuv7B$SRdR3,HJ.{;56}"/>
+        </value>
+        <next>
+          <block type="input_dummy" id="WcaEtKwH(V008}^)NVZr">
+            <field name="ALIGN">LEFT</field>
+            <statement name="FIELDS">
+              <block type="field_static" id="erVG4bka~LPXpsQP~aC.">
+                <field name="TEXT">Pour la simulation </field>
+                <next>
+                  <block type="field_number" id=";6/hSJ|-^8^,3G?-Jgu(">
+                    <field name="VALUE">1577840461</field>
+                    <field name="FIELDNAME">simu_return</field>
+                    <field name="MIN">0</field>
+                    <field name="MAX">9999999999</field>
+                    <field name="PRECISION">1</field>
+                  </block>
+                </next>
+              </block>
+            </statement>
+          </block>
+        </next>
+      </block>
+    </statement>
+    <value name="TOOLTIP">
+      <block type="text" id="xvDr#EZTy4-qb{nHgeX=" deletable="false" movable="false">
+        <field name="TEXT">retourne la date (en seconde/timestamp) du dernier allumage de l'ID passé en paramètre</field>
+      </block>
+    </value>
+    <value name="HELPURL">
+      <block type="text" id="K`Pu0?qT(d*PMAZ4TX7P" deletable="false" movable="false">
+        <field name="TEXT">https://www.epochconverter.com/</field>
+      </block>
+    </value>
+    <value name="OUTPUTTYPE">
+      <shadow type="type_null" id="r)}/fmW=6L%9uZ{rQVxJ"/>
+      <block type="type_number" id="xWSjIBq`L78bv1^9tee8"/>
+    </value>
+    <value name="COLOUR">
+      <block type="colour_hue" id="3h/7kU=@.X^}-q`I.tOH">
+        <mutation colour="#a5a55b"/>
+        <field name="HUE">60</field>
+      </block>
+    </value>
+  </block><block type="factory_base" id="i_Q0HKlk|!*K/=~SazeI" deletable="false" movable="false" x="10" y="10">
+    <mutation connections="LEFT"/>
+    <field name="NAME">relayLastUpAuto</field>
+    <field name="INLINE">EXT</field>
+    <field name="CONNECTIONS">LEFT</field>
+    <statement name="INPUTS">
+      <block type="input_value" id="I-)RBlt^xeD2{?HVC8hv">
+        <field name="INPUTNAME">id</field>
+        <field name="ALIGN">LEFT</field>
+        <statement name="FIELDS">
+          <block type="field_static" id="J$OOvL#JG}_/qS/qzM%6">
+            <field name="TEXT">relayLastUpAuto</field>
+            <next>
+              <block type="field_static" id="(]*Bl`T_K+?Z0sFti~@k">
+                <field name="TEXT">id:</field>
+              </block>
+            </next>
+          </block>
+        </statement>
+        <value name="TYPE">
+          <shadow type="type_null" id="H)P^($1TI:xQ6IID02gV"/>
+          <block type="type_number" id="iuv7B$SRdR3,HJ.{;56}"/>
+        </value>
+        <next>
+          <block type="input_dummy" id="WcaEtKwH(V008}^)NVZr">
+            <field name="ALIGN">LEFT</field>
+            <statement name="FIELDS">
+              <block type="field_static" id="erVG4bka~LPXpsQP~aC.">
+                <field name="TEXT">Pour la simulation </field>
+                <next>
+                  <block type="field_number" id=";6/hSJ|-^8^,3G?-Jgu(">
+                    <field name="VALUE">1577840461</field>
+                    <field name="FIELDNAME">simu_return</field>
+                    <field name="MIN">0</field>
+                    <field name="MAX">9999999999</field>
+                    <field name="PRECISION">1</field>
+                  </block>
+                </next>
+              </block>
+            </statement>
+          </block>
+        </next>
+      </block>
+    </statement>
+    <value name="TOOLTIP">
+      <block type="text" id="xvDr#EZTy4-qb{nHgeX=" deletable="false" movable="false">
+        <field name="TEXT">retourne la date (en seconde/timestamp) du dernier allumage automatique de l'ID passé en paramètre</field>
+      </block>
+    </value>
+    <value name="HELPURL">
+      <block type="text" id="K`Pu0?qT(d*PMAZ4TX7P" deletable="false" movable="false">
+        <field name="TEXT">https://www.epochconverter.com/</field>
+      </block>
+    </value>
+    <value name="OUTPUTTYPE">
+      <shadow type="type_null" id="@}-;ap-jzs0b(.BcCVDJ"/>
+      <block type="type_number" id="xWSjIBq`L78bv1^9tee8"/>
+    </value>
+    <value name="COLOUR">
+      <block type="colour_hue" id="3h/7kU=@.X^}-q`I.tOH">
+        <mutation colour="#a5a55b"/>
+        <field name="HUE">60</field>
+      </block>
+    </value>
+  </block><block type="factory_base" id="i_Q0HKlk|!*K/=~SazeI" deletable="false" movable="false" x="10" y="10">
+    <mutation connections="LEFT"/>
+    <field name="NAME">relayLastDown</field>
+    <field name="INLINE">EXT</field>
+    <field name="CONNECTIONS">LEFT</field>
+    <statement name="INPUTS">
+      <block type="input_value" id="I-)RBlt^xeD2{?HVC8hv">
+        <field name="INPUTNAME">id</field>
+        <field name="ALIGN">LEFT</field>
+        <statement name="FIELDS">
+          <block type="field_static" id="J$OOvL#JG}_/qS/qzM%6">
+            <field name="TEXT">relayLastDown</field>
+            <next>
+              <block type="field_static" id="(]*Bl`T_K+?Z0sFti~@k">
+                <field name="TEXT">id:</field>
+              </block>
+            </next>
+          </block>
+        </statement>
+        <value name="TYPE">
+          <shadow type="type_null" id="H)P^($1TI:xQ6IID02gV"/>
+          <block type="type_number" id="iuv7B$SRdR3,HJ.{;56}"/>
+        </value>
+        <next>
+          <block type="input_dummy" id="WcaEtKwH(V008}^)NVZr">
+            <field name="ALIGN">LEFT</field>
+            <statement name="FIELDS">
+              <block type="field_static" id="erVG4bka~LPXpsQP~aC.">
+                <field name="TEXT">Pour la simulation </field>
+                <next>
+                  <block type="field_number" id=";6/hSJ|-^8^,3G?-Jgu(">
+                    <field name="VALUE">1577840461</field>
+                    <field name="FIELDNAME">simu_return</field>
+                    <field name="MIN">0</field>
+                    <field name="MAX">9999999999</field>
+                    <field name="PRECISION">1</field>
+                  </block>
+                </next>
+              </block>
+            </statement>
+          </block>
+        </next>
+      </block>
+    </statement>
+    <value name="TOOLTIP">
+      <block type="text" id="xvDr#EZTy4-qb{nHgeX=" deletable="false" movable="false">
+        <field name="TEXT">retourne la date de la dernière extinction de l'ID passé en paramètre</field>
+      </block>
+    </value>
+    <value name="HELPURL">
+      <block type="text" id="K`Pu0?qT(d*PMAZ4TX7P" deletable="false" movable="false">
+        <field name="TEXT">https://www.epochconverter.com/</field>
+      </block>
+    </value>
+    <value name="OUTPUTTYPE">
+      <shadow type="type_null" id="9w4RI`Msqx(`m%#MZy;C"/>
+      <block type="type_number" id="xWSjIBq`L78bv1^9tee8"/>
+    </value>
+    <value name="COLOUR">
+      <block type="colour_hue" id="3h/7kU=@.X^}-q`I.tOH">
+        <mutation colour="#a5a55b"/>
+        <field name="HUE">60</field>
+      </block>
+    </value>
+  </block><block type="factory_base" id="GE3w)aQ~+yI$%X%j@nB(" deletable="false" movable="false" x="10" y="10">
+    <mutation connections="LEFT"/>
+    <field name="NAME">relayEtat</field>
+    <field name="INLINE">EXT</field>
+    <field name="CONNECTIONS">LEFT</field>
+    <statement name="INPUTS">
+      <block type="input_value" id="%u6:j,.g^lDAE)#M!x=g">
+        <field name="INPUTNAME">id</field>
+        <field name="ALIGN">LEFT</field>
+        <statement name="FIELDS">
+          <block type="field_static" id="1*:Y4YkumYD60:Z=z|Ap">
+            <field name="TEXT">relayEtat</field>
+            <next>
+              <block type="field_static" id="W/u$iF%6E4tms2`#`4+i">
+                <field name="TEXT">id : </field>
+              </block>
+            </next>
+          </block>
+        </statement>
+        <value name="TYPE">
+          <shadow type="type_null" id="7*f-+DNU$Sla;XaQh=j8"/>
+          <block type="type_number" id="zPou)jIGuWGAHLB@/HG}"/>
+        </value>
+        <next>
+          <block type="input_dummy" id="7W/0x~eWyNW]VfR#N`qF">
+            <field name="ALIGN">LEFT</field>
+            <statement name="FIELDS">
+              <block type="field_static" id="ky.u%my#y||US~rXmzkc">
+                <field name="TEXT">Pour la simulation</field>
+                <next>
+                  <block type="field_dropdown" id="sEg_qYFxIO{u@47[|Jl=">
+                    <mutation options="[&quot;text&quot;,&quot;text&quot;]"/>
+                    <field name="FIELDNAME">simu_return</field>
+                    <field name="USER0">Ce relai est éteint</field>
+                    <field name="CPU0">0</field>
+                    <field name="USER1">Ce relai est allumé</field>
+                    <field name="CPU1">1</field>
+                  </block>
+                </next>
+              </block>
+            </statement>
+          </block>
+        </next>
+      </block>
+    </statement>
+    <value name="TOOLTIP">
+      <block type="text" id="RauSU]SQaodnu@zU@#$3" deletable="false" movable="false">
+        <field name="TEXT">Renvoi l'état du relai demandé (0 ou 1)</field>
+      </block>
+    </value>
+    <value name="HELPURL">
+      <block type="text" id="B,~seXE!kv]R|MRaR@`^" deletable="false" movable="false">
+        <field name="TEXT"/>
+      </block>
+    </value>
+    <value name="OUTPUTTYPE">
+      <shadow type="type_null" id="mn{B,TQ00L)[nGxeByn5"/>
+      <block type="type_number" id="JrdeJ2_rMM$kI={(jv;`"/>
+    </value>
+    <value name="COLOUR">
+      <block type="colour_hue" id="zbt7OjGHPai~KlH1%)mH">
+        <mutation colour="#a5a55b"/>
+        <field name="HUE">60</field>
+      </block>
+    </value>
+  </block><block type="factory_base" id="GE3w)aQ~+yI$%X%j@nB(" deletable="false" movable="false" x="10" y="10">
+    <mutation connections="LEFT"/>
+    <field name="NAME">relayMod</field>
+    <field name="INLINE">EXT</field>
+    <field name="CONNECTIONS">LEFT</field>
+    <statement name="INPUTS">
+      <block type="input_value" id="K10f#m}Zuh(YTaP*Xz!U">
+        <field name="INPUTNAME">id</field>
+        <field name="ALIGN">LEFT</field>
+        <statement name="FIELDS">
+          <block type="field_static" id="1*:Y4YkumYD60:Z=z|Ap">
+            <field name="TEXT">relayMod</field>
+            <next>
+              <block type="field_static" id="SCC(y6!?Vd-ztCg}zM1T">
+                <field name="TEXT">Id </field>
+              </block>
+            </next>
+          </block>
+        </statement>
+        <value name="TYPE">
+          <shadow type="type_null" id="^2U(v-b0$}v24)Ujz}Pg"/>
+          <block type="type_number" id=")[k0`~KIT$vZ3Zts-`dT"/>
+        </value>
+        <next>
+          <block type="input_dummy" id="7W/0x~eWyNW]VfR#N`qF">
+            <field name="ALIGN">LEFT</field>
+            <statement name="FIELDS">
+              <block type="field_static" id="ky.u%my#y||US~rXmzkc">
+                <field name="TEXT">Pour la simulation</field>
+                <next>
+                  <block type="field_dropdown" id="sEg_qYFxIO{u@47[|Jl=">
+                    <mutation options="[&quot;text&quot;,&quot;text&quot;,&quot;text&quot;,&quot;text&quot;]"/>
+                    <field name="FIELDNAME">simu_return</field>
+                    <field name="USER0">Off forcé (action de l'utilisateur)</field>
+                    <field name="CPU0">0</field>
+                    <field name="USER1">Off automatique (par défaut)</field>
+                    <field name="CPU1">1</field>
+                    <field name="USER2">On automatique (allumé par les scripts)</field>
+                    <field name="CPU2">2</field>
+                    <field name="USER3">On forcé (action de l'utilisateur)</field>
+                    <field name="CPU3">3</field>
+                  </block>
+                </next>
+              </block>
+            </statement>
+          </block>
+        </next>
+      </block>
+    </statement>
+    <value name="TOOLTIP">
+      <block type="text" id="RauSU]SQaodnu@zU@#$3" deletable="false" movable="false">
+        <field name="TEXT">Renvoi le mod du relai demandé</field>
+      </block>
+    </value>
+    <value name="HELPURL">
+      <block type="text" id="B,~seXE!kv]R|MRaR@`^" deletable="false" movable="false">
+        <field name="TEXT"/>
+      </block>
+    </value>
+    <value name="OUTPUTTYPE">
+      <shadow type="type_null" id="b.-z`WT:[i3mfli~@E~{"/>
+      <block type="type_number" id="JrdeJ2_rMM$kI={(jv;`"/>
+    </value>
+    <value name="COLOUR">
+      <block type="colour_hue" id="zbt7OjGHPai~KlH1%)mH">
+        <mutation colour="#a5a55b"/>
+        <field name="HUE">60</field>
+      </block>
+    </value>
+  </block></xml>

@@ -64,8 +64,8 @@ if (is_file('/tmp/domo'.$thisId.'up') && $data['SOC'] > 89) {
                 $return['mod'] = 1;
             }
         } else {
-            if (date('G') >= 19 && $checkIfComputerIsUp == 0)  {
-                $return['log'] = 'S\'il est plus de 19h et qu\'il n\'y a pas d\'ordinateur d\'allumé';
+            if (date('G') >= 21 && $checkIfComputerIsUp == 0)  {
+                $return['log'] = 'S\'il est plus de 21h et qu\'il n\'y a pas d\'ordinateur d\'allumé';
                 $return['mod'] = 1;
             }
         }

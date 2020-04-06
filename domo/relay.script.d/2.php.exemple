@@ -1,33 +1,47 @@
 <?php
+$retour['mod'];
+$retour['log'];
+$heureDebut;
+$HeureFin;
 
-# Téléphone
 
-// Par défaut à off (auto)
-$return['log'] = null;
-$return['mod'] = 1;
+// Retour par défaut
+// 1 relai éteint
+// 2 relai allumé
 
-$timeUp=2200;
-
-// Si la box est allumé
-if ($relayEtat[1] == 1) {
-    if (MpptAbsOrFlo($data['CS'])) {
-        $return['log'] = 'Régulateur en Abs ou Float';
-        $return['mod'] = 2;
-    }
-    if (date('G') > 11 && date('G') < 19 && $data['SOC'] > 95) {
-        $return['log'] = 'Il est plus de 11 heure et que les batterie sont suppérieur à 95 c\'est qu\'il fait beau...';
-        $return['mod'] = 2;
-    } 
-    if ($thisEtat == 1) {
-        if (timeUpMin($thisId, $timeUp)) {
-            $return['log'] = 'Temps minimum non dépassé, on maintient allumé';
-            $return['mod'] = 2;
-        }
-    }
+$retour['mod'] = 1;
+// Pour l'affichage dans le log
+$retour['log'] = null;
+if ((date("%n")) <= 2 || (date("%n")) >= 11) {
+  $heureDebut = 11;
+  $HeureFin = 19;
+#print('Nous sommes l\'hiver, on diminue les heures d\'allumage ');
+} else {
+  $heureDebut = 11;
+  $HeureFin = 21;
+#print('Nous sommes l\'été');
 }
+// Si le relai 1 est allumé
+// (le relai 2 en dépend pour son fonctionnement)
+if (($relayEtat[1]) == 1) {
+  if (MpptAbsOrFlo($data['CS'])) {
+    $retour['log'] = 'Le régulateur est en float ou absorption on allume !';
+    $retour['mod'] = 2;
+  }
+  if ((date("%G")) > $heureDebut && (date("%G")) < $HeureFin) {
+    if (($data['SOC']) >= 95) {
+      $retour['log'] = 'Nous sommes dans la tranche horaire et la batterie est à plus de 95%, on allume !';
+      $retour['mod'] = 2;
+    }
+  }
+  // Si ce relai est allumé
+  if (($thisEtat) == 1 && (timeUpMin(($thisId), 300))) {
+    $retour['log'] = 'Le temps minimum (ici de 300s) d\'allumage n\'est pas dépassé';
+    $retour['mod'] = 2;
+  }
+}
+#print('Le MOD est décidé à : ' . $retour['mod']);
+#print('Retour de log : ' . $retour['log']);
 
-
-
-
-return $return;
+return $retour;
 ?>

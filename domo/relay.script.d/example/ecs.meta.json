@@ -1,0 +1,8 @@
+{
+  "title": "S'il y a du surplus d'énergie (eau chaude simple)",
+  "desc": "Si le régulateur est en Float et que P (Puissance au BMV) est positif c'est qu'on ne pompe pas dans la batterie, il y a donc du surplus d'énergie, on allume ce relai",
+  "data": {
+	  "CS": "CS",
+	  "P": "P"
+  }
+}

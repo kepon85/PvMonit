@@ -32,6 +32,7 @@ function getConfigYaml($config_dir){
 		}
 	}
 
+	$config['md5sum']=md5_file($config_dir.'/config.yaml');
 	return $config;
 	
 }
@@ -635,7 +636,7 @@ function vedirect_parse_arduino($data) {
 
 # Fonction de debug
 function trucAdir($niveau, $msg) {
-        global $config;
+	global $config;
 	if ($config['printMessage'] >= $niveau) {
 		if (isset($_SERVER['SERVER_NAME'])) {
 			echo  '<script type="text/javascript">console.log(\''.date('c') . ' - ' . strtr($msg, '\'', '\\\'').'\'); </script>';
@@ -643,15 +644,18 @@ function trucAdir($niveau, $msg) {
 			echo  date('c') . ' - ' . $msg."\n";
 		}
 	}
-        if ($config['printMessageLogfile'] != false) {
-                if (! is_file($config['printMessageLogfile'])) {
-                        touch($config['printMessageLogfile']);
-                        if (substr(sprintf('%o', fileperms($config['printMessageLogfile'])), -3) != '777')  {
-                                chmod($config['printMessageLogfile'], 0777);
-                        }
-                }
-                file_put_contents($config['printMessageLogfile'], date('c') . ' - ' . $_SERVER['SCRIPT_NAME']. ' - ' . $msg . "\n", FILE_APPEND);
-        }
+	if ($config['printMessageLogfile'] != false) {
+		if (is_file($config['printMessageLogfile']) && filesize($config['printMessageLogfile']) > 10000000) {
+			unlink($config['printMessageLogfile']);
+		}
+		if (! is_file($config['printMessageLogfile'])) {
+			touch($config['printMessageLogfile']);
+			if (substr(sprintf('%o', fileperms($config['printMessageLogfile'])), -3) != '777')  {
+				chmod($config['printMessageLogfile'], 0777);
+			}
+		}
+		file_put_contents($config['printMessageLogfile'], date('c') . ' - ' . $_SERVER['SCRIPT_NAME']. ' - ' . $msg . "\n", FILE_APPEND);
+	}
 }
 
 # Récupérer les informations de la sonde de température

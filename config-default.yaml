@@ -149,6 +149,9 @@ emoncms:
 
 ### Page Web : 
 www:
+    # Mot de passe d'accès à la page web
+    password: false                     # http://www.passwordtool.hu/md5-password-hash-generator
+    passwordLife: 86400                 # Durée de vie du mot de passe en seconde
     # Délais de raffraichissement de la page (en seconde) 300 = 5 minutes
     refreshTime: 300
     # Max de la jauge voltage batterie (en V) 
@@ -184,7 +187,12 @@ www:
     checkUpdate: 43200                              # false for disable, or seconds checks
     domo: false                                      # Enable domo on web interface ?
     domoRefreshTime: 5                              # Refresh time domo in second
+    domoPassword: false                             # Domo password in MD5 - http://www.passwordtool.hu/md5-password-hash-generator
+    domoEdit: false                                  # Script edit on web /domo-edit-script.php page
+    domoEditPassword: false                         # DomoEdit password in MD5 - http://www.passwordtool.hu/md5-password-hash-generator
     help: false                                      # Active l'assistance
+    domoEditExampleDir: /opt/PvMonit/domo/relay.script.d/example
+
 
 # Ecran LCD (avec script PvMonit/lcd
 lcd:
@@ -218,6 +226,50 @@ domo:
         #PPV: (^[0-9]+\.?[0-9]+?$)|(^[0-9]$)                 # Production des MPPT
         #CS: ^Off$|Fault$|Bulk|Faible|Abs|Float|On$         # MPPT etat (float, bulk...)
         #Relay: ^ON|OFF|on|off|Off|On|0|1$                      # SmartSolar MPPT Relay ou BMV
+    valueSimu:          # Les valeurs pour la simulation blockly des "valueUse"
+        SOC:
+            - type:number
+            - value:90
+            - min:0
+            - max:100
+            - output:Number
+            - tooltip:"% des batteries"
+        Relay:
+            - type:dropdown
+            - value:0|1
+            - output:Number
+            - tooltip:"Etat du relai (sur le victron)"
+        CS:
+            - type:dropdown
+            - value:Float|Absorption|Bulk|Off|Fault
+            - output:String
+            - tooltip:"Statut du régulateur"
+        P: 
+            - type:number
+            - value:200
+            - min:-5000
+            - max:5000
+            - output:Number
+            - tooltip:"Puissance (BMV)"
+        PPV:
+            - type:number
+            - value:400
+            - min:0
+            - max:5000
+            - output:Number
+            - tooltip:"Puissance des panneaux"
+        PPVT:
+            - type:number
+            - value:400
+            - min:0
+            - max:5000
+            - output:Number
+            - tooltip:"Puissance total des panneaux"
+        EXEMPLEINPUT:
+            - type:input
+            - value:Test
+            - output:String
+            - tooltip:"Juste un exemple d'input"
     relay:
         scriptDir: /opt/PvMonit/domo/relay.script.d
         scriptExecInterval: 60                # Interval d'execution des script de relais
@@ -247,3 +299,26 @@ domo:
         refresh: 0.3
         actionButtonDelay: 2        # délais (en seconde) avant que les actions boutton n'est un effet
 
+cloud:                              # Cloud service, visit http://pvmonit.zici.fr
+    daemon: false
+    url: http://pvmonit.zici.fr/id/
+    api: XXXXXXXXXXXXXXX
+    sendDelay: 300       # Délai d'envoi de donnée (en seconde)
+
+#~ user: # Ok for text/number/password... 
+    #~ startTime:                           # name in form
+        #~ id: startTime
+        #~ label: "Heure de début"
+        #~ type: number
+        #~ value: 1
+        #~ min: 0
+        #~ max: 23
+        #~ step: 1
+    #~ endTime: 
+        #~ id: startTime
+        #~ label: "Heure de début"
+        #~ type: number
+        #~ value: 6
+        #~ min: 0
+        #~ max: 23
+        #~ step: 1

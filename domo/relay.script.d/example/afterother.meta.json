@@ -1,0 +1,6 @@
+{
+  "title": "5 minutes après un autre allumage",
+  "desc": "Si un autre relai est allumé, on attend 5 minutes avant d'allumé celui-ci",
+  "data": {
+  }
+}

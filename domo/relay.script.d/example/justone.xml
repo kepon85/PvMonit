@@ -1,0 +1,176 @@
+<xml xmlns="https://developers.google.com/blockly/xml">
+  <variables>
+    <variable id="%T:aQsW_09Pq7OFw5^2R">retour_mod</variable>
+    <variable id="O*:+KwYE$esPIH8f?9M`">retour_log</variable>
+  </variables>
+  <block type="variables_set" id="{e?epK5K_ij=dm|lF]n}" x="83" y="27">
+    <field name="VAR" id="%T:aQsW_09Pq7OFw5^2R">retour_mod</field>
+    <comment pinned="false" h="80" w="160">Retour par défaut&#10;1 relai éteind&#10;2 relai allumé&#10;</comment>
+    <value name="VALUE">
+      <block type="math_number" id="!KJp:1-VAp_|vKl~_Hv|">
+        <field name="NUM">1</field>
+      </block>
+    </value>
+    <next>
+      <block type="variables_set" id="Q)sJ(K7rt5d0a=avn.xy">
+        <field name="VAR" id="O*:+KwYE$esPIH8f?9M`">retour_log</field>
+        <comment pinned="false" h="80" w="160">Pour laffichage dans le log</comment>
+        <value name="VALUE">
+          <block type="logic_null" id="e^p|sHvEOA4bTWw--v?)"/>
+        </value>
+        <next>
+          <block type="controls_if" id="^Z@`1llaRe%j{Q*2l1z2">
+            <comment pinned="false" h="80" w="160">Si le régulateur est en abs/float et que le relai ne c'est pas allumé aujourd'hui</comment>
+            <value name="IF0">
+              <block type="logic_operation" id="cCq5jSCqlW,]L=RQk,zh">
+                <field name="OP">AND</field>
+                <value name="A">
+                  <block type="mpptabsorflo" id="}Om(,Us$(l?LY}/*.(Bx">
+                    <field name="simu_return">true</field>
+                  </block>
+                </value>
+                <value name="B">
+                  <block type="logic_compare" id="1+3zif5)B=5RsJ`AzzgQ">
+                    <field name="OP">EQ</field>
+                    <value name="A">
+                      <block type="relayuptoday" id="b/uLn$+E3np5@jkRfSE5">
+                        <field name="simu_return">false</field>
+                        <comment pinned="false" h="80" w="160">Retourne vrai si le relai c'est déjà allumé ce jour</comment>
+                        <value name="id">
+                          <block type="thisid" id="S_IOeAxLC#FZW.Hk#-`~"/>
+                        </value>
+                      </block>
+                    </value>
+                    <value name="B">
+                      <block type="logic_boolean" id="dQE%8MHi^7+0o.``1{zU">
+                        <field name="BOOL">FALSE</field>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <statement name="DO0">
+              <block type="variables_set" id=")5qvD45^+$+Hwt~Zij%x">
+                <field name="VAR" id="O*:+KwYE$esPIH8f?9M`">retour_log</field>
+                <value name="VALUE">
+                  <block type="text" id="[:SS7hjo.oKTpL_DTt*z">
+                    <field name="TEXT">Le régulateur est en Abs ou Float et ce relai n'a pas été allumé ce jour</field>
+                  </block>
+                </value>
+                <next>
+                  <block type="variables_set" id="]O[R^:wV|B80q0#jl^Gg">
+                    <field name="VAR" id="%T:aQsW_09Pq7OFw5^2R">retour_mod</field>
+                    <value name="VALUE">
+                      <block type="math_number" id="ex*fc8n2:i`28o(E`CDz">
+                        <field name="NUM">2</field>
+                      </block>
+                    </value>
+                  </block>
+                </next>
+              </block>
+            </statement>
+            <next>
+              <block type="controls_if" id="c$ZLOk$t8v7TP/dF8dD5">
+                <comment pinned="false" h="80" w="160">Maintient allumé le relai durant un temps minimum de 300ss ici</comment>
+                <value name="IF0">
+                  <block type="logic_operation" id="qx+[WhrLs-eo@.pnvDVN">
+                    <field name="OP">AND</field>
+                    <value name="A">
+                      <block type="logic_compare" id="QBJ}AQa3bCC`bapLrk_w">
+                        <field name="OP">EQ</field>
+                        <value name="A">
+                          <block type="thisetat" id="jw*qw:dzJ}OO-a+[rdiU">
+                            <field name="simu_return">0</field>
+                          </block>
+                        </value>
+                        <value name="B">
+                          <block type="math_number" id=".-`!+E3v00tHubkk!f{F">
+                            <field name="NUM">1</field>
+                          </block>
+                        </value>
+                      </block>
+                    </value>
+                    <value name="B">
+                      <block type="timeupmin" id="|pn40e/vNl;nhtwW^!dn">
+                        <field name="delai">300</field>
+                        <field name="simu_return">true</field>
+                        <value name="id">
+                          <block type="thisid" id="/.^Y4pk9?xNE*o4]!2$L"/>
+                        </value>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+                <statement name="DO0">
+                  <block type="variables_set" id="gJnRzQXD!3W8#-45OL#%">
+                    <field name="VAR" id="O*:+KwYE$esPIH8f?9M`">retour_log</field>
+                    <value name="VALUE">
+                      <block type="text" id="_y@aP:xY5DJn%Mu;^^*%">
+                        <field name="TEXT">Le temps minimum (ici de 300s) d'allumage n'est pas dépassé</field>
+                      </block>
+                    </value>
+                    <next>
+                      <block type="variables_set" id="q4juI(IBek.^kg-N@d%v">
+                        <field name="VAR" id="%T:aQsW_09Pq7OFw5^2R">retour_mod</field>
+                        <value name="VALUE">
+                          <block type="math_number" id="()RV][j^yAjtDjwZCbLf">
+                            <field name="NUM">2</field>
+                          </block>
+                        </value>
+                      </block>
+                    </next>
+                  </block>
+                </statement>
+                <next>
+                  <block type="text_print" id="T#jI?T]p[WP`4J3C6r}]">
+                    <value name="TEXT">
+                      <shadow type="text" id="!ft[rdbCAIrN4*9}({7;">
+                        <field name="TEXT">abc</field>
+                      </shadow>
+                      <block type="text_join" id="Kb!Cc|=)1]OLd2MXfTp;">
+                        <mutation items="2"/>
+                        <value name="ADD0">
+                          <block type="text" id="XrB6!+?S#y`9=h];2)?#">
+                            <field name="TEXT">Le MODE est décidé à : </field>
+                          </block>
+                        </value>
+                        <value name="ADD1">
+                          <block type="variables_get" id="3(pU3`qnKU8pJL;df)#A">
+                            <field name="VAR" id="%T:aQsW_09Pq7OFw5^2R">retour_mod</field>
+                          </block>
+                        </value>
+                      </block>
+                    </value>
+                    <next>
+                      <block type="text_print" id="A!d_KA]Waa3W`n2GUS9i">
+                        <value name="TEXT">
+                          <shadow type="text" id="T1-[]_d8Ht4EG^?*Z`g4">
+                            <field name="TEXT">abc</field>
+                          </shadow>
+                          <block type="text_join" id="+kWA)-%mLk*icR`!z*o(">
+                            <mutation items="2"/>
+                            <value name="ADD0">
+                              <block type="text" id="a|,tm=]k.bSU*:R1.E-3">
+                                <field name="TEXT">Retour de log : </field>
+                              </block>
+                            </value>
+                            <value name="ADD1">
+                              <block type="variables_get" id="b?3[d[7AzbaB(`LU?gl9">
+                                <field name="VAR" id="O*:+KwYE$esPIH8f?9M`">retour_log</field>
+                              </block>
+                            </value>
+                          </block>
+                        </value>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </next>
+  </block>
+</xml>

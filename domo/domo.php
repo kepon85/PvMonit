@@ -34,7 +34,7 @@ function xml_data_get($DATA_FILE)  {
             }
         }
         // On vérifie si toutes les données sont là
-        if (count($xmlData) != count($config['domo']['valueUse'])) {
+        if (count($xmlData) < count($config['domo']['valueUse'])) {
             trucAdir(5, count($xmlData).' éléments sont trouvés alors que '.count($config['domo']['valueUse']).' éléments sont attendu dans la configuration');
             trucAdir(2, 'Toutes les données requisent ne sont pas présentes dans le XML donc on passe notre chemin (vérifier domo/valueUse dans le fichier config.yaml)');
             $xmlData = false;
@@ -334,6 +334,13 @@ while(true) {
     //
     if ($xml_check_error == 0) {
         if ($relay_script_last_exec+$config['domo']['relay']['scriptExecInterval'] < time()) {
+            
+            
+            if ($config['md5sum'] != md5_file('/opt/PvMonit/config.yaml')) {
+                trucAdir(1, "Changement dans la configuration, relecture !");
+                $config = getConfigYaml('/opt/PvMonit');
+            }
+            
             trucAdir(3, "Traitement des ordres");
             if (is_array($relayMod) && is_array($relayEtat)) {
                 foreach ($relayMod as $relay => $Mod) {
@@ -346,6 +353,11 @@ while(true) {
                                 $thisMod=$relayMod[$relay];
                                 $data=$xml_data_get;
                                 $script_return = (include $config['domo']['relay']['scriptDir'].'/'.$relay.'.php');
+                                if ($relay == 7) {
+                                    //~ var_dump($relayMod[$relay]);
+                                    //~ var_dump($script_return);
+                                    trucAdir(2, "7 debug : ".$relayMod[$relay]."!=".$script_return['mod']);
+                                }
                                 if ($relayMod[$relay] != $script_return['mod'] && $script_return != null) {
                                     trucAdir(1, "Changement de mod pour le relay ".$relay." (".$thisMod." vers ".$script_return['mod'].")");
                                     trucAdir(2, "Pourquoi ? : ".$script_return['log']);

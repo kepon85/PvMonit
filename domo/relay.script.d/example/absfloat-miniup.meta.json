@@ -1,0 +1,7 @@
+{
+  "title": "Allumage selon le régulateur est en abs/float + temp minimum",
+  "desc": "Si le régulateur est en Absorption ou en Float, on allume ce relai. De plus on maintient allumé le relai si un temps minimum ne c'est pas écoulé depuis son allumage (20minutes dans l'exemple)",
+  "data": {
+    "CS": "CS"
+  }
+}

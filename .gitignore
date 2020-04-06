@@ -1,7 +1,11 @@
 config.php
 config.yaml
+config.yaml.*
 demo.sh
 gitPush.sh
 www/data-xml.php-test.html
 bin-enabled/*.php
 domo/relay.script.d/*.php
+domo/relay.script.d/*.blockly.md5
+domo/relay.script.d/*.blockly.xml
+domo/relay.script.d/*.php_bkp

@@ -1,0 +1,7 @@
+{
+  "title": "Allumage selon le % de batterie (BMV)",
+  "desc": "Si la batterie est au\n dessus de X% on allume ce relai",
+  "data": {
+    "SOC": "SOC"
+  }
+}

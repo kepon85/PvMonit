@@ -1,23 +1,28 @@
 <?php
+$retour['mod'];
+$retour['log'];
 
-# Pompe de rellevage
 
-// Par défaut à off (auto)
-$return['log'] = null;
-$return['mod'] = 1;
+// Retour par défaut
+// 1 relai éteind
+// 2 relai allumé
 
-# Temps d'allumage
-$timeUp=300;
-
-if (MpptAbsOrFlo($data['CS']) && $data['SOC'] > 94 && !relayUpToday($thisId)) {     
-    $return['log'] = 'UP La batterie est chargé à 98% et pas lancé aujourd hui';
-    $return['mod'] = 2;
+$retour['mod'] = 1;
+// Pour laffichage dans le log
+$retour['log'] = null;
+// Si le régulateur est en abs/float et que le relai ne c'est pas allumé aujourd'hui
+// Retourne vrai si le relai c'est déjà allumé ce jour
+if ((MpptAbsOrFlo($data['CS'])) && (relayUpToday(($thisId))) == false) {
+  $retour['log'] = 'Le régulateur est en Abs ou Float et ce relai n\'a pas été allumé ce jour';
+  $retour['mod'] = 2;
 }
-if ($thisEtat == 1 && timeUpMin($thisId, $timeUp)) {
-    $return['log'] = 'UP, maintient allume, le temps n est pas passé';
-    $return['mod'] = 2; 
-} 
+// Maintient allumé le relai durant un temps minimum de 300ss ici
+if (($thisEtat) == 1 && (timeUpMin(($thisId), 300))) {
+  $retour['log'] = 'Le temps minimum (ici de 300s) d\'allumage n\'est pas dépassé';
+  $retour['mod'] = 2;
+}
+#print('Le MODE est décidé à : ' . $retour['mod']);
+#print('Retour de log : ' . $retour['log']);
 
-return $return;
-
+return $retour;
 ?>

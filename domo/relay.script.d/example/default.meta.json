@@ -1,0 +1,6 @@
+{
+  "title": "Allumage selon heure",
+  "desc": "Si il est entre Xh et Yh, on allume ce relai",
+  "data": {
+  }
+}
