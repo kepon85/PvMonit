@@ -1,6 +1,6 @@
-# PvMonit
+# PvMonit - monitoring solaire autonome et gestion du surplus
 
-Il s'agit d'un petit projet de monitoring photovoltaique pour matériel Victron compatible Ve.direct particulièrement adapté pour les installations autonômes. Il permet une vue "en direct" et un export de l'historique vers [emoncms](https://openenergymonitor.org/emon/emoncms) (une branche d'[OpenEnergyMonitor project](http://openenergymonitor.org)).
+Il s'agit d'un projet de monitoring photovoltaique pour matériel Victron compatible Ve.direct particulièrement adapté pour les installations autonomes. Il permet une vue "en direct" et un export de l'historique vers [emoncms](https://openenergymonitor.org/emon/emoncms) (une branche d'[OpenEnergyMonitor project](http://openenergymonitor.org)). Il est aussi possible de gérer le surplus d'énergie solaire non utilisé [avec le module domotique](https://david.mercereau.info/pvmonit-v2-0-domotique-gestion-surplus-electrique-solaire-en-autonomie/).
 
 Démonstration :
 
@@ -26,26 +26,32 @@ PvMonit support tout le matériel Victron compatible Ve Direct :
 
 ## Service / Commander / soutenir le projet
 
-### Téléchargé prêt à l'emploi
+### Faire un don
 
-Télécharger [raspbian](https://www.raspberrypi.org/downloads/raspbian/) + PvMonit d'installé prêt à l'emploi. Il n'y a plus qu'a copier le tout sur une carte SD.
-
-Note : Cette version faite pour être installé sur un Raspbery Pi et pour être connecté avec du matériel Victron par câble USB ve.direct (découvert automatiquement)
-
-
+Pour soutenir le projet vous pouvez faire un don libre à l'auteur parce que ça représente des centaines et des centaines d'heures de travail un machin comme ça : https://david.mercereau.info/soutenir/
 
 ### Livré sur mesure 
 
-Pour soutenir le projet vous pouvez faire un don à l'auteur parce que ça représente des centaines et des centaines d'heures de travail : https://david.mercereau.info/soutenir/
+Vous pouvez aussi vous commander PvMonit avec ou sans Raspbery Pi tout prêt à l'emploi : https://david.mercereau.info/pvmonit/#shop sur mesure pour votre projet.
 
-Vous pouvez aussi vous commandez un raspbery pi avec PvMonit tout prêt à l'emploi : https://david.mercereau.info/pvmonit/#shop sur mesure, ça permet de soutenir le projet.
+### Téléchargé prêt à l'emploi
+
+Pour 35€, télécharger [raspbian](https://www.raspberrypi.org/downloads/raspbian/) + PvMonit d'installé prêt à l'emploi. Il n'y a plus qu'a copier le tout sur une carte SD.
+
+Note : Cette version faite pour être installé sur un Raspbery Pi et pour être connecté avec du matériel Victron par câble USB ve.direct (découvert automatiquement)
+
+Recevez un lien de téléchargement par email : https://david.mercereau.info/pvmonit/#shop
 
 ### Service cloud
 
 Pour 15€/ans un service de cloud est à votre disposition. L'interface PvMonit est exporté sur un serveur distant ce qui permet son accès depuis n'importe quel ordinateur connecté a Internet. 
 
-* 2 niveau de mot de passe son possible pour la connexion au service 
+* 2 niveau de mot de passe son possible pour la connexion au service si vous souhaitez rester discret
 * Si vous utilisez la domotique pour le surplus d'énergie vous pouvez activer ou désactiver les relais à distance
+
+Exemple avec mon installation : http://david.pvmonit.zici.fr/
+
+Commander par ici : https://david.mercereau.info/pvmonit/#shop
 
 ## Changelog
 
@@ -72,6 +78,8 @@ Pour 15€/ans un service de cloud est à votre disposition. L'interface PvMonit
   - David Mercereau [david #arobase# mercereau #point# info](http://david.mercereau.info/contact/)
 
 ## Support
+
+**Aucun support ne sera fait pour la conception des scripts "domotiques" pour la gestion du surplus d'énergie. Mais je peux vous les concevoir sur mesure.**
 
 Le support se fait par ici : https://framagit.org/kepon/PvMonit/issues
 

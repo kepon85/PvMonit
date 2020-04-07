@@ -71,6 +71,12 @@ Dépendance du script :
 aptitude install php-pdo-sqlite php-xml
 ```
 
+Indiquer les bonnes permissions : 
+
+```bash
+chown pvmonit:pvmonit /opt/PvMonit/domo -R
+```
+
 Lancement du script à la main
 
 ```bash
