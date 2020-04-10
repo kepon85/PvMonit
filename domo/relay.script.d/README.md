@@ -4,7 +4,7 @@ Documentation pour construire des ordres pour les relais
 
 Les scripts qui donne les ordres sont dans /opt/PvMonit/domo/relay.script.d/
 
-Ils sont rédigé en PHP mais peuvent être édité avec Blockly si vous ne savez pas programmé. Ensuite Blockly génère du PHP...
+Ils sont rédigé en PHP mais peuvent être édité avec Blockly si vous ne savez pas programmé. Ensuite Blockly génère du PHP... (démonstration ici : http://demo.zici.fr/PvMonit/domo-edit-script.php)   Vous pouvez l'attendre avec l'adresse http://votreraspbery/domo-edit-script.php
 
 ## Les relais
 

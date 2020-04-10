@@ -151,6 +151,7 @@ if(count($bin_enabled_data) > 2 || $config['data']['ppv_total'] || $config['data
                                 foreach ($array_data as $i => $value) {
                                     unset($array_data[$i]);
                                 }
+                                trucAdir(3, "Lecture du script ".$bin_script_enabled);
                                 $script_return = (include $config['dir']['bin_enabled'].'/'.$bin_script_enabled);
                                 file_put_contents($cache_file_script, json_encode($script_return));
                                 if (substr(sprintf('%o', fileperms($cache_file)), -3) != '777')  {
