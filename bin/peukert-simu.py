@@ -105,7 +105,7 @@ while True:
 
                 # Capacité  a l'instant T en fonction de Peukert
                 # Donc l’ampérage a l'instant T EXPOSANT coefficient de peukert MULTIPLIER par le temps $T (temps entre 2 mesures)
-                CapT=reversCurent(I)*Coef*TempEntre2passage
+                CapT=pow(reversCurent(I),Coef)*TempEntre2passage
                 logMsg(3, "CapT  = " + str(CapT) + "Ah")
 
                 # Capacité restante Réelle en Ah
@@ -129,60 +129,3 @@ while True:
             logMsg(3, "Aucune synchro pour le moment, patientez jusqu'au prochain float du régulateur")
         
     time.sleep(sleepInterval)
-        # ~ try:
-                # ~ # Lecture du caractère en UTF 8
-                # ~ c = ser.read().decode('utf-8')
-                # ~ readSerial=1
-        # ~ except:
-                # ~ logMsg(3, "Erreur sur le read ")
-                # ~ readSerial=0
-        # ~ # Si un caractère est présent
-        # ~ if c and readSerial == 1:
-                # ~ # Si c'est un saut de ligne, la ligne est complète
-                # ~ if c == "\n":
-                        # ~ isStop=line[0:4]
-                        # ~ isSonde=line[0:2]
-                        # ~ isSerial=line[0:3]
-                        # ~ patternSerial = re.compile(r"S:[1-3]")
-                        # ~ logMsg(4, configGet('vedirect', 'arduino', 'serial', 'port') + " : " + line)
-                        # ~ # le stop
-                        # ~ if isStop == "STOP":
-                                # ~ logMsg(2, "Détection du STOP, on write le fichier")
-                                # ~ with open(configGet('vedirect', 'arduino', 'data_file'), 'w') as yaml_file:
-                                        # ~ yaml.dump(dataFile, yaml_file, default_flow_style=False)
-                                # ~ time.sleep(configGet('vedirect', 'arduino', 'serial', 'whileSleepAfterStop'))
-                        # ~ # Le serial
-                        # ~ elif patternSerial.match(isSerial):
-                                # ~ logMsg(4, "Un serial ;")
-                                # ~ lineSplit=line.split("_")
-                                # ~ dataName=lineSplit[0]
-                                # ~ dataNameSplit=dataName.split(":")
-                                # ~ nom="Serial" + dataNameSplit[1]
-                                # ~ # Nom déclaré s'il ne l'est pas déjà
-                                # ~ if nom not in dataFile:
-                                        # ~ dataFile[nom]={}
-                                # ~ dataValuesSplit=lineSplit[1].split("\t")
-                                # ~ # Valeur
-                                # ~ if dataValuesSplit[0] != "Checksum":
-                                        # ~ dataFile[nom].update({dataValuesSplit[0] : dataValuesSplit[1].replace('\r','')})
-                        # ~ # Les sondes
-                        # ~ elif isSonde == "S:" :
-                                # ~ logMsg(4, "Une sonde ;")
-                                # ~ lineSplit=line.split("_")
-                                # ~ dataName=lineSplit[0]
-                                # ~ dataNameSplit=dataName.split(":")
-                                # ~ nom=dataNameSplit[1]
-                                # ~ dataFile[nom]={}
-                                # ~ dataValues=lineSplit[1]
-                                # ~ dataValuesSplit=dataValues.split(",")
-                                # ~ for values in dataValuesSplit:
-                                        # ~ value=values.split(":")
-                                        # ~ dataFile[nom].update({value[0] : value[1].replace('\r','')})
-                        # ~ else:
-                                # ~ logMsg(1, "Erreur ligne non pris en charge :" + line)
-                        # Remise à 0
-                        # ~ line=""
-                        
-                # ~ else:
-                        # ~ # Sinon on concataine
-                        # ~ line+=c
