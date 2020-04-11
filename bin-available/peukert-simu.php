@@ -1,7 +1,6 @@
 <?php
 $exportData='/tmp/peukert-export.json';
 $expir_data=60;
-
 if (!is_file($exportData) || filemtime($exportData)+$expir_data < time()){
     trucAdir(1, 'Erreur le fichier '.$exportData.' n\'est pas présent ou est périmé');
 } else {
@@ -22,7 +21,5 @@ if (!is_file($exportData) || filemtime($exportData)+$expir_data < time()){
         $nb++;
     }
 }
-
 return $array_data;
-
 ?>
