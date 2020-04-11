@@ -29,8 +29,8 @@ def reversCurent(n):
 def export2json(exp_soc, exp_cap):
     data = []
     data.append({
-        'SOC': exp_soc,
-        'CAP': exp_cap
+        'SOC': round(exp_soc, 2),
+        'CAP': round(exp_cap, 2)
     })
     with open(exportData, 'w') as outfile:
         json.dump(data, outfile)
@@ -93,7 +93,7 @@ while True:
             time_messure=time.time()
             
             if time_messure_precedente == 0:
-                print('Première messure, on ignore le calcul sinon ça fait tout merdé... Faut comprendre pourquoi...')
+                logMsg(3, 'Première messure, on ignore le calcul sinon ça fait tout merdé... Faut comprendre pourquoi...')
             else: 
                 # Temps écoulé entre 2 mesures en heures, donc l'heure qu'il est MOINS l'heure qu'il était,
                 # Le tout divisé par 3600 pour avoir des heures et non des secondes
@@ -118,8 +118,10 @@ while True:
                 SOC=Cap/CapDischargeMax*100;
                 logMsg(3, "SOC  = " + str(SOC) + "%")
                 
-                # Export
-                export2json(SOC, Cap)
+                # Si les valeur sont bien des float
+                if isinstance(SOC, float) and isinstance(Cap, float):
+                    # Export
+                    export2json(SOC, Cap)
                 
             # On enregistre le moment de la messure précédente
             time_messure_precedente=time_messure
