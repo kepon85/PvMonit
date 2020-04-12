@@ -86,7 +86,7 @@ while True:
             logMsg(3, "Capacité restante  = " + str(CapRest))
             
             # On récupère le courant
-            I=int(data['Serial3']['I'])/1000 # Courant (en mA)
+            I=float(data['Serial3']['I'])/1000 # Courant (en mA)
             logMsg(1, "Courant  = " + str(I))
             
             # Moment de la mesure :
@@ -99,13 +99,13 @@ while True:
                 # Le tout divisé par 3600 pour avoir des heures et non des secondes
                 logMsg(5, "Temps messure  = " + str(time_messure) + "s")
                 logMsg(5, "Temps messure précédente = " + str(time_messure_precedente) + "s")
-                TempEntre2passage=(int(time_messure)-int(time_messure_precedente))/3600;
+                TempEntre2passage=(float(time_messure)-float(time_messure_precedente))/3600;
                 
                 logMsg(1, "Temps entre 2 passage  = " + str(TempEntre2passage) + "H")
 
                 # Capacité  a l'instant T en fonction de Peukert
                 # Donc l’ampérage a l'instant T EXPOSANT coefficient de peukert MULTIPLIER par le temps $T (temps entre 2 mesures)
-                CapT=I**Coef*TempEntre2passage
+                CapT=float(pow(reversCurent(I),Coef)*TempEntre2passage)
                 logMsg(3, "CapT  = " + str(CapT) + "Ah")
 
                 # Capacité restante Réelle en Ah
