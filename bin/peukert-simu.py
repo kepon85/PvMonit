@@ -105,7 +105,7 @@ while True:
 
                 # Capacité  a l'instant T en fonction de Peukert
                 # Donc l’ampérage a l'instant T EXPOSANT coefficient de peukert MULTIPLIER par le temps $T (temps entre 2 mesures)
-                CapT=pow(reversCurent(I),Coef)*TempEntre2passage
+                CapT=I**Coef*TempEntre2passage
                 logMsg(3, "CapT  = " + str(CapT) + "Ah")
 
                 # Capacité restante Réelle en Ah
