@@ -12,7 +12,7 @@ printMessage=5      # 5=debug, 1=silence
 sleepInterval=8     # Temps entre 2 pasage (en s)
 importDataYaml='/tmp/PvMonit_getSerialArduino.data.yaml'
 # Pour les test on peur importer des valeurs : 
-#importDataYaml='/opt/PvMonit/bin/peukert-simu-datatest.yaml'
+importDataYaml='/opt/PvMonit/bin/peukert-simu-datatest.yaml'
 exportData='/tmp/peukert-export.json'
 IreversCurent=True   # Inversé le courant dans les formule ( -1A devient 1A, 1A devient -1A
 # Loin de pouvoir faire ça toutes les 500ms sur le raspberry parce que j'ai le retour du BMV toutes les 8 secondes (structruellement il faudrait que ça soit directement sur l'Arduino chez moi encore une fois..)
@@ -80,7 +80,7 @@ while True:
         
         # Export
         export2json(SOC, Cap)
-    else: 
+    elif int(data['Serial1']['CS']) < 5 and int(data['Serial2']['CS']) < 5:
         if synchro == True:
             
             CapRest=Cap
@@ -123,11 +123,18 @@ while True:
                 # La valeur de $Cap est donc la valeur réelle en Ah a afficher et a comparer avec ce que dis le BVM
                 Cap=CapRest-CapT;
                 logMsg(3, "Cap restante  = " + str(Cap) + "Ah")
-
+                
                 # Produit en croix qui donne la valeur de $Cap en %
                 SOC=Cap/CapDischargeMax*100;
                 logMsg(3, "SOC  = " + str(SOC) + "%")
                 
+                if Cap >= CapDischargeMax:
+                    logMsg(1, "CAP est >= à " + str(CapDischargeMax) + "Ah (CapDischargeMax) c'est une erreur, on corrige")
+                    Cap=CapDischargeMax;
+                    logMsg(3, "Correction : Cap restante  = " + str(Cap) + "Ah")
+                    SOC=100;
+                    logMsg(3, "Correction : SOC  = " + str(SOC) + "%")
+
                 # Si les valeur sont bien des float
                 if isinstance(SOC, float) and isinstance(Cap, float):
                     # Export
