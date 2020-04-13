@@ -14,6 +14,7 @@ importDataYaml='/tmp/PvMonit_getSerialArduino.data.yaml'
 # Pour les test on peur importer des valeurs : 
 #importDataYaml='/opt/PvMonit/bin/peukert-simu-datatest.yaml'
 exportData='/tmp/peukert-export.json'
+IreversCurent=True   # Inversé le courant dans les formule ( -1A devient 1A, 1A devient -1A
 # Loin de pouvoir faire ça toutes les 500ms sur le raspberry parce que j'ai le retour du BMV toutes les 8 secondes (structruellement il faudrait que ça soit directement sur l'Arduino chez moi encore une fois..)
 # Bon même si on peut se dire que l'imprécision ça permet de tester...
 
@@ -103,11 +104,20 @@ while True:
                 
                 logMsg(1, "Temps entre 2 passage  = " + str(TempEntre2passage) + "H")
 
+                # Si c'est demandé, on invers le courant
+                if IreversCurent == True:
+                    I=reversCurent(I)
+                    logMsg(5, "Valeur pour le courant inversé, I  = " + str(I) + "A")
+                
                 # Capacité  a l'instant T en fonction de Peukert
                 # Donc l’ampérage a l'instant T EXPOSANT coefficient de peukert MULTIPLIER par le temps $T (temps entre 2 mesures)
-                CapT=float(pow(reversCurent(I),Coef)*TempEntre2passage)
+                if I < 0:
+                    CapT=float(pow(abs(I),Coef)*TempEntre2passage)
+                    CapT=CapT*-1
+                else:
+                    CapT=float(pow(I,Coef)*TempEntre2passage)
                 logMsg(3, "CapT  = " + str(CapT) + "Ah")
-
+                
                 # Capacité restante Réelle en Ah
                 # donc capacité restante MOINS la capacité calculé a l'instant T trouvée plus haut
                 # La valeur de $Cap est donc la valeur réelle en Ah a afficher et a comparer avec ce que dis le BVM
