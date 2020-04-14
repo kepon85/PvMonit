@@ -7,7 +7,7 @@ import json
 # Définition
 CapNomi=220          # Capacité de peukert nominale en Ah a déterminer par l'utilisateur
 Coef=1.25          # Coefficient de Peukert a déterminer par l'utilisateur              // 1,2 pour le plomb AGM
-ChargeEfficiencyFactor=0.65
+ChargeEfficiencyFactor=1
 DischargeMax=100   # Pourcentage max de décharge sous lequel il ne faut pas descendre pour ne pas détériorer la batterie  (100%, on affiche tout le niveau de batterie)
 printMessage=5      # 5=debug, 1=silence
 sleepInterval=8     # Temps entre 2 pasage (en s)
