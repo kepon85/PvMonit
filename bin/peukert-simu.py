@@ -7,12 +7,13 @@ import json
 # Définition
 CapNomi=220          # Capacité de peukert nominale en Ah a déterminer par l'utilisateur
 Coef=1.25          # Coefficient de Peukert a déterminer par l'utilisateur              // 1,2 pour le plomb AGM
+ChargeEfficiencyFactor=0.65
 DischargeMax=100   # Pourcentage max de décharge sous lequel il ne faut pas descendre pour ne pas détériorer la batterie  (100%, on affiche tout le niveau de batterie)
 printMessage=5      # 5=debug, 1=silence
 sleepInterval=8     # Temps entre 2 pasage (en s)
 importDataYaml='/tmp/PvMonit_getSerialArduino.data.yaml'
 # Pour les test on peur importer des valeurs : 
-importDataYaml='/opt/PvMonit/bin/peukert-simu-datatest.yaml'
+#importDataYaml='/opt/PvMonit/bin/peukert-simu-datatest.yaml'
 exportData='/tmp/peukert-export.json'
 IreversCurent=True   # Inversé le courant dans les formule ( -1A devient 1A, 1A devient -1A
 # Loin de pouvoir faire ça toutes les 500ms sur le raspberry parce que j'ai le retour du BMV toutes les 8 secondes (structruellement il faudrait que ça soit directement sur l'Arduino chez moi encore une fois..)
@@ -88,7 +89,11 @@ while True:
             
             # On récupère le courant
             I=float(data['Serial3']['I'])/1000 # Courant (en mA)
-            logMsg(1, "Courant  = " + str(I))
+            logMsg(3, "Courant  = " + str(I))
+            
+            # On applique le facteur d'efficacité
+            I=float(I*ChargeEfficiencyFactor) # Courant (en mA)
+            logMsg(3, "Courant real = " + str(I))
             
             # Moment de la mesure :
             time_messure=time.time()
