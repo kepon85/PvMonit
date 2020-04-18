@@ -16,7 +16,7 @@ printMessage: 0                             # 0=0	5=debug
 printMessageLogfile: false                  # path or fase
 
 # URL data
-urlDataXml: http://192.168.1.X/data-xml.php # N'utilisez pas 127.0.0.1 mais plutôt l'ip local si vous restez en local (192.168.1.2 ? commande "ip a s" pour l'obtenir, vous ne pouvez pas être en DHCP, mais en IP fixe donc), ou un nom de domain résolu en local et à l'exterieur si c'est publié sur internet
+urlDataXml: http://pvmonit.local/data-xml.php # N'utilisez pas 127.0.0.1 mais plutôt l'ip local si vous restez en local (192.168.1.2 ? commande "ip a s" pour l'obtenir, vous ne pouvez pas être en DHCP, mais en IP fixe donc), ou un nom de domain résolu en local et à l'exterieur si c'est publié sur internet
 tmpFileDataXml: /tmp/PvMonit_data-xml.php.tmp
 
 dir:
