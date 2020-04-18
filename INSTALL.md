@@ -13,11 +13,15 @@ Les fonctionnalités de PvMonit sont dissociable :
   * Affichage LCD
   * Domotique (voir domo/README.md) pour déclencher des actions (allumer des appareils par exemple) suivant l'état du système
 
-#### La base / le socle
+## Pré-requis
+
+Avoir installé Raspbian : https://www.raspberrypi.org/downloads/raspbian/
+
+## La base / le socle
 
 Installation de PvMonit via le dépôt git et de ses dépendances :
 ```bash
-apt-get install php-cli php-yaml git python-serial sudo screen sshpass
+apt-get install php-cli php-yaml git python-serial sudo screen sshpass python3-pip
 cd /opt
 git clone https://github.com/kepon85/PvMonit.git
 cd PvMonit
@@ -61,7 +65,11 @@ Option, pour lancer le daemon par alias :
 echo 'alias pvmonitd="/opt/PvMonit/bin/pvmonitd.php"' >> /etc/bash.bashrc
 ```
 
-### Ve.direct via USB
+## Matériel solair
+
+### Victron
+
+#### Ve.direct via USB
 
 Dans le fichier config.yaml mentionner : 
 ```yaml
@@ -103,7 +111,7 @@ Ajouter :
 + pvmonit ALL=(ALL) NOPASSWD:/usr/bin/python /opt/PvMonit/bin/vedirect.py *
 ```
 
-### Ve.direct via Arduino
+#### Ve.direct via Arduino
 
 Avec l'Arduino IDE, uploader le firmware "ArduinoMegaVeDirect.ino" contenu dans le dossier "firmware" 
 
@@ -192,7 +200,7 @@ systemctl start pvmonit
 ```
 
 
-#### Interface web en temps réel
+## Interface web en temps réel
 
 Installation des dépendances : 
 
@@ -236,13 +244,28 @@ chown -R pvmonit:pvmonit /var/cache/lighttpd
 chown pvmonit:pvmonit /var/run/lighttpd
 ```
 
+Puis dans le fichier /usr/lib/tmpfiles.d/lighttpd.tmpfile.conf modifier toutes les occurrences "www-data" par "pvmonit"
+
+```diff
+- d /run/lighttpd 0750 www-data www-data -
+- d /var/log/lighttpd 0750 www-data www-data -
+- d /var/cache/lighttpd 0750 www-data www-data -
+- d /var/cache/lighttpd/compress 0750 www-data www-data -
+- d /var/cache/lighttpd/uploads 0750 www-data www-data -
++ d /run/lighttpd 0750 pvmonit pvmonit -
++ d /var/log/lighttpd 0750 pvmonit pvmonit -
++ d /var/cache/lighttpd 0750 pvmonit pvmonit -
++ d /var/cache/lighttpd/compress 0750 pvmonit pvmonit -
++ d /var/cache/lighttpd/uploads 0750 pvmonit pvmonit -
+```
+
 On applique la configuration (si lighttpd ne démarre pas il faut creuser la question, regarder les logs...) :
 
 ```bash
 service lighttpd start
 ```
 
-Note : un bug est présent sur ce changement de droit, pour corriger le problème ajouter dans le fichier /etc/rc.local la ligne suivante juste avant "exit 0" 
+Note : si après un reboot lighttpd ne démarre pas, pour corriger le problème ajouter dans le fichier /etc/rc.local la ligne suivante juste avant "exit 0" 
 
 ```bash
 bash /opt/PvMonit/bin/lighttpd-fix-user.sh
@@ -254,7 +277,7 @@ Attention : dans la configuration l'appel du fichier data (urlDataXml) doit cont
 
 ![Screenshot PvMonit](http://david.mercereau.info/wp-content/uploads/2016/11/PvMonit_Full.png)
 
-#### Export vers emoncms
+## Export vers emoncms
 
 Connectez-vous à votre interface emoncms hébergée ou créez un compte sur [emoncms.org](https://emoncms.org/) et rendez-vous sur la page "Input api" https://emoncms.org/input/api :
 
@@ -316,7 +339,9 @@ Voici, pour exemple, mon dashboard : http://emoncms.mercereau.info/dashboard/vie
 Une capture : 
 ![Screenshot emoncms dashboard](http://david.mercereau.info/wp-content/uploads/2016/11/emoncms-mon-dashboard-pvmonit.png)
 
-#### Sonde température/humidité (DHT) sur GPIO (sur raspberi pi)
+## Sondes et capteurs
+
+### Sonde température/humidité (DHT) sur GPIO (sur raspberi pi)
 
 Installation des dépendances : 
 ```
@@ -346,7 +371,7 @@ $dhtModel=22;    // DHT modèle : [11|22|2302]
 $dhtGpio=4;     // GPIO pin number
 ```
 
-#### Sonde température/humidité (DHT) récupéré sur l'arduino
+### Sonde température/humidité (DHT) récupéré sur l'arduino
 
 /!\ Uniquement si vous avez un Arduino pour récolter les donnée
 
@@ -354,14 +379,14 @@ $dhtGpio=4;     // GPIO pin number
 ln -s /opt/PvMonit/bin-available/TempHumByArduino.php /opt/PvMonit/bin-enabled/OTHER-TSol.php 
 ```
 
-#### Sonde de courant (type ACS712) récupéré sur l'arduino
+### Sonde de courant (type ACS712) récupéré sur l'arduino
 
 /!\ Uniquement si vous avez un Arduino pour récolter les donnée
 
 ```bash
 ln -s /opt/PvMonit/bin-available/CurrentByArduino.php/opt/PvMonit/bin-enabled/OTHER-CONSO.php 
 ```
-#### Sonde température USB (option)
+### Sonde température USB (option)
 
 La sonde *thermomètre USB TEMPer*, cette sonde fonctionne avec le logiciel temperv14 qui est plutôt simple à installer
 
@@ -408,7 +433,7 @@ Autres documentations à propos de cette sonde :
   - http://www.generation-linux.fr/index.php?post/2014/06/21/Relever-et-grapher-la-temp%C3%A9rature-de-sa-maison-sur-Debian
   - http://dev-random.net/temperature-measuring-using-linux-and-raspberry-pi/
 
-#### Capteur de courant / tension / watt / conso PZEM-004T V3.0
+### Capteur de courant / tension / watt / conso PZEM-004T V3.0
 
 Contributeur @akoirium merci à lui !
 
@@ -447,7 +472,7 @@ Puis activer le script :
 ln -s /opt/PvMonit/bin-available/Pzem.php /opt/PvMonit/bin-enabled/OTHER-conso.php
 ```
 
-#### Pince ampèremétrique USB  (option)
+### Pince ampèremétrique USB  (option)
 
 /!\ Uniquement si vous n'avez pas d'Arduino
 
@@ -485,7 +510,7 @@ Activer le script (et l'éditer au besoin)
 ln -s /opt/PvMonit/bin-available/AmpermetreUSB.php /opt/PvMonit/bin-enabled/other-CONSO.php
 ```
 
-#### Co² Meter 
+### Co² Meter 
 
 Il s'agit le ht2000 co² meter. Je ne l'utilise que pour le co² ayant des sondes ailleur mais il peut aussi donner l'humidité et la température. Si vous voulez aussi ces informations vous pouvez regarder de ce côté : https://github.com/tomvanbraeckel/slab_ht2000
 
@@ -512,7 +537,7 @@ Commande "visudo" et ajouter :
 + pvmonit ALL=(ALL) NOPASSWD:  /opt/PvMonit/bin/ht2000 *
 ```
 
-#### Raspberry Adafruit LCD RGB - 16x2 + Keypad (option)
+## Raspberry Adafruit LCD RGB - 16x2 + Keypad (option)
 
 Uniquement pour les Raspbery Pi
 

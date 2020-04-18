@@ -4,7 +4,6 @@ include('/opt/PvMonit/function.php');
 // Chargement de la config
 $config = getConfigYaml('/opt/PvMonit');
 
-
 function xml_data_get($DATA_FILE)  {
     global $config;
     $xmlData = null;

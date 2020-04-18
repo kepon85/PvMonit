@@ -68,7 +68,7 @@ Pour la configuration, regarder le fichier config.yaml, dans la partie "domo:"
 Dépendance du script : 
 
 ```bash
-aptitude install php-pdo-sqlite php-xml
+aptitude install php-sqlite3 php-xml
 ```
 
 Indiquer les bonnes permissions : 
@@ -127,7 +127,7 @@ Nous permet d’interagir avec le système sans allumer un ordinateur (ou sans s
 Dépendance du script : 
 
 ```bash
-aptitude install python3 python3-yaml python3-json pip3
+aptitude install python3 python3-yaml python3-json python3-pip
 pip3 install rpi-TM1638
 ```
 
