@@ -42,10 +42,13 @@ def export2json(exp_soc, exp_cap):
 time_messure_precedente=0
 synchro=False
 
+#capacité de peukert nominale
+CapNomiPeuk=Ct*(pow((CapNomi/Ct),(Coef)))
+
 # Capacité de décharge maximum
 # c'est le calcul de 80% de la capacité de peukert nominale en Ah
 # donc la capacité réelle en Ah sans détérioration
-CapDischargeMax=int(CapNomi/100*DischargeMax);
+CapDischargeMax=int(CapNomiPeuk/100*DischargeMax);
 logMsg(1, "Capacité de décharge max : " + str(CapDischargeMax))
 
 export2json(False, False)
@@ -118,19 +121,18 @@ while True:
                 # Capacité  a l'instant T en fonction de Peukert
                 # Donc l’ampérage a l'instant T EXPOSANT coefficient de peukert MULTIPLIER par le temps $T (temps entre 2 mesures)
                 if I < 0:
-                    #CapT=float(pow(abs(I),Coef)*TempEntre2passage)
-                    CapT=float((abs(I)*Ct)/(pow((Ct/TempEntre2passage),(1/Coef))))
+                    CapT=float(pow(abs(I),Coef)*TempEntre2passage)
                     CapT=CapT*-1
                 else:
-                    #CapT=float(pow(I,Coef)*TempEntre2passage)
-                    CapT=float((I*Ct)/(pow((Ct/TempEntre2passage),(1/Coef))))
+                    CapT=float(pow(I,Coef)*TempEntre2passage)
                 logMsg(3, "CapT  = " + str(CapT) + "Ah")
                 
-                # Capacité restante Réelle en Ah
+                # Capacité restante de peukert en Ah
                 # donc capacité restante MOINS la capacité calculé a l'instant T trouvée plus haut
                 # La valeur de $Cap est donc la valeur réelle en Ah a afficher et a comparer avec ce que dis le BVM
                 Cap=CapRest-CapT;
-                logMsg(3, "Cap restante  = " + str(Cap) + "Ah")
+                CapReel=Cap/CapNomiPeuk*CapNomi;
+                logMsg(3, "Cap restante  = " + str(CapReel) + "Ah")
                 
                 # Produit en croix qui donne la valeur de $Cap en %
                 SOC=Cap/CapDischargeMax*100;
@@ -144,9 +146,9 @@ while True:
                     logMsg(3, "Correction : SOC  = " + str(SOC) + "%")
 
                 # Si les valeur sont bien des float
-                if isinstance(SOC, float) and isinstance(Cap, float):
+                if isinstance(SOC, float) and isinstance(CapReel, float):
                     # Export
-                    export2json(SOC, Cap)
+                    export2json(SOC, CapReel)
                 
             # On enregistre le moment de la messure précédente
             time_messure_precedente=time_messure
