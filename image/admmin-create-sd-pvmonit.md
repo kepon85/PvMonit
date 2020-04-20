@@ -39,12 +39,7 @@ PermitRootLogin yes
 
 Balancer sa clef SSH (authorized_keys) pour root et pi
 
-Indiquer la partition opt
-
-```
-mkfs.ext4 /dev/mmcblk0p3          # formater
-e2label /dev/mmcblk0p3 opt        # ajouter le label
-```
+Indiquer la partition opt dans le fstab (formaté en vfat pour que ça soit lisible par windows...)
 
 Ajouter la partition opt dans le fstab : 
 
@@ -52,7 +47,7 @@ Ajouter la partition opt dans le fstab :
 proc            /proc           proc    defaults          0       0
 PARTUUID=738a4d67-01  /boot           vfat    defaults          0       2
 PARTUUID=738a4d67-02  /               ext4    defaults,noatime  0       1
-+ LABEL="opt"           /opt            ext4    defaults,noatime  0       1
++ LABEL="PVMONIT"           /opt            vfat    defaults,users,rw,umask=022,uid=1001,gid=1001  0       0
 ```
 
 Monter : mount -a
@@ -93,10 +88,9 @@ console=serial0,115200 console=tty1 root=PARTUUID=738a4d67-02 rootfstype=ext4 el
 Générer l'image
 
 ```bash
-udo dd bs=4M if=/dev/sdb conv=fsync | split -b 3000m - ./sdb.img
+sudo umount /dev/sdb*
+sudo dd bs=4M if=/dev/sdb conv=fsync | split -b 3000m - ./sdb.img
 ```
-
-
 
 # Changelog
 
@@ -106,5 +100,47 @@ udo dd bs=4M if=/dev/sdb conv=fsync | split -b 3000m - ./sdb.img
   
   Merde pas changé wifi...
 
-2 resize
+* V1.1 18/04/20
+  * wpa_supplicant.conf  dans le boot possible
+  * partition /opt en fat32 pour l'accès depuis un windows...
+
+* a faire
+
+En fait c'est /opt/PvMonit qu'on monte :
+
+```
+umount /opt
+mkdir /opt/PvMonit
+vi /etc/fstab 
+mount -a
+cd /opt/PvMonit/
+mv PvMonit/* .
+mv PvMonit/.gi* .
+rmdir PvMonit/
+```
+
+/etc/fstab
+
+```diff
+- LABEL="PVMONIT"           /opt            vfat    defaults,users,rw,umask=022,uid=1001,gid=1001  0       0
++ LABEL="PVMONIT"           /opt/PvMonit            vfat    defaults,users,exec,rw,umask=022,uid=1001,gid=1001  0       0
+```
+
+version image dans /etc/pvmonit_version 
+
+pip3 install pyserial
+
+aptitude install i2c-tools
+
+pip3 install Adafruit_DHT
+
+pip3 install adafruit-circuitpython-charlcd lxml
+
+aptitude install wiringpi
+
+aptitude install php-sqlite3 php-xml
+
+aptitude install python3 python3-yaml python3-json python3-pip
+
+pip3 install rpi-TM1638
 

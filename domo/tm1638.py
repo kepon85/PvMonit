@@ -26,9 +26,9 @@ STB = 26, # S'il y a plusieurs TM1638 √† la suite, vous pouvez les indiquer apr√
 import pprint
 
 with open('/opt/PvMonit/config-default.yaml') as f1:
-    config = yaml.load(f1, Loader=yaml.FullLoader)
+    config = yaml.load(f1)
 with open('/opt/PvMonit/config.yaml') as f2:
-    config_perso = yaml.load(f2, Loader=yaml.FullLoader)
+    config_perso = yaml.load(f2)
 
 TM = TMBoards(DIO, CLK, STB, 0)
 

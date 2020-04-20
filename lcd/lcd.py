@@ -15,9 +15,9 @@ from pwd import getpwnam
 import grp
 
 with open('/opt/PvMonit/config-default.yaml') as f1:
-    config = yaml.load(f1, Loader=yaml.FullLoader)
+    config = yaml.load(f1)
 with open('/opt/PvMonit/config.yaml') as f2:
-    config_perso = yaml.load(f2, Loader=yaml.FullLoader)
+    config_perso = yaml.load(f2)
 
 def configGet(key1, key2=None, key3=None, key4=None):
     if key4 != None:

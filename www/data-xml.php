@@ -104,7 +104,14 @@ foreach ($vedirect_data_ready as $device) {
 
 # Divers
 $bin_enabled_data = scandir($config['dir']['bin_enabled']);
-if(count($bin_enabled_data) > 2 || $config['data']['ppv_total'] || $config['data']['ppv_total']) {
+$printDivers=false;
+foreach ($bin_enabled_data as $bin_script_enabled) { 
+    $bin_script_info = pathinfo($config['dir']['bin_enabled'].'/'.$bin_script_enabled);
+    if ($bin_script_info['extension'] == 'php') {
+        $printDivers=true;
+    } 
+}
+if($printDivers == true || $config['data']['ppv_total'] || $config['data']['ppv_total']) {
 ?>
 	<device id="other">
 		<nom>Divers</nom>

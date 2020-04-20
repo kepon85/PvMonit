@@ -62,7 +62,7 @@ systemctl enable pvmonit # Activer au démarage
 Option, pour lancer le daemon par alias : 
 
 ```bash
-echo 'alias pvmonitd="/opt/PvMonit/bin/pvmonitd.php"' >> /etc/bash.bashrc
+echo 'alias pvmonitd=" /opt/PvMonit/bin/pvmonitd.php"' >> /etc/bash.bashrc
 ```
 
 ## Matériel solair
@@ -361,7 +361,7 @@ Ajouter :
 ```
 Puis activer la sonde (remplacer "NOM" par son petit nom, tout attaché, sans espace... : 
 ```bash
-ln -s /opt/PvMonit/bin-available/DhtGpio.php /opt/PvMonit/bin-enabled/OTHER-NOM.php 
+cp /opt/PvMonit/bin-available/DhtGpio.php /opt/PvMonit/bin-enabled/OTHER-NOM.php 
 ```
 
 Éditer ensuite le fichier /opt/PvMonit/bin-enabled/OTHER-NOM.php , au début : 
@@ -376,7 +376,7 @@ $dhtGpio=4;     // GPIO pin number
 /!\ Uniquement si vous avez un Arduino pour récolter les donnée
 
 ```bash
-ln -s /opt/PvMonit/bin-available/TempHumByArduino.php /opt/PvMonit/bin-enabled/OTHER-TSol.php 
+cp /opt/PvMonit/bin-available/TempHumByArduino.php /opt/PvMonit/bin-enabled/OTHER-TSol.php 
 ```
 
 ### Sonde de courant (type ACS712) récupéré sur l'arduino
@@ -384,7 +384,7 @@ ln -s /opt/PvMonit/bin-available/TempHumByArduino.php /opt/PvMonit/bin-enabled/O
 /!\ Uniquement si vous avez un Arduino pour récolter les donnée
 
 ```bash
-ln -s /opt/PvMonit/bin-available/CurrentByArduino.php/opt/PvMonit/bin-enabled/OTHER-CONSO.php 
+cp /opt/PvMonit/bin-available/CurrentByArduino.php/opt/PvMonit/bin-enabled/OTHER-CONSO.php 
 ```
 ### Sonde température USB (option)
 
@@ -425,7 +425,7 @@ Ajouter :
 Activer le script (et l'éditer au besoin)
 
 ```bash
-ln -s /opt/PvMonit/bin-available/TemperatureUSB.php /opt/PvMonit/bin-enabled/other-TEMP.php
+cp /opt/PvMonit/bin-available/TemperatureUSB.php /opt/PvMonit/bin-enabled/other-TEMP.php
 ```
 
 Autres documentations à propos de cette sonde :
@@ -469,7 +469,7 @@ Et ajouter :
 Puis activer le script :
 
 ```bash
-ln -s /opt/PvMonit/bin-available/Pzem.php /opt/PvMonit/bin-enabled/OTHER-conso.php
+cp /opt/PvMonit/bin-available/Pzem.php /opt/PvMonit/bin-enabled/OTHER-conso.php
 ```
 
 ### Pince ampèremétrique USB  (option)
@@ -507,7 +507,7 @@ Si vous utilisez l'export vers emoncms, ajouter :
 Activer le script (et l'éditer au besoin)
 
 ```bash
-ln -s /opt/PvMonit/bin-available/AmpermetreUSB.php /opt/PvMonit/bin-enabled/other-CONSO.php
+cp /opt/PvMonit/bin-available/AmpermetreUSB.php /opt/PvMonit/bin-enabled/other-CONSO.php
 ```
 
 ### Co² Meter 
@@ -570,7 +570,7 @@ La dernière commande (i2cdetect 1) doit afficher quelque chose comme :
 Pour tester le LCD lancer la commande : 
 
 ```bash
-pip3 install adafruit-circuitpython-charlcd lxml
+pip3 install adafruit-circuitpython-charlcd lxml past
 python3 /opt/PvMonit/lcd/lcd.py
 ```
 

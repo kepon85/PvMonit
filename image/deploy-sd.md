@@ -11,21 +11,37 @@ Une fois télécharger déployer l'image comme si c'était une Raspbian "normal"
 * Windows : https://www.raspberrypi.org/documentation/installation/installing-images/windows.md
 * Chrome OS : https://www.raspberrypi.org/documentation/installation/installing-images/chromeos.md
 
-**Wifi : modifier dans la partition rootfs le /etc/wpa_supplicant/wpa_supplicant.conf et indiqué votre SSID de Wifi et votre Clef / mot de passe**
+## Configuration Wifi
 
 Par défaut le Wifi tentera de se connecter à 
 
 * SSID : MONWIFI
-
 * Clef/mot de passe : monMotDePasseWifi"
 
-Vous pouvez maintenant mettre la carte SD sur votre PI et le mettre sous tension.
+Pour modifier ces paramètres déposé un fichier wpa_supplicant.conf dans la partition "boot" de la carte SD. Au démarrage celui-ci sera lu / déplacé dans le système avant un reboot.
+
+Ce fichier wpa_supplicant.conf  doit ressemblé à ceci : 
+
+```
+country=fr
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+network={
+    ssid="<nom de votre connexion>"
+    scan_ssid=1 # nécessaire quand le ssid n'est pas diffusé
+    psk="<mot de passe de votre connexion>"
+}
+```
+
+(plus de détail sur [ce fichier ici](https://debian-facile.org/doc:reseau:wpasupplicant#ajouter-un-profil-wifi))
+
+Vous pouvez maintenant mettre la carte SD dans votre PI et le mettre sous tension.
 
 Vous pouvez joindre votre raspberry pi avec son nom "**pvmonit.local**"
 
 Si pvmonit.local ne répond pas vous pouvez chercher l'adresse IP de celui-ci avec https://angryip.org/download/#linux
 
-## Accéder a votre raspberry pi
+## Administrer votre raspberry pi
 
 Les paramètres
 

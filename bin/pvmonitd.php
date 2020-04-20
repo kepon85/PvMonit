@@ -12,7 +12,7 @@ if (! posix_getuid() == 0){
 //~ error_reporting(0);
 $sortie=0;
 $printHelp=false;
-$screenRunDir = '/var/run/screen/S-root/';
+$screenRunDir = '/run/screen/S-root/';
 $screenList = scandir($screenRunDir);
 
 //~ ---------- Pour fixer 

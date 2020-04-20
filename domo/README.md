@@ -24,7 +24,7 @@ Un daemon est utilisé pour mettre en actions les relais selon les différents p
 Dépendance du script, la commande "gpio" : 
 
 ```bash
-aptitude install gpio-utils
+aptitude install wiringpi
 ```
 
 Cette commande doit pouvoir s’exécute avec les droits "root", pour ça on va la lancer en sudo, il faut donc lancer la commande :
@@ -128,7 +128,15 @@ Dépendance du script :
 
 ```bash
 aptitude install python3 python3-yaml python3-json python3-pip
-pip3 install rpi-TM1638
+```
+
+Installation de la lib tm1638 : https://github.com/thilaire/rpi-TM1638
+
+```bash
+cd /opt wget https://github.com/thilaire/rpi-TM1638/archive/master.zip
+unzip master.zip 
+cd rpi-TM1638-master/
+python3 setup.py  install
 ```
 
 Lancement du script à la main

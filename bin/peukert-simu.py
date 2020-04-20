@@ -56,7 +56,7 @@ export2json(False, False)
 while True:
     # Lecture des données
     with open(importDataYaml) as f1:
-        data = yaml.load(f1, Loader=yaml.FullLoader)
+        data = yaml.load(f1)
     try:
         data['Serial1']['CS']
         data['Serial2']['CS']
