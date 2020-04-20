@@ -8,7 +8,7 @@ import json
 CapNomi=220          # Capacité de peukert nominale en Ah a déterminer par l'utilisateur
 Ct=20
 Coef=1.17          # Coefficient de Peukert a déterminer par l'utilisateur              // 1,2 pour le plomb AGM
-ChargeEfficiencyFactor=1
+ChargeEfficiencyFactor=85
 DischargeMax=100   # Pourcentage max de décharge sous lequel il ne faut pas descendre pour ne pas détériorer la batterie  (100%, on affiche tout le niveau de batterie)
 printMessage=5      # 5=debug, 1=silence
 sleepInterval=8     # Temps entre 2 pasage (en s)
@@ -96,9 +96,13 @@ while True:
             logMsg(3, "Courant  = " + str(I))
             
             # On applique le facteur d'efficacité
-            I=float(I*ChargeEfficiencyFactor) # Courant (en mA)
-            logMsg(3, "Courant real = " + str(I))
-            
+            if I > 0:
+                I=float(I/100*ChargeEfficiencyFactor) # Courant (en mA)
+                logMsg(3, "Courant real = " + str(I))
+            else:
+                I=float(I)
+                logMsg(3, "Courant real = " + str(I))
+
             # Moment de la mesure :
             time_messure=time.time()
             
