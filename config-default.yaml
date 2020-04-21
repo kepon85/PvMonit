@@ -111,6 +111,224 @@ vedirect:
             - AC_OUT_I
             - WARN
 
+wks:
+    enable: false       # Passer a true pour activer
+    bin: "/usr/bin/sudo /usr/bin/python3 /opt/PvMonit/bin/wks.py"   # Script qui récupère les informations du WKS
+    data:
+        printAll: true                          # Afficher toutes les valeurs mêmes si elles n'ont pas de libellé
+        QPIRI:                                  # Ordre
+            name: "Paramètre"                   # Le nom
+            #~ 1:                               # La position de 1 à X 
+              #~ id: ConfGirdRatV               # Id : doit être unique, sans caractères spéciaux ni espace, ni accent...
+              #~ desc: "Grid rating voltage"    # Description
+              #~ units: "V"                     # Unité de messur (V / % / A...)
+              #~ regex: /^[0-9]+.[0-9]$/        # Regex a valider sinon la valeur ne s'affiche pas, Si pas de regex, pas de validation
+              #~ hide: true                     # true = caché, false or null = affiché
+            1:
+              id: ConfGirdRatV
+              desc: "Grid rating voltage"
+              units: "V"
+              regex: /^[0-9]+.[0-9]$/
+            2:
+              id: GirdRatA
+              desc: "Grid rating current"
+              units: "A"
+              #~ regex: false
+              #~ hide: true
+            3:
+              id: ConfAcOutRV
+              desc: "AC output rating voltage"
+              units: "V"
+            4:
+              id: ConfAcOutRF
+              desc: "AC output rating frequency"
+              units: "Hz"
+            5:
+              id: ConfAcOutRI
+              desc: "AC output rating current"
+              units: "A"
+            6:
+              id: ConfAcOutVA
+              desc: "AC output rating apparent power"
+              units: "VA"
+            7:
+              id: ConfAcOutRP
+              desc: "AC output rating active power"
+              units: "W"
+            8:
+              id: ConfBatRV
+              desc: "Battery rating voltage"
+              units: "V"
+            9:
+              id: ConfBatReCV
+              desc: "Battery re-charge voltage"
+              units: "V"
+            10:
+              id: ConfBatUV
+              desc: "Battery under voltage"
+              units: "V"
+            11:
+              id: ConfBatBV
+              desc: "Battery bulk voltage "
+              units: "V"
+            12:
+              id: ConfBatFV
+              desc: "Battery float voltage"
+              units: "V"
+            13:
+              id: ConfBatT
+              desc: "Battery type"
+              value2text:
+                0: "AGM"
+                1: "Flooded"
+                2: "User"
+            14:
+              id: ConfCurMaxACcharge
+              desc: "Current max AC charging current"
+              units: "A"
+            15:
+              id: ConfCurMaxCharge
+              desc: "Current max charging current"
+              units: "A"
+            16:
+              id: ConfInputVR
+              desc: "Input voltage range"
+              value2text:
+                0: "Appliance (From 90V to 280V AC)"
+                1: "UPS (From 170V to 280V AC)"
+            17:
+              id: ConfOutputSP
+              desc: "Output source priority"
+              value2text:
+                0: "Utility first"
+                1: "Solar first"
+                2: "SBU first"
+            18:
+              id: ConfChargeSP
+              desc: "Charger source priority"
+              value2text:
+                0: "Utility first"
+                1: "Solar first"
+                2: "Solar + Utility"
+                3: "Only solar charging permitted"
+            19:
+              id: ConfBatReDV
+              desc: "Battery re-discharge voltage"
+              units: "V"
+        QPIGS:
+            name: "Donnée"
+            1:
+              id: GirdV
+              desc: "Grid voltage"
+              units: "V"
+              regex: /^[0-9]+.[0-9]$/
+            2:
+              id: GirdF
+              desc: "Grid frequency"
+              units: "Hz"
+            3:
+              id: ACoutV
+              desc: "AC output voltage"
+              units: "V"
+            4:
+              id: ACoutF
+              desc: "AC output frequency"
+              units: "Hz"
+            5:
+              id: ACoutP
+              desc: "AC output apparent power"
+              units: "VA"
+            6:
+              id: CONSO
+              desc: "AC output active power"
+              units: "W"
+            7:
+              id: LOAD
+              desc: "AC output load percent"
+              units: "%"
+            8:
+              id: BusV
+              desc: "BUS voltage"
+              units: "V"
+            9:
+              id: V
+              desc: "Battery voltage"
+              units: "V"
+            10:
+              id: Ic
+              desc: "Battery charging current"
+              units: "A"
+            11:
+              id: SOC
+              desc: "Battery capacity"
+              units: "%"
+            12:
+              id: BatFloatV
+              desc: "Battery float voltage"
+              units: "V"
+            13:
+              id: BatVsoc
+              desc: "Battery voltage from SCC 1"
+              units: "V"
+            14:
+              id: Id
+              desc: "Battery discharge current"
+              units: "A"
+            15:
+              id: T
+              desc: "Inverter heat sink temperature"
+              units: "°C"
+            16:
+              id: IPV
+              desc: "PV Input current 1"
+              units: "A"
+            17:
+              id: VPV
+              desc: "PV Input voltage 1 "
+              units: "A"
+            18:
+              id: PPV
+              desc: "PV Charging power 1 "
+              units: "W"
+            19:
+              id: Status
+              desc: "Device status"
+        QPIWS:
+            name: "Alarme"
+            1:
+              id: ERR_OC
+              desc: "Over charge current"
+            2:
+              id: ERR_T
+              desc: "Over temperature"
+            3:
+              id: ERR_BVU
+              desc: "Battery voltage under"
+            4:
+              id: ERR_BVH
+              desc: "Battery voltage high"
+            5:
+              id: ERR_PVHL
+              desc: "PV high loss"
+            6:
+              id: ERR_BT
+              desc: "Battery temperature too low"
+            7:
+              id: ERR_BTH
+              desc: "Battery temperature too high"
+            8:
+              id: ERR_PVLL
+              desc: "PV low loss"
+            9:
+              id: ERR_PVHD
+              desc: "PV high derating"
+            10:
+              id: ERR_THD
+              desc: "Temperature high derating"       
+            11:
+              id: ERR_BTA
+              desc: "Battery temperature low alarm"
+
 # Numéro de série (champs SER#) en correspondance avec des nom buvables
 deviceCorrespondance:
     HQXXXXXXXX: MpttGarage

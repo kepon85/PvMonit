@@ -1,7 +1,7 @@
 <?php
 
 // Soft version
-define('VERSION', '3.0');
+define('VERSION', '3.1');
 
 
 function getConfigYaml($config_dir){
@@ -468,7 +468,7 @@ function vedirect_scan() {
 			unset($vedirect_retour);
 			exec($config['vedirect']['usb']['bin'].' /dev/'.$unDev, $vedirect_sortie, $vedirect_retour);
 			if ($vedirect_retour != 0){
-				trucAdir(1, 'Erreur à l\'exécution du script '.VEDIRECT_BIN.' sur le '.$unDev);
+				trucAdir(1, 'Erreur à l\'exécution du script '.$config['vedirect']['usb']['bin'].' sur le '.$unDev);
 			} else {
 				// Pour gérer le BMV-600
 				$BMV600=false;

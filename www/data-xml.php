@@ -69,38 +69,115 @@ if ($config['vedirect']['by'] == 'usb') {
                 $vedirect_data_ready = $device_vedirect_data;
         } 
 }
-foreach ($vedirect_data_ready as $device) {
-        if ($device['serial']  == 'Inconnu' || $device['serial']  == '') {
-                $device['serial'] = $device['nom'];
-        }
-        echo "\n\t".'<device id="'.str_replace(' ', '', $device['serial']).'">';
-        echo "\n\t\t".'<nom>'.$device['nom'].'</nom>';
-        echo "\n\t\t".'<timerefresh>'.time().'</timerefresh>';
-        echo "\n\t\t".'<type>'.$device['type'].'</type>';
-        echo "\n\t\t".'<modele>'.$device['modele'].'</modele>';
-        echo "\n\t\t".'<serial>'.$device['serial'].'</serial>';
-        echo "\n\t\t".'<datas>';
-        sort($device['data']);
-        foreach (explode(',', $device['data']) as $data) {
-                $dataSplit = explode(':', $data);
-                $veData=ve_label2($dataSplit[0], $dataSplit[1]);
-                echo "\n\t\t\t".'<data id="'.$veData['label'].'" screen="'.$veData['screen'].'" smallScreen="'.$veData['smallScreen'].'">';
-                        echo "\n\t\t\t\t".'<desc>'.$veData['desc'].'</desc>';
-                        echo "\n\t\t\t\t".'<value>'.$veData['value'].'</value>';
-                        echo "\n\t\t\t\t".'<units>'.$veData['units'].'</units>';
-                echo "\n\t\t\t".'</data>';
-                if ($dataSplit[0] == 'PPV'){ 
-                        $ppv_total=$ppv_total+$dataSplit[1];
-                        $nb_ppv_total++;
-                }
-                if ($device['type'] == "BMV" && $dataSplit[0] == 'P'){ 
-                        $bmv_p=$dataSplit[1];
-                }
-        }
-        echo "\n\t\t".'</datas>';
-        echo "\n\t".'</device>';
+if ($config['vedirect']['by'] != false) {
+    foreach ($vedirect_data_ready as $device) {
+            if ($device['serial']  == 'Inconnu' || $device['serial']  == '') {
+                    $device['serial'] = $device['nom'];
+            }
+            echo "\n\t".'<device id="'.str_replace(' ', '', $device['serial']).'">';
+            echo "\n\t\t".'<nom>'.$device['nom'].'</nom>';
+            echo "\n\t\t".'<timerefresh>'.time().'</timerefresh>';
+            echo "\n\t\t".'<type>'.$device['type'].'</type>';
+            echo "\n\t\t".'<modele>'.$device['modele'].'</modele>';
+            echo "\n\t\t".'<serial>'.$device['serial'].'</serial>';
+            echo "\n\t\t".'<datas>';
+            sort($device['data']);
+            foreach (explode(',', $device['data']) as $data) {
+                    $dataSplit = explode(':', $data);
+                    $veData=ve_label2($dataSplit[0], $dataSplit[1]);
+                    echo "\n\t\t\t".'<data id="'.$veData['label'].'" screen="'.$veData['screen'].'" smallScreen="'.$veData['smallScreen'].'">';
+                            echo "\n\t\t\t\t".'<desc>'.$veData['desc'].'</desc>';
+                            echo "\n\t\t\t\t".'<value>'.$veData['value'].'</value>';
+                            echo "\n\t\t\t\t".'<units>'.$veData['units'].'</units>';
+                    echo "\n\t\t\t".'</data>';
+                    if ($dataSplit[0] == 'PPV'){ 
+                            $ppv_total=$ppv_total+$dataSplit[1];
+                            $nb_ppv_total++;
+                    }
+                    if ($device['type'] == "BMV" && $dataSplit[0] == 'P'){ 
+                            $bmv_p=$dataSplit[1];
+                    }
+            }
+            echo "\n\t\t".'</datas>';
+            echo "\n\t".'</device>';
+    }
 }
-
+# WKS
+if ($config['wks']['enable'] == true) {
+    trucAdir(1, "WKS enable");
+    exec($config['wks']['bin'], $wks_sortie, $wks_retour);
+    if ($wks_retour != 0){
+        trucAdir(1, 'Erreur à l\'exécution du script '.$config['wks']['bin']);
+    } else {
+        $datas = json_decode($wks_sortie[0]);
+        $execTime=time();
+        foreach ($datas as $command=>$reponses) {
+            if (empty($config['wks']['data'][$command]['hide']) || $config['wks']['data'][$command]['hide'] != true) {
+                echo "\n\t".'<device id="WKS'.$command.'">';
+                if (isset($config['wks']['data'][$command]['name'])) {
+                    echo "\n\t\t".'<nom>WKS '.$config['wks']['data'][$command]['name'].'</nom>';
+                } else {
+                    echo "\n\t\t".'<nom>WKS '.$command.'</nom>';
+                }
+                echo "\n\t\t".'<timerefresh>'.$execTime.'</timerefresh>';
+                echo "\n\t\t".'<type>inverter</type>';
+                echo "\n\t\t".'<modele></modele>';
+                echo "\n\t\t".'<serial></serial>';
+                echo "\n\t\t".'<datas>';
+                $numReponse=1;
+                foreach ($reponses as $reponse) {
+                    # Check regex : 
+                    if (isset($config['wks']['data'][$command][$numReponse]['regex']) 
+                    && $config['wks']['data'][$command][$numReponse]['regex'] != false)  {
+                        if (! preg_match($config['wks']['data'][$command][$numReponse]['regex'], $reponse)) {
+                            trucAdir(3, "[WKS] Erreur ".$command.$numReponse." regex ".$config['wks']['data'][$command][$numReponse]['regex']." ne correspond pas à l'item ".$reponse);
+                            $numReponse++;
+                            continue;
+                        }
+                    }
+                    # Si l'ordre est présent
+                    if (isset($config['wks']['data'][$command][$numReponse])) {
+                        if (empty($config['wks']['data'][$command][$numReponse]['hide']) || $config['wks']['data'][$command][$numReponse]['hide'] != true) {
+                            trucAdir(5, "[WKS] Config trouvé, on affiche ".$command.$numReponse);
+                            echo "\n\t\t\t".'<data id="'.$config['wks']['data'][$command][$numReponse]['id'].'"'.onScreenPrint($config['wks']['data'][$command][$numReponse]['id']).'>';
+                                echo "\n\t\t\t\t".'<desc>'.$config['wks']['data'][$command][$numReponse]['desc'].'</desc>';
+                                if (isset($config['wks']['data'][$command][$numReponse]['value2text'])) {
+                                    $find = false;
+                                    foreach($config['wks']['data'][$command][$numReponse]['value2text'] as $value=>$text) {
+                                        if ($reponse == $value) {
+                                            echo "\n\t\t\t\t".'<value>'.$text.'</value>';
+                                            $find = true;
+                                        }
+                                    }
+                                    if ($find == false) {
+                                        echo "\n\t\t\t\t".'<value>'.$reponse.'</value>';
+                                    }
+                                } else {
+                                    echo "\n\t\t\t\t".'<value>'.$reponse.'</value>';
+                                }
+                                echo "\n\t\t\t\t".'<units>'.$config['wks']['data'][$command][$numReponse]['units'].'</units>';
+                            echo "\n\t\t\t".'</data>';
+                        } else {
+                            # Caché
+                            trucAdir(5, "[WKS] idem caché : ".$command.$numReponse);
+                        }
+                    } elseif ($config['wks']['data']['printAll'] == true) {
+                        # Sinon c'est par défaut
+                        trucAdir(5, "[WKS] pas de config, item par défaut : ".$command.$numReponse);
+                        echo "\n\t\t\t".'<data id="'.$command.$numReponse.'"'.onScreenPrint($command.$numReponse).'>';
+                            echo "\n\t\t\t\t".'<desc>'.$command.$numReponse.'</desc>';
+                            echo "\n\t\t\t\t".'<value>'.$reponse.'</value>';
+                            echo "\n\t\t\t\t".'<units></units>';
+                        echo "\n\t\t\t".'</data>';
+                    }
+                    $numReponse++;
+                }
+                echo "\n\t\t".'</datas>';
+                echo "\n\t".'</device>';
+            }
+        }
+    }
+}
 
 # Divers
 $bin_enabled_data = scandir($config['dir']['bin_enabled']);

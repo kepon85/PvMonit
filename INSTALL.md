@@ -1,9 +1,15 @@
 
 # Installation
 Deux type d'installation possible : 
--   Une version Raspbery PI 3B, si vous avez un point wifi actif (même occasionnellement) et que votre matériel solaire est à porté de wifi. C'est une solution plutôt simple (si on touche un peu sous linux).
-![Schéma de câblage PI3B et ve.direct USB officiel](https://david.mercereau.info/wp-content/uploads/2019/10/PvMonitV1_USB.png)-   Une version Raspbery Pi 0 + Arduino : plus complexe à mettre en oeuvre (il faut savoir souder et avoir plus de connaissance) mais beaucoup plus souple et moins chère. Particulièrement adapté si votre installation réseau est loin (max 60m) de votre maison
-![Schéma de câblage avec Pi0 et Arduino Mega (ve.direct Diy)](https://david.mercereau.info/wp-content/uploads/2019/10/PvMonitV1_Arduino.png)
+- Une version Raspbery PI, si vous avez un point wifi actif (même occasionnellement) et que votre matériel solaire est à porté de wifi. C'est une solution plutôt simple (si on touche un peu sous linux).
+  ![Schéma de câblage PI3B et ve.direct USB officiel](https://david.mercereau.info/wp-content/uploads/2019/10/PvMonitV1_USB.png)
+
+  Ou avec un WKS : 
+
+  ![WKS](https://david.mercereau.info/wp-content/uploads/2020/04/Schema-V3.1.png)
+
+- (pour matériel victron uniquement)  Une version Raspbery Pi 0 + Arduino : plus complexe à mettre en oeuvre (il faut savoir souder et avoir plus de connaissance) mais beaucoup plus souple et moins chère. Particulièrement adapté si votre installation réseau est loin (max 60m) de votre maison
+  ![Schéma de câblage avec Pi0 et Arduino Mega (ve.direct Diy)](https://david.mercereau.info/wp-content/uploads/2019/10/PvMonitV1_Arduino.png)
 
 PvMonit support tout le matériel Victron compatible Ve Direct (via USB) : 
 
@@ -199,6 +205,50 @@ systemctl stop pvmonit
 systemctl start pvmonit
 ```
 
+### WKS
+
+Dépendance
+
+```bash
+aptitude install python3-usb python3-libusb1 python3-json
+pip3 install crc16
+```
+
+Pour tester vous pouvez lancer ce script à la main : 
+
+```bash
+/usr/bin/python3 /opt/PvMonit/bin/wks.py
+```
+
+Si le retour est une chaîne au format JSON c'est dans la poche : 
+
+```
+root@pi0(ro):~# python3 /opt/PvMonit/bin/wks.py 
+{"QPIRI": ["230.0", "13.0", "230.0", "50.0", "13.0", "3000", "3000", "48.0", "46.0", "42.0", "56.4", "53.0", "2", "15", "20", "1", "2", "2", "01", "1", "0", "54.0", "0"], "QPIGS": ["228.0", "50.0", "227.0", "50.0", "0917", "0897", "031", "476", "53.72", "001", "095", "0390", "0001", "059.6", "53.82", "00000", "10010111", "12", "04", "00052"], "QPIWS": ["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"]}
+```
+
+Lancer la commande :
+
+```bash
+visudo
+```
+
+Ajouter : 
+
+```diff
++ pvmonit ALL=(ALL) NOPASSWD:/usr/bin/python3 /opt/PvMonit/bin/wks.py
+```
+
+Ensuite modifier cotre fichier config.yaml
+
+Dans le fichier config.yaml mentionner : 
+
+```yaml
+wks:
+    enable: true    
+```
+
+Un fichier exemple config-wks.yaml est présent, vous pouvez vous en inspirer...
 
 ## Interface web en temps réel
 
@@ -570,7 +620,7 @@ La dernière commande (i2cdetect 1) doit afficher quelque chose comme :
 Pour tester le LCD lancer la commande : 
 
 ```bash
-pip3 install adafruit-circuitpython-charlcd lxml past
+pip3 install adafruit-circuitpython-charlcd lxml past future
 python3 /opt/PvMonit/lcd/lcd.py
 ```
 

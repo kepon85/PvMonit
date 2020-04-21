@@ -1,6 +1,6 @@
 # PvMonit - monitoring solaire autonome et gestion du surplus
 
-Il s'agit d'un projet de monitoring photovoltaique pour matériel Victron compatible Ve.direct particulièrement adapté pour les installations autonomes. Il permet une vue "en direct" et un export de l'historique vers [emoncms](https://openenergymonitor.org/emon/emoncms) (une branche d'[OpenEnergyMonitor project](http://openenergymonitor.org)). Il est aussi possible de gérer le surplus d'énergie solaire non utilisé [avec le module domotique](https://david.mercereau.info/pvmonit-v2-0-domotique-gestion-surplus-electrique-solaire-en-autonomie/).
+Il s'agit d'un projet de monitoring photovoltaique pour matériel Victron compatible Ve.direct & WKS particulièrement adapté pour les installations autonomes. Il permet une vue "en direct" et un export de l'historique vers [emoncms](https://openenergymonitor.org/emon/emoncms) (une branche d'[OpenEnergyMonitor project](http://openenergymonitor.org)). Il est aussi possible de gérer le surplus d'énergie solaire non utilisé [avec le module domotique](https://david.mercereau.info/pvmonit-v2-0-domotique-gestion-surplus-electrique-solaire-en-autonomie/).
 
 Démonstration :
 
@@ -23,6 +23,8 @@ PvMonit support tout le matériel Victron compatible Ve Direct :
   - BlueSolar MPPT 75/10, 70/15, 75/14, 100/15, 100/30 rev1, 100/30 rev2, 150/35 rev1, 150/35 rev2, 150/45, 75/50, 100/50 rev1, 100/50 rev2, 150/60, 150/70, 150/85, 150/100
   - SmartSolar MPPT 250/100, 150/100*, 150/85*, 75/15, 75/10, 100/15, 100/30, 100/50, 150/35, 150/100 rev2, 150/85 rev2, 250/70, 250/85, 250/60, 250/45, 100/20, 100/20 48V, 150/45, 150/60, 150/70, 250/85 rev2, 250/100 rev2"
   - Phoenix Inverter 12V 250VA 230V*, 24V 250VA 230V*, 48V 250VA 230V*, 12V 375VA 230V*, 24V 375VA 230V*, 48V 375VA 230V*, 12V 500VA 230V*, 24V 500VA 230V*, 48V 500VA 230V*, 12V 250VA 230V, 24V 250VA 230V, 48V 250VA 230V, 12V 250VA 120V, 24V 250VA 120V, 48V 250VA 120V, 12V 375VA 230V, 24V 375VA 230V, 48V 375VA 230V, 12V 375VA 120V, 24V 375VA 120V, 48V 375VA 120V, 12V 500VA 230V, 24V 500VA 230V, 48V 500VA 230V, 12V 500VA 120V, 24V 500VA 120V, 48V 500VA 120V, 12V 800VA 230V, 24V 800VA 230V, 48V 800VA 230V, 12V 800VA 120V, 24V 800VA 120V, 48V 800VA 120V, 12V 1200VA 230V, 24V 1200VA 230V, 48V 1200VA 230V, 12V 1200VA 120V, 24V 1200VA 120V, 48V 1200VA 120V
+
+Ainsi que les WKS avec port USB
 
 ## Service / Commander / soutenir le projet
 
@@ -55,6 +57,8 @@ Commander par ici : https://david.mercereau.info/pvmonit/#shop
 
 ## Changelog
 
+  * V3.1 (04/2020)
+        * Support des WKS (via USB)
   * V3.0 (04/2020)
 	  * Intégration de [Blockly](https://developers.google.com/blockly/) pour la conception des scripts de gestion du surplus électrique / domotique
 	  * Service de cloud permet un export de vos données temps réel sur une interface accessible depuis internet (même si vous êtes derrière un routeur xG)
