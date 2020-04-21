@@ -214,6 +214,7 @@ domo:
     jsonFile:
         modPath: /tmp/PvMonit_domo_mod
         etatPath: /tmp/PvMonit_domo_etat
+    prefixFileData: /tmp/PvMonit_domo_data_
     binGpio: /usr/bin/sudo /usr/bin/gpio
     fileExpir: 500                            # Age en seconde après laquel le fichier n'est plus considéré comme ok
     xmlDataExpir: 500                        # Age en seconde avant expiration des données XML (et donc arrêt du heartbeat)

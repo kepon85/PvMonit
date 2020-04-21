@@ -47,6 +47,7 @@ function xml_data_get($DATA_FILE)  {
 }
 
 function MpptAbsOrFlo($cs, $timeUpNoBago = 10) {
+    global $config;
     if ($timeUpNoBago == 0) {
         if (preg_match_all('/^Absorption|^Float/', $cs)) {
             return true;
@@ -54,8 +55,8 @@ function MpptAbsOrFlo($cs, $timeUpNoBago = 10) {
             return false;
         }
     } else {
-        $fileCS='/tmp/PvMonit_domo_MpptAbsOrFlo_NoBago'.'_CS_AoF';
-        $fileTimerNoBago='/tmp/PvMonit_domo_MpptAbsOrFlo_NoBago'.'_timer';
+        $fileCS=$config['domo']['prefixFileData'].'MpptFlo_NoBago'.'_CS_AoF';
+        $fileTimerNoBago=$config['domo']['prefixFileData'].'MpptFlo_NoBago'.'_timer';
         if (preg_match_all('/^Absorption|^Float/', $cs)) {
             touch($fileCS);
             //~ echo "abs ou float";
@@ -89,15 +90,49 @@ function MpptAbsOrFlo($cs, $timeUpNoBago = 10) {
     }
 }
 
-function MpptFlo($cs) {
-    if (preg_match_all('/^Float/', $cs)) {
-        return true;
+function MpptFlo($cs, $timeUpNoBago = 10) {
+    global $config;
+    if ($timeUpNoBago == 0) {
+        if (preg_match_all('/^Float/', $cs)) {
+            return true;
+        } else {
+            return false;
+        }
     } else {
-        return false;
+        $fileCS=$config['domo']['prefixFileData'].'MpptFlo_NoBago'.'_CS_AoF';
+        $fileTimerNoBago=$config['domo']['prefixFileData'].'MpptFlo_NoBago'.'_timer';
+        if (preg_match_all('/^Float/', $cs)) {
+            touch($fileCS);
+            //~ echo "abs ou float";
+            return true;
+        } else {
+            // Si j'étais en abs ou float j'allume le timer
+            if (is_file($fileCS)) {
+                $timer=time();
+                file_put_contents($fileTimerNoBago, $timer);
+                unlink($fileCS);
+                //~ echo "création du timer/suppression du float abs";
+                return true;
+            // Si le timer est déjà en route on récupère l'info
+            } else if (is_file($fileTimerNoBago)) {
+                $timer=file_get_contents($fileTimerNoBago);
+                // Le timer à été dépassé
+                if (time() > $timer+$timeUpNoBago) {
+                    //~ echo "timer dépassé";
+                    unlink($fileTimerNoBago);
+                    return false;
+                } else {
+                    //~ echo "timer NON dépassé";
+                    return true;
+                }
+            // Sinon c'est que le régulateur n'est pas encore passé en abs/float
+            } else {
+                //~ echo "régulateur pas encore été en float abs";
+                return false;
+            }   
+        }
     }
 }
-
-
 
 trucAdir(4, 'Lancement du script');
 
@@ -202,6 +237,34 @@ function timeUpMin($relay, $timeUp) {
     }
 }
 
+
+# Fonctions Timer
+# Contrib @akoirium 
+function timerStart($name, $time) {
+	global $config;
+    trucAdir(3, 'Début du timer '.$name.' pour '.$time.'s');
+	file_put_contents($config['domo']['prefixFileData'].'timer_'.$name, time()+$time);
+}
+function timerOn($name) {
+	global $config;
+    if (!is_file($config['domo']['prefixFileData'].'timer_'.$name)) {
+        // Le timer n'a pas été lancé, donc est pas terminé....
+        trucAdir(2, 'Timer '.$name.' inconnu, on envoi TRUE pour dire que c\'est terminé...');
+		return true;
+	} else {
+        $endTime=file_get_contents($config['domo']['prefixFileData'].'timer_'.$name);
+        if ($endTime < time()) {
+            // Timer On
+            trucAdir(3, 'Timer '.$name.' pas terminé, on envoi FALSE');
+            return false;
+        } else {
+            // Timer Off 
+            trucAdir(3, 'Timer '.$name.' terminé, on envoi TRUE et on supprime le fichier');
+            @unlink($config['domo']['prefixFileData'].'timer_'.$name);
+            return true;
+        }
+    }
+}
 
 
 $dataCheckTime=0;
