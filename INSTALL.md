@@ -207,6 +207,8 @@ systemctl start pvmonit
 
 ### WKS
 
+Le WKS doit être connecté en USB sur le Pi
+
 Dépendance
 
 ```bash

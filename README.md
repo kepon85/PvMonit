@@ -58,7 +58,7 @@ Commander par ici : https://david.mercereau.info/pvmonit/#shop
 ## Changelog
 
   * V3.1 (04/2020)
-        * Support des WKS (via USB)
+	  * Support des WKS (via USB)
   * V3.0 (04/2020)
 	  * Intégration de [Blockly](https://developers.google.com/blockly/) pour la conception des scripts de gestion du surplus électrique / domotique
 	  * Service de cloud permet un export de vos données temps réel sur une interface accessible depuis internet (même si vous êtes derrière un routeur xG)
