@@ -371,7 +371,7 @@ www:
     # Délais de raffraichissement de la page (en seconde) 300 = 5 minutes
     refreshTime: 300
     # Max de la jauge voltage batterie (en V) 
-    vbatMax: 30
+    vbatMax: 17
     # Max de la jauge puissance PV (en W)
     PpvMax: 500                         # max Jauge puissance PV (en W)
     # Max de la jauge puissance PV total (si plusieurs régulateur) (en W)
