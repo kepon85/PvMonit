@@ -29,7 +29,7 @@ Avoir installé Raspbian : https://www.raspberrypi.org/downloads/raspbian/
 sudo -i
 ```
 
-Pour une utilisation local il est bon d'utiliser le . lancer la commande : 
+Pour une utilisation local et pour une utilisation simple il est bon d'utiliser que le nom de la machine soit "pvmonit". Pour modifier cela, lancer la commande : 
 
 ```bash
 raspi-config
@@ -40,6 +40,8 @@ raspi-config
 - Please enter hostname : **pvmonit**
 - Finish
 - Woul'd you like reboot : **Yes**
+
+Après le redémarrage du Raspberry quand vous tapez la commande "hostname" vous devriez obtenir "pvmonit". Votre raspberry est maintenant joignable sur "pvmonit.local"
 
 ## La base / le socle
 
@@ -342,9 +344,9 @@ Note : si après un reboot lighttpd ne démarre pas, pour corriger le problème 
 bash /opt/PvMonit/bin/lighttpd-fix-user.sh
 ```
 
-C'est terminé, vous pouvez vous connecter sur votre IP local pour joindre votre serveur web : 
+C'est terminé, vous pouvez vous connecter sur votre IP local ou sur "pvmonit.local" pour joindre votre serveur web : http://pvmonit.local
 
-Attention : dans la configuration l'appel du fichier data (urlDataXml) doit contenir un nom de domaine, quand vous joingné l'interface ce nom de domaine doit être identique à celui. Exemple vous ateignez l'interface par pv.chezmoi.fr, dans urlDataXml il doit y avoir urlDataXml: http://pv.chezmoi.fr/data-xml.php (modifier le fichier /etc/hosts au besoin...)
+Attention : Dans le fichier config.yaml la variable urlDataXml doit être une URL capable d'être résolut, ici : http://pvmonit.local/data-xml.php ou l'adresse IP de votre raspberry pi : http://192.168.1.1/data-xml.php par exemple...
 
 ![Screenshot PvMonit](http://david.mercereau.info/wp-content/uploads/2016/11/PvMonit_Full.png)
 
