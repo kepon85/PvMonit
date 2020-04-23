@@ -23,11 +23,30 @@ Les fonctionnalités de PvMonit sont dissociable :
 
 Avoir installé Raspbian : https://www.raspberrypi.org/downloads/raspbian/
 
+**Toutes les commandes ci-après sont lancés en "root"**, pour vous en assuré tapé la commande
+
+```bash
+sudo -i
+```
+
+Pour une utilisation local il est bon d'utiliser le . lancer la commande : 
+
+```bash
+raspi-config
+```
+
+- 2) Network Option 
+- N1 Hostname
+- Please enter hostname : **pvmonit**
+- Finish
+- Woul'd you like reboot : **Yes**
+
 ## La base / le socle
 
 Installation de PvMonit via le dépôt git et de ses dépendances :
+
 ```bash
-apt-get install php-cli php-yaml git python-serial sudo screen sshpass python3-pip
+apt-get install aptitude php-cli php-yaml git python-serial sudo screen sshpass python3-pip
 cd /opt
 git clone https://github.com/kepon85/PvMonit.git
 cd PvMonit

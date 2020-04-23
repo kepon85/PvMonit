@@ -1,7 +1,7 @@
 ---
 printMessage: 5
 printMessageLogfile: /tmp/pvmonitdebug.log
-urlDataXml: http://192.168.1.1/data-xml.php
+urlDataXml: http://pvmonit.local/data-xml.php
 wks:
   enable: true
   bin: "/usr/bin/sudo /usr/bin/python3 /opt/PvMonit/bin/wks-simu.py"
