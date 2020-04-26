@@ -4,7 +4,7 @@ printMessageLogfile: /tmp/pvmonitdebug.log
 urlDataXml: http://pvmonit.local/data-xml.php
 wks:
   enable: true
-  bin: "/usr/bin/sudo /usr/bin/python3 /opt/PvMonit/bin/wks-simu.py"
+  bin: "/usr/bin/sudo /usr/bin/python3 /opt/PvMonit/bin/wks.py"
   data:
     printAll: true
     QPIRI:

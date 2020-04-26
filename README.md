@@ -13,20 +13,19 @@ Exemple d'usage de PvMonit : je dispose d'un RaspberryPi, mes appareils Victron 
 
   - D'afficher les informations en temps réel sur une page web (local)
   - D'afficher les informations sur un écran LCD
-  - De collecter les données toutes les X minutes et les expédier vers [emoncms](https://openenergymonitor.org/emon/node/90) quand internet est là (le wifi n'étant pas toujours allumé)
+  - De collecter les données toutes les X minutes et les expédier vers [emoncms](https://openenergymonitor.org/emon/node/90) ce qui permet de faire des graph de l'histoire. Quand internet est là (le wifi n'étant pas toujours allumé)
 
 ![Schéma exemple utilisation PvMonit avec Raspberry](https://david.mercereau.info/wp-content/uploads/2019/10/PvMonitV1_USB.png)
 
-PvMonit support tout le matériel Victron compatible Ve Direct : 
+## Support Matériel 
 
-  - BMV : 600, 700, 702, 700H
-  - BlueSolar MPPT 75/10, 70/15, 75/14, 100/15, 100/30 rev1, 100/30 rev2, 150/35 rev1, 150/35 rev2, 150/45, 75/50, 100/50 rev1, 100/50 rev2, 150/60, 150/70, 150/85, 150/100
-  - SmartSolar MPPT 250/100, 150/100*, 150/85*, 75/15, 75/10, 100/15, 100/30, 100/50, 150/35, 150/100 rev2, 150/85 rev2, 250/70, 250/85, 250/60, 250/45, 100/20, 100/20 48V, 150/45, 150/60, 150/70, 250/85 rev2, 250/100 rev2"
-  - Phoenix Inverter 12V 250VA 230V*, 24V 250VA 230V*, 48V 250VA 230V*, 12V 375VA 230V*, 24V 375VA 230V*, 48V 375VA 230V*, 12V 500VA 230V*, 24V 500VA 230V*, 48V 500VA 230V*, 12V 250VA 230V, 24V 250VA 230V, 48V 250VA 230V, 12V 250VA 120V, 24V 250VA 120V, 48V 250VA 120V, 12V 375VA 230V, 24V 375VA 230V, 48V 375VA 230V, 12V 375VA 120V, 24V 375VA 120V, 48V 375VA 120V, 12V 500VA 230V, 24V 500VA 230V, 48V 500VA 230V, 12V 500VA 120V, 24V 500VA 120V, 48V 500VA 120V, 12V 800VA 230V, 24V 800VA 230V, 48V 800VA 230V, 12V 800VA 120V, 24V 800VA 120V, 48V 800VA 120V, 12V 1200VA 230V, 24V 1200VA 230V, 48V 1200VA 230V, 12V 1200VA 120V, 24V 1200VA 120V, 48V 1200VA 120V
+PvMonit support tout le matériel **Victron** compatible Ve Direct ainsi que les **WKS** avec port USB
 
-Ainsi que les WKS avec port USB
+## Documentation / installation
 
-## Service / Commander / soutenir le projet
+Tout se trouve sur le wiki officiel : http://pvmonit.zici.fr/doc/fr:start#tutoriel
+
+## Soutenir le projet : Service / Commander
 
 ### Faire un don
 
@@ -61,20 +60,7 @@ Commander par ici : https://david.mercereau.info/pvmonit/#shop
 
 ## Support
 
-**Aucun support ne sera fait pour la conception des scripts "domotiques" pour la gestion du surplus d'énergie. Mais je peux vous les concevoir sur mesure.**
-
-Le support se fait par ici : https://framagit.org/kepon/PvMonit/issues
-
-Pour activer le mode debug, modifier le fichier config.yaml avec ces valeurs : 
-
-```
-printMessage: 5                                         # 0=0	5=debug
-printMessageLogfile: /tmp/pvmonitdebug.log              # path or fase
-```
-
-Lancer l'action qui ne fonctionne pas et envoyez le contenu nouvellement apparu de /tmp/pvmonitdebug.log dans la demande de support. 
-
-Dans tout les cas, dans une demande de support il faut du détail (image/schéma d'installation/log...), le plus de détail possible
+http://pvmonit.zici.fr/doc/fr:start#support
 
 ## License BEERWARE
 
