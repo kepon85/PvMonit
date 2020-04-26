@@ -33,9 +33,9 @@ if ($config['wks']['enable'] == true) {
                             continue;
                         }
                     }
+                    echo "\t".$numReponse." :\n";
                     # Si l'ordre est présent
                     if (isset($config['wks']['data'][$command][$numReponse])) {
-                        echo "\t".$numReponse." :\n";
                         if (empty($config['wks']['data'][$command][$numReponse]['hide']) || $config['wks']['data'][$command][$numReponse]['hide'] != true) {
                             echo "\t\tid find : ".$config['wks']['data'][$command][$numReponse]['id']."\n";
                             echo "\t\tdesc : ".$config['wks']['data'][$command][$numReponse]['desc']."\n";
@@ -58,13 +58,10 @@ if ($config['wks']['enable'] == true) {
                             # Caché
                             echo "\t Hide";
                         }
-                    } elseif ($config['wks']['data']['printAll'] == true) {
+                    } else  {
                         # Sinon c'est par défaut
-                        trucAdir(5, "[WKS] pas de config, item par défaut : ".$command.$numReponse);
-                        echo "\n\t\t\t".'<data id="'.$command.$numReponse.'">';
-                            echo "\n\t\t\t\t".'<desc>'.$command.$numReponse.'</desc>';
-                            echo "\n\t\t\t\t".'<value>'.$reponse.'</value>';
-                            echo "\n\t\t\t\t".'<units></units>';
+                        echo "\t\tid not found : ".$config['wks']['data'][$command][$numReponse]['id']."\n";
+                        echo "\t\tvalue in wks.py : ".$reponse."\n";
                     }
                     $numReponse++;
                 }
