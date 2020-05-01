@@ -1,12 +1,6 @@
 #!/usr/bin/php
 <?php
 
-######################################################################
-# PvMonit - By David Mercereau : http://david.mercereau.info/contact/
-# Script sous licence BEERWARE
-# Version 1.0	2016
-######################################################################
-
 include('/opt/PvMonit/function.php');
 // Chargement de la config
 $config = getConfigYaml('/opt/PvMonit');
@@ -43,7 +37,7 @@ if ($config['vedirect']['by'] == 'usb') {
                 }
         } 
         $timerefresh=filemtime($cache_file);
-        $vedirect_data_ready=json_decode(file_get_contents($cache_file), true);
+        $data_ready=json_decode(file_get_contents($cache_file), true);
 } elseif ($config['vedirect']['by'] == 'arduino') { 
         $arduino_data=yaml_parse_file($config['vedirect']['arduino']['data_file']);
         $idDevice=0;
@@ -53,13 +47,60 @@ if ($config['vedirect']['by'] == 'usb') {
                         $idDevice++;
                 }
         }
-        $vedirect_data_ready = $device_vedirect_data;
+        $data_ready = $device_vedirect_data;
 }
+// pour les WKS
+if ($config['wks']['enable'] == true) {
+    trucAdir(1, "WKS enable");
+    exec($config['wks']['bin'], $wks_sortie, $wks_retour);
+    if ($wks_retour != 0){
+        trucAdir(1, 'Erreur à l\'exécution du script '.$config['wks']['bin']);
+    } else {
+        $datas = json_decode($wks_sortie[0]);
+	foreach ($datas as $command=>$data) {
+	    $nbData_ready=count($data_ready)+1;
+	    $data_ready[$nbData_ready]['nom']=$command;
+	    $data_ready[$nbData_ready]['type']='WKS';
+	    $numReponse=1;
+	    $dataConcat='';
+	    foreach ($data as $reponse) {
+		# Check regex : 
+		if (isset($config['wks']['data'][$command][$numReponse]['regex']) 
+		&& $config['wks']['data'][$command][$numReponse]['regex'] != false)  {
+		    if (! preg_match($config['wks']['data'][$command][$numReponse]['regex'], $reponse)) {
+			trucAdir(3, "[WKS] Erreur ".$command.$numReponse." regex ".$config['wks']['data'][$command][$numReponse]['regex']." ne correspond pas à l'item ".$reponse);
+			$numReponse++;
+			continue;
+		    }
+		}
+		# Si l'ordre est présent
+		if (isset($config['wks']['data'][$command][$numReponse])) {
+		    if (empty($config['wks']['data'][$command][$numReponse]['hide']) || $config['wks']['data'][$command][$numReponse]['hide'] != true) {
+			trucAdir(5, "[WKS] Config trouvé, on affiche ".$command.$numReponse);
+			if ($dataConcat!='') { $dataConcat.=','; }
+			$dataConcat.=$config['wks']['data'][$command][$numReponse]['id'].':'.$reponse;
+		    } else {
+			# Caché
+			trucAdir(5, "[WKS] idem caché : ".$command.$numReponse);
+		    }
+		} elseif ($config['wks']['data']['printAll'] == true) {
+		    # Sinon c'est par défaut
+		    if ($dataConcat!='') { $dataConcat.=','; }
+		    $dataConcat.=$numReponse.':'.$reponse;
+		}
+		$numReponse++;
+	    }
+	    $data_ready[$nbData_ready]['data']=$dataConcat;
+	}
+    }
+}
+
+//~ print_r($data_ready);
 
 $ppv_total=null;
 $bmv_p=null;
 $nb_ppv_total=0;
-foreach ($vedirect_data_ready as $device) {
+foreach ($data_ready as $device) {
 	if ($device['nom'] != '') {
 		sauvegardeDesDonnes("www-browser --dump '".$config['emoncms']['urlInputJsonPost']."?json={".$device['data']."}&node=".$device['nom']."&time=".time()."&apikey=".$config['emoncms']['apiKey']."'\n");
 	}
