@@ -14,17 +14,11 @@ function xml_data_get($DATA_FILE)  {
             //~ // On vérifie que la donnée ne soit pas périmé
             if ($device->timerefresh+$config['domo']['xmlDataExpir'] > time()) {
                 foreach ($device->datas->data as $data) {
-                    foreach ($config['domo']['valueUse'] as $id => $regexCheck) {
-                        if ($data['id'] == $id) {
-                            $xmlDataTemp = json_decode(json_encode($data->value), true);
-                            trucAdir(5, 'XML parse : la valeur pour '.$data['id'].' à été trouvé à '.$xmlDataTemp[0]);
-                            if (preg_match_all('/'.$regexCheck.'/', $xmlDataTemp[0])) {
-                                $xmlData[$id] = $xmlDataTemp[0];
-                            } else {
-                                trucAdir(5, 'XML parse ERROR : La vérification regex pour '.$data['id'].' n\'est pas correct pour la valeur '.$xmlDataTemp[0].' ('.$regexCheck.')');
-                                $xmlData[$id] = false;
-                            }
-                        }
+                    $id= (string)  $data['id'];
+                    $dataString = (string) $data->value;
+                    if (in_array($id, $config['domo']['valueUse'])) {
+                        trucAdir(5, 'XML parse : la valeur pour '.$id.' à été trouvé à '.$dataString);
+                        $xmlData[$id] = $dataString;
                     }
                 }
             } else {

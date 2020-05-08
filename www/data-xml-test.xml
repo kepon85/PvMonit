@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <devices>
-
 	<device id="HQ1544WMX65">
 		<nom>MpttBlanc</nom>
 		<timerefresh>1584830098</timerefresh>
-		<type>MPTT</type>
+		<type>MPPT</type>
 		<modele>BlueSolar MPPT 100/30 rev2</modele>
 		<serial>HQ1544WMX65</serial>
 		<datas>
@@ -68,7 +67,7 @@
 	<device id="HQ16129A5J2">
 		<nom>MpttBleu</nom>
 		<timerefresh>1584830098</timerefresh>
-		<type>MPTT</type>
+		<type>MPPT</type>
 		<modele>BlueSolar MPPT 100/30 rev2</modele>
 		<serial>HQ16129A5J2</serial>
 		<datas>
@@ -345,4 +344,5 @@
 				<units>ppm</units>
 			</data>
 		</datas>
-	</device></devices>
+	</device>
+</devices>

@@ -1,7 +1,8 @@
 <?php
 
 // Soft version
-define('VERSION', '3.1');
+define('VERSION', '3.2');
+
 
 
 function getConfigYaml($config_dir){
@@ -43,7 +44,7 @@ function ve_type($ve_pid) {
 	if (substr($ve_pid, 0, -1) == '0x20') {
 		$ve_type_retour='BMV';
 	} else if (substr($ve_pid, 0, -2) == '0xA0' || $ve_pid == '0x300') {
-		$ve_type_retour='MPTT';
+		$ve_type_retour='MPPT';
 	} else if (substr($ve_pid, 0, -2) == '0xA2') {
 		$ve_type_retour='PhoenixInverter';
 	} else {
@@ -456,7 +457,7 @@ function ve_value($label, $value) {
 	return $retour;
 }
 
-# Fonction vedirect MPTT / BMV
+# Fonction vedirect MPPT / BMV
 function vedirect_scan() {
 	global $config;
 	trucAdir(4, 'Recherche de périphérique vedirect');
@@ -497,7 +498,7 @@ function vedirect_scan() {
 				foreach ($vedirect_sortie as $vedirect_ligne) {
 					$vedirect_data = explode(':', $vedirect_ligne);
 					switch ($ve_type) {
-						case 'MPTT':
+						case 'MPPT':
 							if (in_array($vedirect_data[0], $config['vedirect']['data_ok']['mppt'])) {
 								# éviter les doublons
 								if (!stristr($vedirect_data_formate, $vedirect_data[0].':')) {
@@ -588,7 +589,7 @@ function vedirect_parse_arduino($data) {
         krsort($data);
         foreach ($data as $key => $value) {
                 switch ($ve_type) {
-                        case 'MPTT':
+                        case 'MPPT':
                                 if (in_array($key, $config['vedirect']['data_ok']['mppt'])) {
                                         # éviter les doublons
                                         if (!stristr($vedirect_data_formate, "$key:$value")) {
@@ -641,7 +642,7 @@ function trucAdir($niveau, $msg) {
 		if (isset($_SERVER['SERVER_NAME'])) {
 			echo  '<script type="text/javascript">console.log(\''.date('c') . ' - ' . strtr($msg, '\'', '\\\'').'\'); </script>';
 		} else {
-			echo  date('c') . ' - ' . $msg."\n";
+			echo  date('c') . ' [' . $niveau . '] - ' . $msg."\n";
 		}
 	}
 	if ($config['printMessageLogfile'] != false) {
@@ -654,7 +655,7 @@ function trucAdir($niveau, $msg) {
 				chmod($config['printMessageLogfile'], 0777);
 			}
 		}
-		file_put_contents($config['printMessageLogfile'], date('c') . ' - ' . $_SERVER['SCRIPT_NAME']. ' - ' . $msg . "\n", FILE_APPEND);
+		file_put_contents($config['printMessageLogfile'], date('c') . ' [' . $niveau . '] - ' . $_SERVER['SCRIPT_NAME']. ' - ' . $msg . "\n", FILE_APPEND);
 	}
 }
 
@@ -770,11 +771,10 @@ function checkCacheTime($file) {
         global $config;
         if (!is_dir($config['cache']['dir'])) {
                 mkdir($config['cache']['dir'], 0777);
-                chmod($config['cache']['dir'], 0777);
         }
         if (!is_file($file)) {
                 return false;
-        } else if (filemtime($file)+$config['cache']['time'] < time()) {
+        } else if (filemtime($file)+$config['cache']['expir'] < time()) {
                 return false;
         } else if (isset($_GET['nocache'])) {
                 return false;

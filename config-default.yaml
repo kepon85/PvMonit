@@ -28,11 +28,26 @@ dir:
 data:
     ppv_total: false                         # production total des régulateurs (utilisé si vous avez plusieurs régulateur)
     conso_calc: false                        # Calculé avec : la puissance instantané (P du BMV) - ppv_total     ppv_total at true for use this
+    
+#~ dataCheck:       # Donnée minimum pour que l'XML soit considéré comme valide
+    #~ PPV:                                             # Production des MPPT
+        #~ regex: (^[0-9]+\.?[0-9]+?$)|(^[0-9]$)
+        #~ number: 2                                    # Si vous avez 2 MPPT il faut le préciser
+    #~ SOC: 
+        #~ regex: (^[0-9]+\.?[0-9]+?$)|(^[0-9]$)                   # BMV : % SOC
+    #~ P: 
+        #~ regex: (^-?[0-9]+\.?[0-9]+?$)|(^-?[0-9]$)                     # BMV : P
+    #~ PPVT:                                              # Total des PPVT (si plusieurs MPPT
+        #~ regex: (^[0-9]+\.?[0-9]+?$)|(^[0-9]$)                  
+    #~ CS:                                                  # MPPT etat (float, bulk...)
+        #~ regex: ^Off$|Fault$|Bulk|Faible|Abs|Float|On$         
+    #~ Relay:                                               # SmartSolar MPPT Relay ou BMV
+        #~ Si aucun regex n'est précisé alors la vérification ne ce fait pas sur la valeur mais uniquement sur la présence de la donnée
 
 cache:
     dir: /tmp/PvMonit_cache                 # in tmpfs
-    file_prefix: 
-    time: 60                                # in second
+    expir: 15                               # in second
+    expirLimit: 60                          # If dataCheck error...
 
 # Methode de récupération des données VE DIRECT (par USB - vedirect OU serial par Arduino)
 vedirect:
@@ -437,13 +452,13 @@ domo:
     fileExpir: 500                            # Age en seconde après laquel le fichier n'est plus considéré comme ok
     xmlDataExpir: 500                        # Age en seconde avant expiration des données XML (et donc arrêt du heartbeat)
     valueUse:
-        SOC: (^[0-9]+\.?[0-9]+?$)|(^[0-9]$)                   # BMV : % SOC
-        P: (^-?[0-9]+\.?[0-9]+?$)|(^-?[0-9]$)                     # BMV : P
-        #PPVT: (^[0-9]+\.?[0-9]+?$)|(^[0-9]$)                  # Total des PPVT (si plusieurs MPPT
-        #PPV: (^[0-9]+\.?[0-9]+?$)|(^[0-9]$)                 # Production des MPPT
-        #CS: ^Off$|Fault$|Bulk|Faible|Abs|Float|On$         # MPPT etat (float, bulk...)
-        #Relay: ^ON|OFF|on|off|Off|On|0|1$                      # SmartSolar MPPT Relay ou BMV
-    valueSimu:          # Les valeurs pour la simulation blockly des "valueUse"
+        - SOC                   # BMV : % SOC
+        #~ - P                     # BMV : P
+        #~ - PPVT                  # Total des PPVT (si plusieurs MPPT
+        #~ - PPV                   # Production des MPPT
+        #~ - CS                    # MPPT etat (float, bulk...)
+        #~ - Relay                 # SmartSolar MPPT Relay ou BMV
+    valueSimu:                 # Les valeurs pour la simulation blockly des "valueUse"
         SOC:
             - type:number
             - value:90
