@@ -3,6 +3,8 @@ import board
 import sys
 from adafruit_ina260 import INA260, AveragingCount, Mode
 
+ICAL=0.0082                  # Coeficient de calibrage en foncction du shunt utilisé (a determiner pas l'utilisateur ou a l'aide d'une pince ampermetrique calibrée)
+VCAL=1.009                  # Correction/calibration voltage
 
 i2c = board.I2C()
 ina260 = INA260(i2c)
@@ -16,8 +18,10 @@ ina260.mode = Mode.CONTINUOUS
 
 while True:
     print ('{', end='')
-    print ('"A": ' + str(ina260.current*0.008) + ', ', end='')
-    print ('"V": ' + str(ina260.voltage), end='')
+    print ('"A": ' + str(ina260.current*ICAL) + ', ', end='')
+    print ('"V": ' + str(ina260.voltage*VCAL), end='')
     print ('}')
 #    time.sleep(1)
     sys.exit()
+
+
