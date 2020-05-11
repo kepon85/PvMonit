@@ -293,8 +293,8 @@ if (checkCacheTime($config['cache']['dir'].'/data.xml')) {
             }
         }
         trucAdir(5, "On recherche $nbDataCheck data pour valider l'XML");
-        //~ $devices = simplexml_load_string($xmlPrint);
-        $devices = simplexml_load_file('data-xml-test.xml');
+        $devices = simplexml_load_string($xmlPrint);
+        //~ $devices = simplexml_load_file('data-xml-test.xml');
         foreach ($devices as $device) {
             foreach ($device->datas->data as $data) {
                 $id= (string)  $data['id'];
