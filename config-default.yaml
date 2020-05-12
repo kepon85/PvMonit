@@ -18,12 +18,16 @@ printMessageLogfile: false                  # path or fase
 # URL data
 urlDataXml: http://pvmonit.local/data-xml.php # N'utilisez pas 127.0.0.1 mais plutôt l'ip local si vous restez en local (192.168.1.2 ? commande "ip a s" pour l'obtenir, vous ne pouvez pas être en DHCP, mais en IP fixe donc), ou un nom de domain résolu en local et à l'exterieur si c'est publié sur internet
 tmpFileDataXml: /tmp/PvMonit_data-xml.php.tmp
+scriptDataXml: /opt/PvMonit/www/data-xml.php
 
 dir:
     bin: /opt/PvMonit/bin/
     bin_enabled: /opt/PvMonit/bin-enabled/
     lcd: /opt/PvMonit/lcd/
     domo: /opt/PvMonit/domo/
+
+bin:
+    php-cli: /usr/bin/php
 
 data:
     ppv_total: false                         # production total des régulateurs (utilisé si vous avez plusieurs régulateur)
@@ -348,6 +352,7 @@ wks:
 deviceCorrespondance:
     HQXXXXXXXX: MpttGarage
     HQYYYYYYYY: MpttToit
+    OTHER: Divers
 
 # Plafont de consommation en W impossible à dépasser (techniquement, sinon c'est une erreur de sonde)
 consoPlafond: 1500

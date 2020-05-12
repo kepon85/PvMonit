@@ -1,9 +1,12 @@
 <?php
 
-header("Access-Control-Allow-Origin: *");
-header("Content-Type:  application/xml");
+// Si on est pas en HTTP
+if (php_sapi_name() != "cli") {
+    header('Content-Type: text/xml');
+    header("Access-Control-Allow-Origin: *");
+}
 
-$xmlPrint= '<?xml version="1.0" encoding="utf-8"?>
+$xmlPrint= '<?xml version="1.0" encoding="UTF-8"?>
 <devices>';
 
 ###################################
@@ -26,6 +29,7 @@ function xmlPrintError($msg) {
             <data id="ERR" screen="1" smallScreen="1">
                 <desc>Erreur</desc>
                 <value>'.$msg.'</value>
+                <valueBeast>255</valueBeast>
                 <units></units>
             </data>
         </datas>
@@ -99,13 +103,13 @@ if (checkCacheTime($config['cache']['dir'].'/data.xml')) {
                 $xmlPrint.= "\n\t\t".'<modele>'.$device['modele'].'</modele>';
                 $xmlPrint.= "\n\t\t".'<serial>'.$device['serial'].'</serial>';
                 $xmlPrint.= "\n\t\t".'<datas>';
-                sort($device['data']);
                 foreach (explode(',', $device['data']) as $data) {
                         $dataSplit = explode(':', $data);
                         $veData=ve_label2($dataSplit[0], $dataSplit[1]);
                         $xmlPrint.= "\n\t\t\t".'<data id="'.$veData['label'].'" screen="'.$veData['screen'].'" smallScreen="'.$veData['smallScreen'].'">';
                                 $xmlPrint.= "\n\t\t\t\t".'<desc>'.$veData['desc'].'</desc>';
                                 $xmlPrint.= "\n\t\t\t\t".'<value>'.$veData['value'].'</value>';
+                                $xmlPrint.= "\n\t\t\t\t".'<valueBeast>'.$dataSplit[1].'</valueBeast>';
                                 $xmlPrint.= "\n\t\t\t\t".'<units>'.$veData['units'].'</units>';
                         $xmlPrint.= "\n\t\t\t".'</data>';
                         if ($dataSplit[0] == 'PPV'){ 
@@ -173,7 +177,12 @@ if (checkCacheTime($config['cache']['dir'].'/data.xml')) {
                                     } else {
                                         $xmlPrint.= "\n\t\t\t\t".'<value>'.$reponse.'</value>';
                                     }
-                                    $xmlPrint.= "\n\t\t\t\t".'<units>'.$config['wks']['data'][$command][$numReponse]['units'].'</units>';
+                                    $xmlPrint.= "\n\t\t\t\t".'<valueBeast>'.$reponse.'</valueBeast>';
+                                    if (isset($config['wks']['data'][$command][$numReponse]['units'])) {
+                                        $xmlPrint.= "\n\t\t\t\t".'<units>'.$config['wks']['data'][$command][$numReponse]['units'].'</units>';
+                                    } else {
+                                        $xmlPrint.= "\n\t\t\t\t".'<units></units>';
+                                    }
                                 $xmlPrint.= "\n\t\t\t".'</data>';
                             } else {
                                 # Caché
@@ -208,7 +217,7 @@ if (checkCacheTime($config['cache']['dir'].'/data.xml')) {
     }
     if($printDivers == true || $config['data']['ppv_total'] || $config['data']['ppv_total']) {
         $xmlPrint.= '<device id="other">
-            <nom>Divers</nom>
+            <nom>'.deviceCorrespondance('OTHER').'</nom>
             <timerefresh>'.time().'</timerefresh>
             <type></type>
             <modele></modele>
@@ -219,6 +228,7 @@ if (checkCacheTime($config['cache']['dir'].'/data.xml')) {
                     $xmlPrint.= '<data id="PPVT"'.onScreenPrint('PPVT').'>
                     <desc>Production total des panneaux</desc>
                     <value>'.$ppv_total.'</value>
+                    <valueBeast>'.$ppv_total.'</valueBeast>
                     <units>W</units>
                     </data>';
                 }
@@ -228,6 +238,7 @@ if (checkCacheTime($config['cache']['dir'].'/data.xml')) {
                     $xmlPrint.= '<data id="CONSO"'.onScreenPrint('CONSO').'>
                     <desc>Consommation du foyer</desc>
                     <value>'.abs($conso).'</value>
+                    <valueBeast>'.abs($conso).'</valueBeast>
                     <units>W</units>
                     </data>';
                 }
@@ -243,8 +254,10 @@ if (checkCacheTime($config['cache']['dir'].'/data.xml')) {
                             $id=$filenameSplit[1];
 
                             // Ménage
-                            foreach ($array_data as $i => $value) {
-                                unset($array_data[$i]);
+                            if (isset($array_data)) {
+                                foreach ($array_data as $i => $value) {
+                                    unset($array_data[$i]);
+                                }
                             }
                             trucAdir(3, "Lecture du script ".$bin_script_enabled);
                             $script_return = (include $config['dir']['bin_enabled'].'/'.$bin_script_enabled);
@@ -252,7 +265,7 @@ if (checkCacheTime($config['cache']['dir'].'/data.xml')) {
                             $script_return_datas = $script_return;
                             
                             $xmlPrint.= "\n\t<device id=\"".strtolower($idParent)."\">";
-                            $xmlPrint.= "\n\t\t<nom></nom>";
+                            $xmlPrint.= "\n\t\t<nom>".deviceCorrespondance($idParent)."</nom>";
                             $xmlPrint.= "\n\t\t<timerefresh>".$timerefresh."</timerefresh>";
                             $xmlPrint.= "\n\t\t<type></type>";
                             $xmlPrint.= "\n\t\t<modele></modele>";
@@ -269,6 +282,11 @@ if (checkCacheTime($config['cache']['dir'].'/data.xml')) {
                                     $xmlPrint.= "\n\t\t\t<data id='".$id_data."' screen='".$script_return_data['screen']."' smallScreen='".$script_return_data['smallScreen']."'>";
                                     $xmlPrint.= "\n\t\t\t\t<desc>".$script_return_data['desc']."</desc>";
                                     $xmlPrint.= "\n\t\t\t\t<value>".$script_return_data['value']."</value>";
+                                    if (isset($script_return_data['valueBeast'])) {
+                                        $xmlPrint.= "\n\t\t\t\t<valueBeast>".$script_return_data['valueBeast']."</valueBeast>";
+                                    } else {
+                                        $xmlPrint.= "\n\t\t\t\t<valueBeast>".$script_return_data['value']."</valueBeast>";
+                                    }
                                     $xmlPrint.= "\n\t\t\t\t<units>".$script_return_data['units']."</units>";
                                     $xmlPrint.= "\n\t\t\t</data>";
                             }
@@ -277,6 +295,7 @@ if (checkCacheTime($config['cache']['dir'].'/data.xml')) {
                     } 
             }
     }
+    
     $xmlPrint.= "</devices>";
     trucAdir(5, "Fin de la génération du fichier data-xml");
 
@@ -294,7 +313,6 @@ if (checkCacheTime($config['cache']['dir'].'/data.xml')) {
         }
         trucAdir(5, "On recherche $nbDataCheck data pour valider l'XML");
         $devices = simplexml_load_string($xmlPrint);
-        //~ $devices = simplexml_load_file('data-xml-test.xml');
         foreach ($devices as $device) {
             foreach ($device->datas->data as $data) {
                 $id= (string)  $data['id'];

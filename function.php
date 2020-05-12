@@ -430,15 +430,20 @@ function ve_label2($label, $valeur) {
 
 
 function ve_nom($ve_serial) {
-        global $config;
-	$ve_nom=$ve_serial;
-	foreach ($config['deviceCorrespondance'] as $serialName => $nom) {
-		if ($ve_serial == $serialName) {
-			$ve_nom=$nom;
+	return deviceCorrespondance($ve_serial);
+}
+
+function deviceCorrespondance($search) {
+	global $config;
+	$return=$search;
+	foreach ($config['deviceCorrespondance'] as $id => $nom) {
+		if ($search == $id) {
+			$return=$nom;
 		}
 	}
-	return $ve_nom;
+	return $return;
 }
+
 
 # Hack value
 function ve_value($label, $value) {
