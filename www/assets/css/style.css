@@ -11,7 +11,9 @@ body {
 p {
     padding: 10px;
 }
-
+b {
+    font-weight: bold;
+}
 #wrapper {
     margin: 0 auto;
     width: 1000px;
@@ -121,6 +123,14 @@ progress.jaugeBleu::-moz-progress-bar { background: #8590F7; }
 	padding: 5px;
 	border-bottom: 1px solid #BCB7B7;
 	color : #6B6B6B;
+}
+.boxvaleur ul {
+	list-style: circle;
+}
+.boxvaleur li {
+	margin-left: 10px;
+	margin-top: 2px;
+	margin-bottom: 2px;
 }
 .box h3 {
 	font-size: 80%;
@@ -235,6 +245,12 @@ progress.jaugeBleu::-moz-progress-bar { background: #8590F7; }
 #box_domo .boxvaleur{
     padding-bottom: 20px;
     border-bottom: none;
+}
+#box_weatherProdForcast b.prodOk {
+    color:#4EA541;
+}
+#box_weatherProdForcast b.prodKo {
+    color:#C14C4C;
 }
 .relayEtat {
     margin: 5px;

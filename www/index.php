@@ -181,6 +181,13 @@ if (isset($cloud)) {
 			?>
 
 			<div style="display: none" id="nodata" class="boxvaleur">Rien à afficher, vérifier le fichier config.yaml. <br /><span style="color: red" id="textStatus"></span> : <span id="errorThrown"></span></div>
+				
+			<div style="display: none" class="box" id="box_weatherForcast">
+				<div class="title">Weather forcast</div>
+			</div>			
+			<div style="display: none" class="box" id="box_weatherProdForcast">
+				<div class="title">Weather production forcast</div>
+			</div>			
 			
 			<?php 
 			if ($config['www']['domo'] == true) { 
@@ -343,6 +350,96 @@ if (isset($cloud)) {
 				function preparDomo(){
 					$("#box_domo").show();
 					refreshDomo();
+				}
+				<?php } ?>
+				<?php  if ($config['www']['weatherForcast'] == true) {  ?>
+				function refreshWeatherForcast() {
+					trucAdir(3, 'Refresh WeatherForcast');
+					$.ajax({
+						url : 'weatherForcast.php',
+						type : 'GET',
+						dataType : 'json',
+						success : function(resultat, statut){
+							$('#box_weatherForcast').show();
+							//~ console.log(resultat.error);
+							//~ console.log(resultat);
+							if (typeof resultat.error !== 'undefined') {
+								$('#box_weatherForcast').append('<div class="boxvaleur err">'+resultat.error+'</div>');
+							} else {
+								var previousDay = 0;
+								var plus='';
+								for (var [cle, valeur] of Object.entries(resultat['list'])){
+									//~ console.log(valeur);
+									if (valeur.dt > <?php echo time()+($config['www']['weatherForcastNbDayPrint']*86400) ?>) {
+										plus=' plus';
+									}
+									var date = new Date(valeur.dt * 1000);
+									var hours = date.getHours();
+									var day = date.getDate();
+									var month = date.getMonth();
+									var year = date.getFullYear();
+									if (previousDay != day) {
+										$('#box_weatherForcast').append('<div class="boxvaleur'+plus+'"><h2>Le '+day+' '+month+' '+year+'</h2></div>');
+									}
+									
+									$('#box_weatherForcast').append('<div class="boxvaleur'+plus+'">' +
+																	'<img style="float: right" src="https://openweathermap.org/img/wn/'+valeur.weather[0].icon+'.png" width="45" /> ' +
+																	hours+'h - '+valeur.main.temp+'°C - H '+valeur.main.humidity+'%' +
+																	'<br />Cloud : '+valeur.clouds.all+'% - '+ valeur.weather[0].description +
+																	'<br />Wind : '+valeur.wind.speed+'km/h - '+valeur.wind.deg+'° - '+valeur.main.pressure+'Ha' + 
+																	'</div>');
+									previousDay=day;
+								}
+								$('#box_weatherForcast').append('<div id="PlusWeatherForcast" class="boxvaleur plusboutton" onclick="PlusPrint(\'weatherForcast\')">...</div>'+
+															'<div class="boxvaleur moinsboutton" onclick="MoinsPrint(\'weatherForcast\')">...</div>');
+							}
+						},
+						error : function (xhr, ajaxOptions, thrownError) {
+							alert('Erreur à l\'affichage de WeatherForcast');
+						}
+					});
+				}
+				<?php } ?>
+				<?php  if ($config['www']['weatherProdForcast'] == true) {  ?>
+				function refreshWeatherProdForcast() {
+					trucAdir(3, 'Refresh WeatherProdForcast');
+					$.ajax({
+						url : 'weatherProdForcast.php',
+						type : 'GET',
+						dataType : 'json',
+						success : function(resultat, statut){
+							$('#box_weatherProdForcast').show();
+							if (typeof resultat.error !== 'undefined') {
+								$('#box_weatherProdForcast').append('<div class="boxvaleur err">'+resultat.error+'</div>');
+							} else {
+								var previousDay = 0;
+								var plus='';
+								for (var [day, valeur] of Object.entries(resultat)){	
+									var classProd='';							
+									if (day != 0 && valeur.prodCumul > <?= $config['weather']['dalyConsumption'] ?>) {
+										classProd='prodOk';
+									}else if (day != 0) {
+										classProd='proKo';
+									}
+									$('#box_weatherProdForcast').append('<div class="boxvaleur">Day +'+day+' : <b class="'+classProd+'">'+valeur.prodCumul+'W</b> (cloud '+valeur.cloudAvg+'%)</div>');
+									var ByHourContent = '<div class="boxvaleur plus"><ul>';
+									for (var [hour, valeurByHour] of Object.entries(valeur.byHour)){
+										if (valeurByHour.sun == 1) {
+											//~ console.log(valeurByHour);
+											ByHourContent = ByHourContent + '<li>'+hour+'H  : <b>'+valeurByHour.prod+'W</b>  (cloud '+valeurByHour.cloud+'%)</li>';
+										}
+									}
+									ByHourContent = ByHourContent + '</ul></div>';
+									$('#box_weatherProdForcast').append(ByHourContent);
+								}
+								$('#box_weatherProdForcast').append('<div id="PlusWeatherProdForcast" class="boxvaleur plusboutton" onclick="PlusPrint(\'weatherProdForcast\')">...</div>'+
+															'<div class="boxvaleur moinsboutton" onclick="MoinsPrint(\'weatherProdForcast\')">...</div>');
+							}
+						},
+						error : function (xhr, ajaxOptions, thrownError) {
+							alert('Erreur à l\'affichage de WeatherProdForcast');
+						}
+					});
 				}
 				<?php } ?>
 				// /domo
@@ -646,6 +743,13 @@ if (isset($cloud)) {
 						<?php  if ($config['www']['domo'] == true) {  ?>
 						intervalIdDomo = setInterval(refreshDomo, refreshTimeDomo) ;
 						<?php  } ?>
+						<?php  if ($config['www']['weatherForcast'] == true) {  ?>
+						refreshWeatherForcast();
+						<?php  } ?>
+						<?php  if ($config['www']['weatherProdForcast'] == true) {  ?>
+						refreshWeatherProdForcast();
+						<?php  } ?>
+						
 				}); 
 			</script>
 			

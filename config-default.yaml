@@ -428,6 +428,9 @@ www:
     domoEditPassword: false                         # DomoEdit password in MD5 - http://www.passwordtool.hu/md5-password-hash-generator
     help: false                                      # Active l'assistance
     domoEditExampleDir: /opt/PvMonit/domo/relay.script.d/example
+    weatherForcast: false                       # Prévision météo a afficher dans l'interface web
+    weatherForcastNbDayPrint: 1                 # Nombre de jour a afficher pour les prévisions météos
+    weatherProdForcast: false                   # Prévision de productoin a afficher dans l'interface web
 
 
 # Ecran LCD (avec script PvMonit/lcd
@@ -541,6 +544,33 @@ cloud:                              # Cloud service, visit http://pvmonit.zici.f
     url: http://pvmonit.zici.fr/id/
     api: XXXXXXXXXXXXXXX
     sendDelay: 300       # Délai d'envoi de donnée (en seconde)
+
+weather:
+    enable: false
+    cache: 3600 # in seconde
+    openweathermapCityId: XXXXXXX # OpenWeatherMap city ID
+            # Tout les city id sont là : http://bulk.openweathermap.org/sample/city.list.json.gz
+            # Sinon tu peux faire un recherche https://openweathermap.org/city et l'ID se trouve dans l'URL (exemple pour Paris FR : https://openweathermap.org/city/2988507 l'ID est 2988507 )
+    openweathermapAppId: XXXXXXXXXXXXXXXXXXXXXXXX  # Creat account on openweathermap.org for APP ID (api key)
+    forecastDay: 5   # Nombre de jour de prévision au delà de ce jour (min 1, max 5)
+    prod: 1000 # Wc panel installed
+    dalyConsumption: 1000 # Wh/d need (calculé pour le dimmensionnement 
+    prod_yield_global: 0.80 # Rendement global de l'installation ($prod * 0.80)
+    prod_mini: 0.03 # Production minimum (%)
+    abatementSurise: # Abattement sur la production au levé du soleil
+        0: 0          # Exemple : à l'heure du levé du soleil on applique un coef de 0.1 sur la prod
+        1: 0.1
+        2: 0.3
+        3: 0.6
+        4: 0.8
+        5: 0.9
+    abatementSunset: #  Abattement sur la production au couché du soleil
+        5: 0.9       # Exemple : 5 h avant le couché du soleil on applique un abattement de 0.6
+        4: 0.8
+        3: 0.6
+        2: 0.3
+        1: 0.1
+        0: 0
 
 #~ user: # Ok for text/number/password... 
     #~ startTime:                           # name in form

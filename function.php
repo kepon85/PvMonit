@@ -807,5 +807,29 @@ function genDefaultJsonFile($type) {
 	file_put_contents($filePath, json_encode($relay[$type]));
 }
 
+# Download weather
+function getDataOpenWeathert() {
+	global $config;
+	$cacheFile=$config['cache']['dir'].'/openweathermap-forecast.json';
+	if (!is_file($cacheFile) || filemtime($cacheFile)+$config['weather']['cache'] < time()) {
+		$opts = array('http' =>
+			array(
+				'method'  => 'GET',
+				'timeout' => 60
+			)
+		);
+		$context  = stream_context_create($opts);
+		$result = file_get_contents('https://api.openweathermap.org/data/2.5/forecast?id='.$config['weather']['openweathermapCityId'].'&appid='.$config['weather']['openweathermapAppId'], false, $context);
+		if ($result != '') {
+			file_put_contents($cacheFile, $result);
+		}
+	}
+	if (is_file($cacheFile)) {
+		$return = file_get_contents($cacheFile);
+	} else {
+		$return = '';
+	}
+	return $return;
+}
 
 ?>
