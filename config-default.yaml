@@ -571,7 +571,10 @@ weather:
         2: 0.3
         1: 0.1
         0: 0
-
+    abatementHour:     # Abattement / h (UTC) 
+        #~ 8: 0.2                # Exemple Si vous avez un masque solaire entre 10 et 12h en été à Paris c'est 8-10h UTC (Paris l'été c'est GTM +2)
+        #~ 9: 0.2
+        
 #~ user: # Ok for text/number/password... 
     #~ startTime:                           # name in form
         #~ id: startTime
