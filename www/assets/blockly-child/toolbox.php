@@ -25,7 +25,7 @@
 </category>
 <category name="Donnée" colour='23'>
     <?php 
-	foreach ($config['domo']['valueUse'] as $value=>$regex)  {
+	foreach ($config['domo']['valueUse'] as $id=>$value)  {
 	    echo '<block type="data_'.$value.'"></block>';
 	}
     ?>

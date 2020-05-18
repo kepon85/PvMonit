@@ -132,6 +132,12 @@ progress.jaugeBleu::-moz-progress-bar { background: #8590F7; }
 	margin-top: 2px;
 	margin-bottom: 2px;
 }
+.focastSocGood {
+    color: #B94300;
+}
+.focastSocVeryGood {
+    color: #B90004;
+}
 .box h3 {
 	font-size: 80%;
 }
@@ -340,3 +346,4 @@ progress.jaugeBleu::-moz-progress-bar { background: #8590F7; }
     border: 1px solid #2789D8;
     padding: 10px;
 }
+

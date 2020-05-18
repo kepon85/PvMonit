@@ -1,4 +1,9 @@
 # Changelog
+  * V3.4 (05/2020)
+	    * Prévision météo
+	  * Prévision de production déduite de la météo
+	  * Prévision de l'état de charge batterie au couché du soleil à J+0 et J+1 
+	        * Doc : https://pvmonit.zici.fr/doc/fr:howto:weather
   * V3.3 (05/2020)
 	    * Ajour de <valueBeast> dans le XML généré
 	  * Changement dans l'attitude de getEmoncms pour l'expédition des fichiers, maintenant il utilise (lui aussi) le XML pour lire les données

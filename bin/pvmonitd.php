@@ -26,7 +26,8 @@ $listCheckDaemon= array('arduino',
                         'help',
                         'sendToEmoncms',
                         'getForEmoncms',
-                        'cloudService');
+                        'cloudService',
+                        'forcastSoc');
 
 function startCmd($daemonSelect) {
     global $config;
@@ -57,6 +58,9 @@ function startCmd($daemonSelect) {
         break;
         case 'cloudService':
             $return = 'screen -A -m -d -S cloudService /opt/PvMonit/bin/cloudService.sh';
+        break;
+        case 'forcastSoc':
+            $return = 'screen -A -m -d -S forcastSoc /opt/PvMonit/bin/forcastSoc-launch.sh';
         break;
         //~ default:
             //~ return '/dev/null';
@@ -103,6 +107,11 @@ function startEnable($daemonSelect) {
         break;
         case 'cloudService':
             if ($config['cloud']['daemon'] == true) {
+                $return = true;
+            }
+        break;
+        case 'forcastSoc':
+            if ($config['weather']['enable'] == true && $config['weather']['forcastSoc'] == true) {
                 $return = true;
             }
         break;

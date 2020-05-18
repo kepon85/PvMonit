@@ -100,6 +100,9 @@ if (!is_file($cacheFileProd) || filemtime($cacheFile)+$config['weather']['cache'
 			if (empty($forecast[$day])) {
 				continue;
 			}
+			if ($day != 0 && count($forecast[$day]) != 24) {
+				continue;
+			}
 			foreach ($forecast[$day] as $hour=>$cloud) {
 				trucAdir(5, "Day $day, $hour H - Cloud : $cloud % ");
 				$abatementCloud=(100-$cloud)/100+$config['weather']['prod_mini'];
@@ -143,6 +146,10 @@ if (!is_file($cacheFileProd) || filemtime($cacheFile)+$config['weather']['cache'
 			}
 			$prodForcast[$day]['prodCumul']=round($prodCumul, 0);
 			$prodForcast[$day]['cloudAvg']=round($cloudAvg/$cloudAvgNb, 0);
+			if($day == 0) {
+				$prodForcast[$day]['sunset']=$forecast['sunset'];
+				$prodForcast[$day]['surise']=$forecast['surise'];
+			}
 			ksort($prodForcast[$day]['byHour']);
 		}
 		return $prodForcast;

@@ -45,6 +45,7 @@ if (isset($_GET['idScript'])) {
 	$idScript=$_GET['idScript'];
 }
 
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -291,7 +292,7 @@ Code.init = function() {
 					$exampleEnable=true;
 					$bloklyExampleMetaData= json_decode(file_get_contents($config['www']['domoEditExampleDir'].'/'.$bloklyExampleMeta), true);
 					foreach ($bloklyExampleMetaData['data'] as $dateRequir) {
-						if (!array_key_exists($dateRequir, $config['domo']['valueUse'])) {
+						if (!in_array($dateRequir, $config['domo']['valueUse'])) {
 							$exampleEnable=false;
 						} 
 					}
@@ -370,7 +371,7 @@ Code.init = function() {
 		} elseif ($_GET['edit'] == 'blockly') {             
             
             // Check data for blockly_data
-            foreach ($config['domo']['valueUse'] as $value=>$regex)  {
+            foreach ($config['domo']['valueUse'] as $id=>$value)  {
                 $bloklyData[$value]['type']='input';
                 $bloklyData[$value]['value']=0;
                 $bloklyData[$value]['output']='null';
@@ -382,7 +383,7 @@ Code.init = function() {
                     }
                 } 
             }
-            
+
 		?>
 <!--
 Pour l'enregistrement des données
@@ -932,7 +933,6 @@ Blockly.PHP['time_now'] = function(block) {
 };
 
 <?php
-
 foreach ($bloklyData as $nom=>$dataSimu) {
     echo 'Blockly.Blocks[\'data_'.$nom.'\'] = {
       init: function() {

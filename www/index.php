@@ -419,7 +419,7 @@ if (isset($cloud)) {
 									if (day != 0 && valeur.prodCumul > <?= $config['weather']['dalyConsumption'] ?>) {
 										classProd='prodOk';
 									}else if (day != 0) {
-										classProd='proKo';
+										classProd='prodKo';
 									}
 									$('#box_weatherProdForcast').append('<div class="boxvaleur">Day +'+day+' : <b class="'+classProd+'">'+valeur.prodCumul+'W</b> (cloud '+valeur.cloudAvg+'%)</div>');
 									var ByHourContent = '<div class="boxvaleur plus"><ul>';
@@ -565,6 +565,24 @@ if (isset($cloud)) {
 										$('#box_' + id + '').append('<div class="boxvaleur temp '+screen+' '+smallScreen+'"><h3>'+desc+'</h3>' + 
 										'<progress class="' + jaugeColor + '" max="45" value="' + value + '"></progress> ' +
 										value+units+'</div>');
+									break;
+									case 'focastSocEndSurise':
+										var classForcastSoc='focastSocWarn';
+										if (value == 100) {
+											classForcastSoc='focastSocVeryGood';
+										} else if (value > 90) {
+											classForcastSoc='focastSocGood';
+										}
+										$('#box_' + id + '').append('<div class="boxvaleur '+classForcastSoc+' '+screen+' '+smallScreen+'">'+desc+' : '+value+units+'</div>');
+									break;
+									case 'focastSocTomorrowEndSurise':
+										var classForcastSoc='focastSocWarn';
+										if (value == 100) {
+											classForcastSoc='focastSocVeryGood';
+										} else if (value > 90) {
+											classForcastSoc='focastSocGood';
+										}
+										$('#box_' + id + '').append('<div class="boxvaleur '+classForcastSoc+' '+screen+' '+smallScreen+'">'+desc+' : '+value+units+'</div>');
 									break;
 									default:
 										$('#box_' + id + '').append('<div class="boxvaleur '+screen+' '+smallScreen+'">'+desc+' : '+value+units+'</div>');

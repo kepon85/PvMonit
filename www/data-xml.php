@@ -271,8 +271,11 @@ if (checkCacheTime($config['cache']['dir'].'/data.xml')) {
                             $xmlPrint.= "\n\t\t<modele></modele>";
                             $xmlPrint.= "\n\t\t<serial></serial>";
                             $xmlPrint.= "\n\t\t<datas>";
-                            sort($script_return_datas);
-                            
+                            if (empty($script_return_datas)) {
+                                continue;
+                            } else {
+                                sort($script_return_datas);
+                            }
                             foreach ($script_return_datas as $script_return_data) {
                                     if (isset($script_return_data['id'])) {
                                             $id_data=$script_return_data['id'];
@@ -295,6 +298,42 @@ if (checkCacheTime($config['cache']['dir'].'/data.xml')) {
                     } 
             }
     }
+    
+    if ($config['weather']['enable'] == true 
+    && $config['weather']['forcastSoc'] == true
+    && is_file($config['weather']['forcastSocFile'])
+    && filemtime($config['weather']['forcastSocFile'])+$config['weather']['cache'] > time()) {
+        trucAdir(4, 'Affichage forcastSoc');
+        $xmlPrint.= '<device id="forcastSoc">
+        <nom>forcastSoc</nom>
+        <timerefresh>'.time().'</timerefresh>
+        <type></type>
+        <modele>Prévision SOC</modele>
+        <serial></serial>
+        <datas>';
+            $forcastSocFile=json_decode(file_get_contents($config['weather']['forcastSocFile']), true);
+            foreach ($forcastSocFile as $key=>$valueBeast) {
+                switch ($key) {
+                    case 'focastSocEndSurise': $desc='Prévision état batterie ce soir'; break;
+                    case 'focastSocTomorrowEndSurise': $desc='Prévision état batterie demain soir'; break;
+                    default; $desc = $key; break;
+                }
+                if ($valueBeast > 100) {
+                    $value = 100;
+                } else {
+                    $value = $valueBeast;
+                }
+                $xmlPrint.= '<data id="'.$key.'"'.onScreenPrint($key).'>
+                <desc>'.$desc.'</desc>
+                <value>'.$value.'</value>
+                <valueBeast>'.$valueBeast.'</valueBeast>
+                <units>%</units>
+                </data>';
+            }
+        $xmlPrint.= '</datas>		
+        </device>';
+    }
+        
     
     $xmlPrint.= "</devices>";
     trucAdir(5, "Fin de la génération du fichier data-xml");
@@ -338,6 +377,9 @@ if (checkCacheTime($config['cache']['dir'].'/data.xml')) {
 
     if ($xmlValid == true) {
         file_put_contents($config['cache']['dir'].'/data.xml', $xmlPrint);
+        if (substr(sprintf('%o', fileperms($config['cache']['dir'].'/data.xml')), -3) != '777')  {
+            chmod($config['cache']['dir'].'/data.xml', 0777);
+        }
         echo $xmlPrint;
     } else {
         if (is_file($config['cache']['dir'].'/data.xml')) {

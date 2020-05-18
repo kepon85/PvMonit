@@ -25,6 +25,7 @@ dir:
     bin_enabled: /opt/PvMonit/bin-enabled/
     lcd: /opt/PvMonit/lcd/
     domo: /opt/PvMonit/domo/
+    www: /opt/PvMonit/www/
 
 bin:
     php-cli: /usr/bin/php
@@ -411,6 +412,8 @@ www:
         - WARN
         - PPVT
         - CONSO
+        - focastSocEndSurise
+        - focastSocTomorrowEndSurise
     dataPrimaireSmallScreen:
         - SOC
         - P
@@ -505,6 +508,20 @@ domo:
             - max:5000
             - output:Number
             - tooltip:"Puissance total des panneaux"
+        focastSocEndSurise:
+            - type:number
+            - value:100
+            - min:0
+            - max:100
+            - output:Number
+            - tooltip:"% des batteries ce soir"
+        focastSocTomorrowEndSurise:
+            - type:number
+            - value:100
+            - min:0
+            - max:100
+            - output:Number
+            - tooltip:"% des batteries ce soir"
         EXEMPLEINPUT:
             - type:input
             - value:Test
@@ -547,6 +564,8 @@ cloud:                              # Cloud service, visit http://pvmonit.zici.f
 
 weather:
     enable: false
+    forcastSoc: false
+    forcastSocFile: /tmp/PvMonit_forcastSoc
     cache: 3600 # in seconde
     openweathermapCityId: XXXXXXX # OpenWeatherMap city ID
             # Tout les city id sont là : http://bulk.openweathermap.org/sample/city.list.json.gz
@@ -555,6 +574,7 @@ weather:
     forecastDay: 5   # Nombre de jour de prévision au delà de ce jour (min 1, max 5)
     prod: 1000 # Wc panel installed
     dalyConsumption: 1000 # Wh/d need (calculé pour le dimmensionnement 
+    batCapacity: 5280    # Capacité des batterie total en Wh
     prod_yield_global: 0.80 # Rendement global de l'installation ($prod * 0.80)
     prod_mini: 0.03 # Production minimum (%)
     abatementSurise: # Abattement sur la production au levé du soleil
