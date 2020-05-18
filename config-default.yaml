@@ -283,24 +283,24 @@ wks:
               desc: "Battery capacity"
               units: "%"
             12:
-              id: BatFloatV
-              desc: "Battery float voltage"
-              units: "V"
+              id: T
+              desc: "inverter heat sink temperature"
+              units: "°C"
             13:
-              id: BatVsoc
+              id: IPV
+              desc: "PV Input current"
+              units: "A"
+            14:
+              id: VPV
+              desc: "PV Imput Voltage 1 "
+              units: "V"
+            15:
+              id: BatVCcc
               desc: "Battery voltage from SCC 1"
               units: "V"
-            14:
+            16:
               id: Id
               desc: "Battery discharge current"
-              units: "A"
-            15:
-              id: T
-              desc: "Inverter heat sink temperature"
-              units: "°C"
-            16:
-              id: IPV
-              desc: "PV Input current 1"
               units: "A"
             17:
               id: VPV
