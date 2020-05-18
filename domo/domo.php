@@ -40,7 +40,7 @@ function xml_data_get($DATA_FILE)  {
     return $xmlData;
 }
 
-function MpptAbsOrFlo($cs, $timeUpNoBago = 10) {
+function MpptAbsOrFlo($cs, $timeUpNoBago = 60) {
     global $config;
     if ($timeUpNoBago == 0) {
         if (preg_match_all('/^Absorption|^Float/', $cs)) {
@@ -84,7 +84,7 @@ function MpptAbsOrFlo($cs, $timeUpNoBago = 10) {
     }
 }
 
-function MpptFlo($cs, $timeUpNoBago = 10) {
+function MpptFlo($cs, $timeUpNoBago = 60) {
     global $config;
     if ($timeUpNoBago == 0) {
         if (preg_match_all('/^Float/', $cs)) {

@@ -84,7 +84,7 @@ while (true) {
         //~ # Récupération du XML
         $xml_ok=false;
         $sortie='';
-        trucAdir(4, 'Aquisition des données (via le data-xml)');
+        trucAdir(4, 'Acquisition des données (via le data-xml)');
         $cmd=$config['bin']['php-cli'].' '.$config['scriptDataXml'];
         exec($cmd, $sortie, $retour);
         if ($cmd != 0){

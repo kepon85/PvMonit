@@ -800,7 +800,7 @@ Blockly.JavaScript['timeupmax'] = function(block) {
   return [code, Blockly.JavaScript.ORDER_NONE];
 };
 
-<?php if (isset($config['domo']['valueUse']['CS'])) { ?>
+<?php if (in_array('CS', $config['domo']['valueUse'])) { ?>
 
 //~ Block MpptFlo
 Blockly.Blocks['mpptflo'] = {
@@ -808,6 +808,10 @@ Blockly.Blocks['mpptflo'] = {
     this.appendDummyInput()
         .appendField("MpptFlo")
         .appendField("data CS");
+    this.appendDummyInput()
+        .appendField("Timer pour éviter bagot :")
+        .appendField(new Blockly.FieldNumber(60, 0, 86400, 1), "timeUpNoBago")
+        .appendField("s");
     this.appendDummyInput()
         .appendField("Pour la simulation ")
         .appendField(new Blockly.FieldDropdown([["Le régulateur est en Float","true"], ["Le régulateur n'est pas en Float","false"]]), "simu_return");
@@ -819,7 +823,8 @@ Blockly.Blocks['mpptflo'] = {
   }
 };
 Blockly.PHP['mpptflo'] = function(block) {
-  var code = 'MpptFlo($data[\'CS\'])';
+  var timeUpNoBago = block.getFieldValue('timeUpNoBago');
+  var code = 'MpptFlo($data[\'CS\'], '+timeUpNoBago+')';
   return [code, Blockly.PHP.ORDER_NONE];
 };
 Blockly.JavaScript['mpptflo'] = function(block) {
@@ -834,6 +839,10 @@ Blockly.Blocks['mpptabsorflo'] = {
         .appendField("MpptAbsOrFlo")
         .appendField("data CS");
     this.appendDummyInput()
+        .appendField("Timer pour éviter bagot :")
+        .appendField(new Blockly.FieldNumber(60, 0, 86400, 1), "timeUpNoBago")
+        .appendField("s");
+    this.appendDummyInput()
         .appendField("Pour la simulation ")
         .appendField(new Blockly.FieldDropdown([["Le régulateur est en Absorption ou Float","true"], ["Le régulateur n'est pas en Absorption ou Float","false"]]), "simu_return");
     this.setInputsInline(false);
@@ -844,7 +853,8 @@ Blockly.Blocks['mpptabsorflo'] = {
   }
 };
 Blockly.PHP['mpptabsorflo'] = function(block) {
-  var code = 'MpptAbsOrFlo($data[\'CS\'])';
+  var timeUpNoBago = block.getFieldValue('timeUpNoBago');
+  var code = 'MpptAbsOrFlo($data[\'CS\'], '+timeUpNoBago+')';
   return [code, Blockly.PHP.ORDER_NONE];
 };
 Blockly.JavaScript['mpptabsorflo'] = function(block) {

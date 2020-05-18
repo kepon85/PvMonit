@@ -18,7 +18,7 @@
 	<block type="relaylastdown"></block>	
 	<block type="timeupmin"></block>	
 	<block type="timeupmax"></block>	
-	<?php if (isset($config['domo']['valueUse']['CS'])) { ?>
+	<?php if (in_array('CS', $config['domo']['valueUse'])) { ?>
 	<block type="mpptflo"></block>	
 	<block type="mpptabsorflo"></block>	
 	<?php } ?>
