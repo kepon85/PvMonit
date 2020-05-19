@@ -28,6 +28,8 @@ function focastSocEndSurise($soc, $weatherProdForcast) {
         $forcastSoc=(100*($batEnergieNow+$prodWithoutConsumption))/$config['weather']['batCapacity'];
         trucAdir(2, 'A J+'.$day.', après injection de cette production dans la batterie sera a '.round($forcastSoc).'% au couché du soleil');
         return round($forcastSoc);
+    } else {
+        return null;
     }
 }
 
@@ -35,20 +37,24 @@ function focastSocTomorrowEndSurise($soc, $weatherProdForcast) {
     global $config;
     $day=1;
     $focastSocEndSurise=focastSocEndSurise($soc, $weatherProdForcast);
-    if ($focastSocEndSurise > 100) {
-        $focastSocEndSurise = 100;
+    if ($focastSocEndSurise == null) {
+        return null;
+    } else {
+        if ($focastSocEndSurise > 100) {
+            $focastSocEndSurise = 100;
+        }
+        trucAdir(5, 'focastSocTomorrowEndSurise');
+        # Energie présente dans les batteries
+        $batEnergieNow=$config['weather']['batCapacity']*$focastSocEndSurise/100;
+        trucAdir(4, 'Energie restant actuelle dans les batteries : '.round($batEnergieNow).'Wh / '.$config['weather']['batCapacity'].' Soc='.$focastSocEndSurise);
+        # Production - consommation
+        $prodWithoutConsumption=$weatherProdForcast[$day]['prodCumul']-$config['weather']['dalyConsumption'];
+        trucAdir(4, 'Production estimé  ('.$weatherProdForcast[$day]['prodCumul'].') ce jour sans la consommation ('.$config['weather']['dalyConsumption'].') : '.round($prodWithoutConsumption).'Wh');
+        # Après injection de la production réel dans la batterie
+        $forcastSoc=(100*($batEnergieNow+$prodWithoutConsumption))/$config['weather']['batCapacity'];
+        trucAdir(2, 'A J+'.$day.', après injection de cette production dans la batterie sera a '.round($forcastSoc).'% au couché du soleil');
+        return round($forcastSoc);
     }
-    trucAdir(5, 'focastSocTomorrowEndSurise');
-    # Energie présente dans les batteries
-    $batEnergieNow=$config['weather']['batCapacity']*$focastSocEndSurise/100;
-    trucAdir(4, 'Energie restant actuelle dans les batteries : '.round($batEnergieNow).'Wh / '.$config['weather']['batCapacity'].' Soc='.$focastSocEndSurise);
-    # Production - consommation
-    $prodWithoutConsumption=$weatherProdForcast[$day]['prodCumul']-$config['weather']['dalyConsumption'];
-    trucAdir(4, 'Production estimé  ('.$weatherProdForcast[$day]['prodCumul'].') ce jour sans la consommation ('.$config['weather']['dalyConsumption'].') : '.round($prodWithoutConsumption).'Wh');
-    # Après injection de la production réel dans la batterie
-    $forcastSoc=(100*($batEnergieNow+$prodWithoutConsumption))/$config['weather']['batCapacity'];
-    trucAdir(2, 'A J+'.$day.', après injection de cette production dans la batterie sera a '.round($forcastSoc).'% au couché du soleil');
-    return round($forcastSoc);
 }
 
 function xml_data_get($xmlFulLData)  {

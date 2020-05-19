@@ -901,7 +901,7 @@ Blockly.JavaScript['date_now'] = function(block) {
 };
 Blockly.PHP['date_now'] = function(block) {
     var dropdown_format = block.getFieldValue('format');
-    var code = 'date("%'+dropdown_format+'")';
+    var code = 'date("'+dropdown_format+'")';
     return [code, Blockly.JavaScript.ORDER_NONE];
 };
 
@@ -938,7 +938,7 @@ Blockly.JavaScript['time_now'] = function(block) {
 };
 Blockly.PHP['time_now'] = function(block) {
   var dropdown_format = block.getFieldValue('format');
-  var code = 'date("%'+dropdown_format+'")';
+  var code = 'date("'+dropdown_format+'")';
   return [code, Blockly.PHP.ORDER_NONE];
 };
 
